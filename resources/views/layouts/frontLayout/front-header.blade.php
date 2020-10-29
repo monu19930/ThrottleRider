@@ -22,7 +22,7 @@
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="{{route('logout')}}">Logout</a>
-                        <a class="dropdown-item" href="{{route('profile')}}">My Profile</a>
+                        <a class="dropdown-item" href="{{route('my-profile')}}">My Profile</a>
                       </div>
                     </div>
               @endauth
@@ -80,7 +80,7 @@
                     Show me the Rider, Bikers and Groups from 
                     <div class="dropdown d-inline-block bnr-select">
                       <label class="location-lbl">Your Location</label>
-                      <button class="bnr-dropdown" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <button class="bnr-dropdown" type="button" id="dropdownMenuButton" content="Bangaluru" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Bangaluru <i class="fa fa-angle-down drop-arrow">  </i>
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -92,7 +92,7 @@
                   </div>
                   <div class="cust-search-bar">
                         <div class="search-block">
-                          <input type="search" class="search-input" placeholder="Where to? i.e. Delhi or Rides to Delhi" />
+                          <input type="search" class="search-input" onkeyup="findResult(this.value)" placeholder="Where to? i.e. Delhi or Rides to Delhi" />
                           <a href="#" class="bnr-search-btn"><i class="fa fa-search"></i></a>
                         </div>
                   </div>

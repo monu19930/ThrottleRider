@@ -26,6 +26,19 @@ Route::get('login/{social}/callback', 'Auth\LoginController@handleSocialCallback
 Route::post('/rider-signup', 'RiderController@register');
 Route::post('/rider-login', 'RiderController@login')->name('login');
 Route::get('/logout', 'RiderController@logout')->name('logout');
-Route::get('/my-profile', 'RiderController@profile')->name('profile');
+Route::get('/my-profile', 'RiderController@index')->name('my-profile');
+Route::get('/my-profile/edit', 'RiderController@create')->name('my-profile.edit');
+Route::post('/my-profile/update', 'RiderController@update')->name('edit-profile');
 
-Route::post('bike', 'BikeController@addBikes')->name('add-bike');
+Route::get('bikes', 'BikeController@index')->name('bikes');
+Route::get('bikes/add', 'BikeController@create')->name('add-bike');
+
+Route::get('rides', 'RideController@index')->name('rides');
+Route::get('add-ride', 'RideController@create')->name('add-ride');
+Route::post('register1', 'RideController@addRideStep1')->name('register1');
+Route::post('add-ride-day', 'RideController@addRideDay')->name('ride-day');
+Route::post('register2', 'RideController@addRideStep2')->name('register2');
+Route::post('save-ride', 'RideController@saveRide')->name('ride-submit');
+
+Route::post('search', 'HomeController@search')->name('search-result');
+

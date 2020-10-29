@@ -1,8 +1,7 @@
     <!--Login Modal -->
 	<div class="modal fade" id="loginmodal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered modal-lg">
-		  <div class="modal-content rounded-0">
-			 
+		  <div class="modal-content rounded-0">			 
 			<div class="modal-body p-0">
 			  <button type="button" class="close login-close" data-dismiss="modal" aria-label="Close">
 				<span aria-hidden="true">&times;</span>
@@ -23,10 +22,10 @@
 					<label class="login-change-txt">or Login using email/ Mobile number</label>
 					<div class="login-input">
 					<div class="form-group">
-					  <input type="email" class="form-control " name="email" id="email" placeholder="Email address/ Mobile number">
+					  <input type="email" class="form-control " name="email" placeholder="Email address/ Mobile number">
 					</div>
 					<div class="form-group">
-					  <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+					  <input type="password" class="form-control" name="password" placeholder="Password">
 					</div>
 				  
 					<button type="button" class="btn btn-danger w-100" onclick="signinRider();">LOGIN</button>
@@ -73,14 +72,14 @@
 					</div>
 					<div class="login-input">
 						<div class="form-group">
-							<input type="text" class="form-control" name="name" id="name" placeholder="Your Name">
+							<input type="text" class="form-control" name="name" placeholder="Your Name">
 							<span class="text-danger p-1">{{ $errors->first('name') }}</span>
 						</div>
 						<div class="form-group">
-							<input type="email" class="form-control" name="email" id="email" placeholder="Email address">
+							<input type="email" class="form-control" name="email" placeholder="Email address">
 						</div>
 						<div class="form-group">
-							<input type="password" class="form-control" name="password" id="password" placeholder="Password">
+							<input type="password" class="form-control" name="password" placeholder="Password">
 						</div>					
 						<button type="button" id="signup" class="btn btn-danger w-100" onclick="registerRider();">CREATE ACCOUNT</button>
 						<p class="mt-3 login-bottom-txt">Are you a member? <a href="#" class="text-danger" data-toggle="modal" data-target="#loginmodal" data-dismiss="modal">Login here</a></p>
@@ -106,7 +105,7 @@
 	  </div>
 
 
-	  <!--Bike Modal -->
+	<!--Bike Modal -->
 	<div class="modal fade" id="bikeModal" data-backdrop="static" data-keyboard="false" tabindex="-2" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered modal-lg">
 		  <div class="modal-content rounded-0">
@@ -129,16 +128,16 @@
 						</div>
 						<div class="login-input">
 							<div class="form-group">
-								<input type="text" class="form-control" name="name" id="name" placeholder="Bike Name">
+								<input type="text" class="form-control" name="name" placeholder="Bike Name">
 							</div>
 							<div class="form-group">
-								<input type="email" class="form-control" name="total_km" id="total_km" placeholder="Kilometer Ride">
+								<input type="email" class="form-control" name="total_km" placeholder="Kilometer Ride">
 							</div>
 							<div class="form-group">
-								<input type="file" class="form-control" name="image" id="image" placeholder="Image">
+								<input type="file" class="form-control" name="image" placeholder="Image">
 							</div>
 							<div class="form-group">
-							<textarea id="form7" class="md-textarea form-control" name="info" id="info" rows="3" placeholder="Information"></textarea>
+							<textarea class="md-textarea form-control" name="info" rows="3" placeholder="Information"></textarea>
 							</div>					
 							<button type="button" id="addBike" class="btn btn-danger w-100">Submit</button>
 						</div>

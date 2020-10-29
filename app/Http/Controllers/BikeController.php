@@ -5,9 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Bike;
+use App\Models\BikeBrand;
+use Illuminate\Support\Facades\Auth;
 
 class BikeController extends Controller
 {
+    public function index() {
+        $id = Auth::user()->id;
+        $data['bikes'] = Bike::where('rider_id', $id)->get();
+        return view('front/bike/index',$data);
+    }
+
+    public function create() {
+        $data['brands'] = BikeBrand::all();
+        return view('front/bike/create',$data);
+    }
 
     public function addBikes(Request $request){
 

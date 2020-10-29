@@ -768,3 +768,13 @@ h4 {
     line-height: normal;
     letter-spacing: normal;
     color: #464855;}
+
+    .fa-plus{
+      float: right;
+      color: #34ad50;
+    }
+
+    .fa-minus{
+      float: right;
+      color: #c23d3e;
+    }

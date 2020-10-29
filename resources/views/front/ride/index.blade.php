@@ -6,26 +6,27 @@
 		<div class="col-md-8">
 		  <div class="cust-left-block">
 			<h2 class="page-heading">
-			  My Bikes
+			  My Rides
 			</h2>
 			<div class="d-flex align-items-center filter-details mb-4">
-			  <span class="filter-block1">{{ $bikes->count() }} Bikes Added</span><br/>
-			  <button class="post-btn w-10 mb-3" data-toggle="modal" data-target="#bikeModal">Add New Bike</button>
+			  <span class="filter-block1">{{ $rides->count() }} Rides Added</span><br/>
 			</div>
+			
+                <a href="{{route('add-ride')}}">Add New Ride</a>
 			
 			<div class="row">
 			  <!-- repeat div from here START -->
-			@if($bikes->count() > 0)
-				@foreach($bikes as $bike)
+			@if($rides->count() > 0)
+				@foreach($rides as $ride)
 				<div class="col-12 mb-3">
 				<div class="rides-block d-none d-md-flex">
 					<div class="rider-img-block mr-md-3 ml-3 ml-md-0 order-2 order-md-1">
-					<img src="{{ asset('public/images')}}/{{ $bike->image }}" class="img-fluid">
+					<img src="{{ asset('public/images')}}/{{ $ride->no_of_person }}" class="img-fluid">
 					</div>
 					<div class="rider-details-block w-100 order-1 order-md-2">
 					<div class="location-heading-block ">
 						<div>
-						<h4 class="location-title">{{ $bike->name}}</h4>
+						<h4 class="location-title">{{ $ride->start_location}} To {{ $ride->end_location}} Via {{ implode(',', json_decode($ride->via_location))}}</h4>
 						<div class="d-flex align-items-center location-block">
 							<span class="location">Banglore, Karnatka, India</span>
 							<span class="time left-seperater">in month of <span>June 2019</span></span></span>
@@ -102,9 +103,22 @@
 			<button class="post-btn w-100 mb-3">{{Auth::user()->name}}</button>
 			<div class="card mt-2 mb-3 border-0"  >
 			 <ul class="list-group list-group-flush cust-notify">
-			   <li class="list-group-item"><h4 class="notify-heading">Profile</h4></li>
-			   <li class="list-group-item"><h4 class="notify-heading">Rides</h4></li>
-			   <li class="list-group-item"><h4 class="notify-heading">Bikes</h4></li>
+			   <li class="list-group-item">
+				   <h4 class="notify-heading">
+				   <a href="{{route('my-profile')}}">Profile</a>
+					</h4>
+				</li>
+			   <li class="list-group-item">
+				   <h4 class="notify-heading">
+					   <a href="{{ route('rides')}}">Rides</a>
+					</h4>
+				</li>
+			   <li class="list-group-item">
+				   
+			   	<h4 class="notify-heading">
+					<a href="{{ route('bikes')}}">Bikes</a>
+				</h4>
+				</li>
 			   <li class="list-group-item"><h4 class="notify-heading">Groups</h4></li>
 			 </ul>
 		   </div>
