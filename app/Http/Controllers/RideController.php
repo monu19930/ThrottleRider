@@ -39,7 +39,7 @@ class RideController extends Controller
                 'description' => $ride->short_description,
                 'rider_rating' => isset($user->profile->rating) ? $user->profile->rating: 0,
                 'ride_rating' => 4,
-                'ride_image' => !empty($rideDays[0]['image']) ? $rideDays[0]['image'] : '',
+                'ride_image' => !empty($rideDays[0]['image']) ? $rideDays[0]['image'] : 'not_found.png',
             ];
         }
         return $result;

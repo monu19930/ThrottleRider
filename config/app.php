@@ -229,7 +229,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
-        'Location' => 'Stevebauman\Location\Facades\Location',
+        'Location' => Stevebauman\Location\Facades\Location::class
 
     ],
 

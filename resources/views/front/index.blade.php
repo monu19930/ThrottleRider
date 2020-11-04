@@ -106,12 +106,12 @@
 			@if(count($explore_rides) > 0)
 				@foreach($explore_rides as $key => $explore_ride)			
 				<div class="slide">
-				<img src="{{ asset('public/images/rides/')}}/{{getRideImage($explore_ride)}} ">
-				<div class="img-content">
-					<span class="no-rides">{{count($explore_ride)}}</span>
-					<span class="ride-loc">Rides from</span>
-					<span class="ride-state">{{$key}}</span>
-				</div>
+					<img src="{{ asset('public/images/rides/')}}/{{getRideImage($explore_ride)}} ">
+					<div class="img-content">
+						<span class="no-rides">{{count($explore_ride)}}</span>
+						<span class="ride-loc">Rides from</span>
+						<span class="ride-state">{{$key}}</span>
+					</div>
 				</div>
 				@endforeach
 			@else
@@ -178,7 +178,7 @@
 					 <div class="username mb-2  d-md-none">
 					   <span class="badge badge-warning"><i class="fa fa-star"></i> 4.5</span> 
 					 </div>
-					 <h3 class="user-name">{{$group['rider_name']}}<small>{{$group['group_desc']}}</small></h3>
+					 <h3 class="user-name">{{$group['group_name']}}<small>{{$group['group_desc']}}</small></h3>
 					 <div class="location-details py-4 d-flex align-items-center">
 					   <span class="rating pl-0 d-none d-md-block">{{$group['group_rating']}} <small>Rating</small></span>
 					   <span class="other-details pl-0">{{$group['total_rides']}} <small>Rides</small></span>

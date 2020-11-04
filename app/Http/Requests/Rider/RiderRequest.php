@@ -25,7 +25,7 @@ class RiderRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'email' => 'required|unique:users|max:255',
+            'email' => 'required|email|unique:users|max:255',
             'password' => 'required|min:6'           
         ];
     }

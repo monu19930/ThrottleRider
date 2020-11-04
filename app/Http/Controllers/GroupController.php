@@ -61,7 +61,7 @@ class GroupController extends Controller
             'group_name' => $request->group_name,
             'group_desc' => $request->group_description,
             'group_image' =>$new_name,
-            'city' => $user->profile->city
+            'city' => isset($user->profile->city) ? $user->profile->city : ''
         ];
         Group::Create($data);
         $response = array('status'=>true, 'msg' => 'Group  has been successfully created');

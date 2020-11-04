@@ -76,7 +76,8 @@ class BikeController extends Controller
         $models = BikeModel::select('id','name', 'image')->where('brand_id',$brand_id)->get();
         $options = "";
         foreach($models as $model) {
-            $options .= "<option value='".$model->name."' data-content='".$model->image."'>".$model->name."</option>";
+            $image = !empty($model->image) ? $model->image : 'not_available.png';
+            $options .= "<option value='".$model->name."' data-content='".$image."'>".$model->name."</option>";
         }
         return $options;
     }
@@ -133,7 +134,7 @@ class BikeController extends Controller
             $bike->fill($filterData);
             $request->session()->put('bike', $bike);
             $bike_models = BikeModel::select('image')->where('name', $bike->name)->first();
-            $result['bike_model_image'] = $bike_models->image;
+            $result['bike_model_image'] = !empty($bike_models->image) ? $bike_models->image : 'not_available.png';
             $result['bike_details'] = $bike;
 
             $result['brands'] = BikeBrand::all();

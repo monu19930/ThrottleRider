@@ -16,6 +16,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/', 'HomeController@index')->name('login');
 
+
+Route::get('/ride', 'HomeController@rides')->name('front-rides');
+Route::get('/biker', 'HomeController@bikers')->name('front-bikers');
+Route::get('/group', 'HomeController@groups')->name('front-groups');
+
 Route::group(['middleware'=>['auth','admin']],function(){
     Route::get('dashboard', 'AdminController@index');
     Route::get('dashboard', 'AdminController@index')->name('admin-dashboard');
@@ -35,7 +40,7 @@ Route::group(['middleware'=>['auth']],function(){
     Route::get('bikes/add', 'BikeController@create')->name('add-bike');
 
     Route::get('rides', 'RideController@index')->name('rides');
-    Route::get('add-ride', 'RideController@create')->name('add-ride');
+    Route::get('rides/add', 'RideController@create')->name('add-ride');
     Route::post('register1', 'RideController@addRideStep1')->name('register1');
     Route::post('add-ride-day', 'RideController@addRideDay')->name('ride-day');
     Route::post('register2', 'RideController@addRideStep2')->name('register2');

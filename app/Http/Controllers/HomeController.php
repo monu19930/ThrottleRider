@@ -6,6 +6,7 @@ use App\Models\Group;
 use Illuminate\Http\Request;
 use App\Models\Ride;
 use App\Models\RiderProfile;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
@@ -220,12 +221,72 @@ class HomeController extends Controller
         return $html;
     }  
 
-    protected function getFinalResult($array) {
-        
-
-        
-
+    public function rides(){
+        $result = [];
+        $rides = Ride::where('is_approved', 1)->OrderBy('created_at', 'desc')->get();
+        foreach($rides as $key => $ride) {
+            $user = $ride->user;
+            $rideDays = $this->formateRideDays($ride->ride_days);            
+            $result[$key] = [
+                'rider_name' => $user->name,
+                'rider_id' => $user->id,
+                'rider_image' => isset($user->profile->image) ? $user->profile->image : '',
+                'start_location' => $ride->start_location,
+                'via_location' => $this->formateViaLocation($ride->via_location),
+                'end_location' => $ride->end_location,
+                'start_date' => formatDate($ride->start_date, 'M Y'),
+                'total_km' => $ride->total_km,
+                'description' => $ride->short_description,
+                'rider_rating' => isset($user->profile->rating) ? $user->profile->rating: 0,
+                'ride_rating' => 4,
+                'ride_image' => !empty($rideDays[0]['image']) ? $rideDays[0]['image'] : 'not_found.png',
+            ];
+        }
+        return view('front.rides',compact('result'));
     }
 
+    public function bikers(){
+        $result = [];
+        $users = User::where('is_admin', 0)->where('is_approved', 1)->get();
+        foreach($users as $key => $user) {
+            $profile = $user->profile;
+            $result['riders'][$key] = [
+                'rider_name' => $user->name,
+                'rider_id' => $user->id,
+                'rider_email' => $user->email,
+                'rider_image' => !empty($profile->image)?$profile->image:'rider.jpg',
+                'total_km' => isset($profile->total_km)?$profile->total_km:0,
+                'total_rides' => isset($profile->total_rides)?$profile->total_rides:0,
+                'rating' => isset($profile->rating)?$profile->rating:0,
+                'description' => isset($profile->description)?$profile->description:''
+            ];
+        }
+        return view('front.riders',$result);
+    }
+
+    public function groups() {
+        $result = [];
+        $groups = Group::where('is_approved', 1)->orderBy('created_at', 'desc')->get();
+        foreach($groups as $key => $group) {
+           $user = $group->user;
+           $groupJoinedRiders = $group->groupJoinedRider->pluck('rider_id')->toArray();
+           $result['groups'][$key] =[
+               'rider_name' => $user->name,
+               'group_owner_id' => $group->id,
+               'rider_email' => $user->email,
+               'rider_image' => isset($user->profile->image)?$user->profile->image:'rider.jpg',
+               'group_name' => $group->group_name,
+               'group_image' => $group->group_image,
+               'group_rating' => $group->group_rating,
+               'group_desc' => $group->group_desc,
+               'total_km' => $group->total_km,
+               'total_rides' => $group->total_rides,
+               'total_group_members' => $group->groupJoinedRider->count(),
+               'current_rider_join_status' => $this->getCurrentRiderJoinStatus($groupJoinedRiders),
+               'group_member_list' => $this->getGroupMembersList($group->groupJoinedRider)
+           ];
+        }
+        return view('front.groups',$result);
+    }
     
 }

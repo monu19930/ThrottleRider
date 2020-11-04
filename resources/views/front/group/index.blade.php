@@ -33,7 +33,7 @@
 						<span class="rating"><i class="fa fa-star"></i>{{ $group['group_rating']}} <small>Rating</small></span>
 						<div class="d-flex followers-block align-items-center">
 						@foreach($group['group_member_list'] as $group_member_list)
-						 	<span class="follow-users"><img src="{{ asset('public/images/rider_images/')}}/{{$group_member_list}}" style="height: 25px; width:25px;" /></span>
+						 	<span class="follow-users"><img src="{{ asset('public/images/rider_images/')}}/{{!empty($group_member_list)?$group_member_list:'rider.jpg'}}" style="height: 25px; width:25px;" /></span>
 						 @endforeach						 
 						 <span class="joined-grp">{{$group['total_group_members']}} People<small>Joined the group</small></span>
 					   </div>

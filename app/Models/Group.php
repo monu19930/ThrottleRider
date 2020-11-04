@@ -12,7 +12,7 @@ class Group extends Model
 
 
    public function user() {
-        return $this->belongsTo('App\User', 'id');
+        return $this->belongsTo('App\User', 'create_rider_id');
    }
 
    public function groupJoinedRider() {

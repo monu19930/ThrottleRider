@@ -24,8 +24,7 @@
                           </div>
                           <div class="form-group">
                             <input type="file" class="form-control-file uplode_file dropzone"
-                            required accept="image/*" name="profile" id="profile"
-                            onchange="validateImage('profile');">
+                            required accept="image/*" name="profile" id="profile">
                           </div>
                           <div class="form-group">
                               <textarea class="md-textarea form-control" name="group_description" rows="3" placeholder="Write short description about this Group"></textarea>

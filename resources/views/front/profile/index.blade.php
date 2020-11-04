@@ -60,7 +60,7 @@
 					
 				</div>
 				<div class="rider-img-block ml-3 ">
-					<img src="{{ asset('public/rider/images/mobe_byke.png')}}" class="img-fluid">
+					<!-- <img src="{{ asset('public/rider/images/mobe_byke.png')}}" class="img-fluid"> -->
 				</div>
 				</div>
 				<div class="d-flex align-items-center mt-1">

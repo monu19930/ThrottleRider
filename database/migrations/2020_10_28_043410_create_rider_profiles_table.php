@@ -16,9 +16,9 @@ class CreateRiderProfilesTable extends Migration
         Schema::create('rider_profiles', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('rider_id');
-            $table->unsignedInteger('riding_year')->nullable();
-            $table->unsignedInteger('total_km')->nullable();
-            $table->unsignedInteger('total_rides')->nullable();
+            $table->unsignedInteger('riding_year')->default(0);
+            $table->unsignedInteger('total_km')->default(0);
+            $table->unsignedInteger('total_rides')->default(0);
             $table->string('image')->nullable();
             $table->float('rating')->default(0);
             $table->text('description')->nullable();

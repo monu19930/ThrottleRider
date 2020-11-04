@@ -133,9 +133,10 @@ class RiderController extends Controller
                     'url' => url('/group').'/'.$group_id.'/join',
                     'email' => $email,
                 ];
-                dispatch(new SendGroupInvitationEmail());
+                $data = (object)$data;
+                dispatch(new SendGroupInvitationEmail($data));
             }
-            $response = ['status' => true, 'msg' => 'Invatation has been sent successfully'];
+            $response = ['status' => true, 'msg' => 'Invitation has been sent successfully'];
             return response()->json($response); 
         } 
         else {
@@ -177,10 +178,12 @@ class RiderController extends Controller
     protected function getCity() {
 
         return $data = [
+            'Delhi' => 'Delhi',
+            'Noida' => 'Noida',
             'New Delhi' => 'New Delhi',
-            'Bangalore' => 'Bangalore',
-            'Mumbai' => 'Mumbai',
-            'Pune' => 'Pune',
+            'Punjab' => 'Punjab',
+            'Ghaziabad' => 'Ghaziabad',
+            'Haryana' => 'Haryana',
             'Varanasi' => 'Varanasi',
         ];
     }

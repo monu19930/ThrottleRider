@@ -13,16 +13,16 @@ use Illuminate\Support\Facades\Mail;
 class SendGroupInvitationEmail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-   // public $data;
+    public $data;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($data)
     {
-        //$this->data = $data;
+        $this->data = $data;
     }
 
     /**
@@ -30,10 +30,10 @@ class SendGroupInvitationEmail implements ShouldQueue
      *
      * @return void
      */
-    public function handle($data)
-    {
-        //$email = $data['email'];
-        
-        Mail::to('test@gmail.com')->send(new InvitationMail());
+    public function handle()
+    {   
+        $rider_email = $this->data->email;
+        $email = new InvitationMail($this->data);
+        Mail::to($rider_email)->send($email);
     }
 }

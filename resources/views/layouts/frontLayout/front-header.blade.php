@@ -11,9 +11,9 @@
           <div class="collapse navbar-collapse" id="main_nav">	
             <ul class="navbar-nav ml-auto cust-links">
               <li class="nav-item"><a class="nav-link active" href="{{url('/')}}"> Whats New</a></li>
-              <li class="nav-item"><a class="nav-link" href="{{url('/')}}"> Rides</a></li>
-              <li class="nav-item"><a class="nav-link" href="{{url('/')}}"> Bikers</a></li>
-              <li class="nav-item"><a class="nav-link" href="{{url('/')}}"> Groups</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{route('front-rides')}}"> Rides</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{route('front-bikers')}}"> Bikers</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{route('front-groups')}}"> Groups</a></li>
               <li class="nav-item"><a class="nav-link" href="{{url('/')}}"> More</a></li>
               @auth
               <li class="dropdown">

@@ -21,7 +21,7 @@
 				<div class="rides-block d-none d-md-flex">
 					<div class="rider-img-block mr-md-3 ml-3 ml-md-0 order-2 order-md-1">
 						@if(!empty($bike->image))
-							<img src="{{ asset('public/images/rider/bikes/')}}/{{isset(json_decode($bike->image,true)[0]) ? json_decode($bike->image,true)[0] : 'default.jpg'  }}" class="img-fluid" width="250" height="180">
+							<img src="{{ asset('public/images/rider/bikes/')}}/{{isset(json_decode($bike->image,true)[0]) ? json_decode($bike->image,true)[0] : 'not_found.jpg'  }}" class="img-fluid" width="250" height="180">
 						@endif
 					</div>
 					<div class="rider-details-block w-100 order-1 order-md-2">

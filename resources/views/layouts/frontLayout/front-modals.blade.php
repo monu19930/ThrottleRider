@@ -251,7 +251,7 @@
 				  <div class="login-block">
 					<form id="inviteGroupMembersForm" method="post">
 						<input type="hidden" name="member" id="group_member">
-						<h2 class="login-heading">INVITE MEMBERS<small>Enter multiple email address by comm(,) separated</small></h2>
+						<h2 class="login-heading">Invite New Members<small>Enter multiple email address by comma(,) separated</small></h2>
 						<div class="alert alert-danger invite-error-msg" style="display:none">
 							<ul></ul>
 						</div>

@@ -24,6 +24,7 @@ class CreateGroupsTable extends Migration
             $table->unsignedInteger('total_group_members')->default(0);
             $table->unsignedBigInteger('total_km')->default(0);
             $table->unsignedBigInteger('total_rides')->default(0);
+            $table->boolean('is_approved')->default(1);
             $table->timestamps();
         });
     }
