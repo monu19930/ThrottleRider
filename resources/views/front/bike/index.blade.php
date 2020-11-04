@@ -17,32 +17,37 @@
 			  <!-- repeat div from here START -->
 			@if($bikes->count() > 0)
 				@foreach($bikes as $bike)
-				<div class="col-12 mb-3">
+				<div class="col-12 mb-3 bike-refferer-{{$bike->id}}">
 				<div class="rides-block d-none d-md-flex">
 					<div class="rider-img-block mr-md-3 ml-3 ml-md-0 order-2 order-md-1">
-					<img src="{{ asset('public/images')}}/{{ $bike->image }}" class="img-fluid">
+						@if(!empty($bike->image))
+							<img src="{{ asset('public/images/rider/bikes/')}}/{{isset(json_decode($bike->image,true)[0]) ? json_decode($bike->image,true)[0] : 'default.jpg'  }}" class="img-fluid" width="250" height="180">
+						@endif
 					</div>
 					<div class="rider-details-block w-100 order-1 order-md-2">
 					<div class="location-heading-block ">
 						<div>
 						<h4 class="location-title">{{ $bike->name}}</h4>
 						<div class="d-flex align-items-center location-block">
-							<span class="location">Banglore, Karnatka, India</span>
-							<span class="time left-seperater">in month of <span>June 2019</span></span></span>
+							<span class="time">Added on <span>{{formatDate($bike->created_at, 'd M Y')}}</span></span></span>
 						</div>
 						</div>
-						<div class="bookmark ml-auto"><a href="#"><i class="fa fa-bookmark-o"></i></a></div>
+						<div class="bookmark ml-auto">
+							<a href="{{url('bikes/edit/')}}/{{$bike->id}}"><i class="fa fa-edit"></i></a>
+							<a href="javascript:void(0)" class="bike-remove" content="{{$bike->id}}"><i class="fa fa-remove"></i></a>
+						</div>
 					</div>
 					<div class="location-details d-flex align-items-center">
 						<span class="rating"><i class="fa fa-star"></i>4.5 <small>Rating</small></span>
-						<span class="other-details"><i class="fa fa-map-o"></i>2176 km <small>from bengaluru</small></span>
-						<span class="other-details"><i class="fa fa-calendar-o"></i>12 <small>Days trip</small></span>
-						<span class="other-details"><i class="fa fa-road"></i>Highway <small>Road Type</small></span>
+						<span class="other-details"><i class="fa fa-map-o"></i>{{ $bike->total_km}} km <small>Bikes Driven</small></span>
+						<span class="other-details"><i class="fa fa-calendar-o"></i>{{ $bike->total_rides}} <small>Rides</small></span>
 					</div>
 					<div class="userdetails d-flex align-items-center">
 						
 						<span class="username">
-						<span class="d-block">Information</span>
+						<span class="d-block">
+						{{ $bike->info}}
+						</span>
 						<span class="badge badge-warning">
 						</span>
 						</span>
@@ -93,13 +98,17 @@
 				<!-- <mobile div END here -->
 				</div>
 				@endforeach
+			@else
+				<div class="col-12 mb-3">
+					<h2 class="page-heading">Bikes is not available</h2>
+				</div>
 			@endif		   
 			</div>		   
 		  </div>
 		</div>
 		<div class="col-md-4 d-none d-md-block">
 		  <div class="right-block">
-		  		<img src="{{ asset('public/images/rider_images/567898.jpg')}}" class="img-circle" alt="Cinque Terre" width="200" height="150">
+		  <img src="{{ asset('public/images/rider_images/rider.jpg')}}" style="position: relative;margin-left:50px;"class="img-circle" alt="Cinque Terre" width="200" height="180">
 			<div class="card mt-2 mb-3 border-0"  >
 			 <ul class="list-group list-group-flush cust-notify">
 			   <li class="list-group-item">
@@ -118,7 +127,7 @@
 					<a href="{{ route('bikes')}}">Bikes</a>
 				</h4>
 				</li>
-			   <li class="list-group-item"><h4 class="notify-heading">Groups</h4></li>
+			   <li class="list-group-item"><h4 class="notify-heading"><a href="{{ route('groups')}}">Groups</a></h4></li>
 			 </ul>
 		   </div>
 		   <div class="card mt-4 mb-3 border-0"  >

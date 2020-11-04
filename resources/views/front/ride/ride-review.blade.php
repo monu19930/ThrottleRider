@@ -50,8 +50,8 @@
                         @endforeach
 
                         <div class="form-group">
-                        <button type="button" id="save_later3" class="btn btn-danger w-20">SAVE FOR LATER</button>
-                        <button type="button" class="btn btn-danger w-20">BACK</button>
+                        <!-- <button type="button" id="save_later3" class="btn back-btn w w-20">SAVE FOR LATER</button> -->
+                        <button type="button" onClick="rideDetailsPage()" class="btn back-btn w-20"> << BACK</button>
                         <button type="button" onClick="submitRide()" id="riderSubmit" class="btn btn-danger w-40">DONE, SUBMIT</button>
                     </div>
 				</div>

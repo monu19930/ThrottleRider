@@ -5,183 +5,142 @@
 	  <div class="row">
 		<div class="col-md-8">
 		  <div class="cust-left-block">
-              <a href="{{route('rides')}}">< Back to My Bikes</a>
-			<h2 class="page-heading">
-			  Select your bike
-			</h2>
-			<div class="d-flex align-items-center filter-details mb-4">
-			  <span class="filter-block1">Choose brand bike and model</span><br/>
-            </div>
-			
-			<div class="row" id="tab1">
-			  <!-- repeat div from here START -->
+                <a href="{{route('bikes')}}">< Back to My Bikes</a>
+			    <div class="row" id="bike_tab1">
+                    <h2 class="page-heading">Select your bike</h2>
+                    <div class="d-flex align-items-center filter-details mb-4">
+                        <span class="filter-block1"></span><br/>
+                    </div>
+                    
+			    <!-- repeat div from here START -->
 				<div class="col-12 mb-3">
                     <div class="row">
                         <div class="col-8 mb-3">                        
-                            <form id="addRideForm1" method="post">
+                            <form id="addBikeForm1" method="post">
                                 <input type="hidden" name="csrf" content="{{ csrf_token() }}">
                                 <div class="alert alert-danger print-error-msg" style="display:none">
                                     <ul></ul>
                                 </div>
                                 <div class="login-input">
                                     <div class="form-group">                                        
-                                        <input type="text" class="form-control" autocomplete="off" name="bike_name" id="bike_list" placeholder="Search for bike brand or model name">
+                                        <input type="text" class="form-control" autocomplete="off" name="name" value="{{isset($name) ? $name : ''}}" id="bike_list" placeholder="Search for bike brand or model name">
                                     </div>
                                 </div>
+                                
                                 <div class="d-flex align-items-center filter-details mb-4">
                                     <span class="filter-block1"> or Choose from following brands</span>
                                 </div>
                                 <div class="row">
                                     @foreach($brands as $brand)
                                         <div class="col-3">
-                                            <img src="{{ asset('public/images/logo/bike_brands/')}}/{{$brand->logo}}" width="100" height="80"/>
+                                            <img src="{{ asset('public/images/logo/bike_brands/')}}/{{$brand->logo}}" onclick="showBikeModelList('{{$brand->id}}')" width="100" height="80"/>
                                         </div>
                                     @endforeach
-                                </div>
+                                </div>                                
                             </form>
-                        </div>                        
+                        </div>
+                        <div class="col-4 mb-3">
+                            <div id="bike-icon" style="background-color: #f2f5fa;height:200px;">
+                                <div>
+                                    <i class="fa fa-motorcycle" aria-hidden="true" style="position: relative;float: bottom; margin-top: 100px;margin-left: 100px;"></i>
+                                </div>
+                                <div class="filter-block1" style="color: #aaaaaa;
+    font-size: 14px;     text-align: center;"> Selected Bike will be shown here.</div>
+                            </div>
+                            <div class="selected_bike" style="display:none">
+                                <img src="{{ asset('public/images/logo/bike_brands/dummy.jpg')}}" alt="" width="200" height="200" id="selected_bike"/>
+                            </div>
+                        </div> 
+                        <div class="col-8 mb-3">
+                            <button type="button" id="submitBikeStep1" class="btn btn-danger w-50"> CONTINUE</button>
+                        </div>                      
                     </div>
 				</div>
             </div>
             
-            <div class="row" id="tab2" style="display:none">
-				<div class="col-12 mb-3">
+            <div class="row" id="bike_tab2" style="display:none">
+                <div class="cust-left-block">
+                
+                    <h2 class="page-heading">
+                    Add Bike Details
+                    </h2>
+                    <div class="d-flex align-items-center filter-details mb-4">
+                    <span class="filter-block1">Fill Details for better review and profile buildup</span><br/>
+                    </div>
+                <div class="col-12 mb-3">
                     <div class="row">                        
-                        <div class="col-6 mb-3">
-                        <button type="button" class="btn btn-success" name="add" id="add" >+ Add Days</button>
-                            <form id="addRideForm2" method="post" enctype="multipart/form-data">
-                                <input type="hidden" name="csrf" content="{{ csrf_token() }}">
+                        <div class="col-12 mb-3">                            
+                            <form id="addBikeForm2" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="id" value="{{isset($id) ? $id : ''}}">
                                 <div class="alert alert-danger print-error-msg" style="display:none">
                                     <ul></ul>
                                 </div>
                                 <div class="login-input">
+                                    <h2 class="page-heading">Upload Bike Images</h2>
+                                    @if(isset($images))
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="start_location_0" placeholder="Start Location">
-                                    </div>                                   
+                                       @foreach($images as $image)
+                                            <img src="{{ asset('public/images/rider/bikes/')}}/{{$image}}" style="width:200px; height:150px">
+                                       @endforeach
+                                    </div>
+                                    @endif
                                     <div class="form-group">
-                                        <input type="email" class="form-control" name="end_location_0" placeholder="End Location">
-                                    </div>                                    
+                                        <input type="file" class="form-control" name="image[]" multiple>
+                                    </div>                        
                                 </div>
-                                <h4>Road Amenties</h4>
+                               
                                 <div class="login-input">
+                                    <h2 class="page-heading">Highlight Details</h2>
                                     <div class="form-group">
-                                        <label class="radio">Was there any petrol pump available ?</label>
-                                        <div class="custom-control custom-radio custom-control-inline">
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="is_petrol_pump_0" value="1" onChange="showHideField(this.value,0,'petrol_pump')">
-                                                <label class="form-check-label">Yes</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="is_petrol_pump_0" value="0" checked onChange="showHideField(this.value,0,'petrol_pump')">
-                                                <label class="form-check-label">No</label>
-                                            </div>
-                                        </div>
+                                        <input type="number" class="form-control" name="total_km" value="{{isset($total_km) ? $total_km : ''}}" placeholder="KMs Driven">
                                     </div>
+                                    <div class="form-group">
+                                        <input type="number" class="form-control" name="total_rides" value="{{isset($total_rides)?$total_rides:''}}" placeholder="Rides you have completed with this bike">
+                                    </div>
+                                </div>
 
-                                    <div class="form-group petrol_pump_0" style="display:none">
-                                        <input type="text" class="form-control" name="petrol_pump_comment_0" placeholder="Add Your Comment">
-                                    </div>
-                                   
+                                <div class="login-input">
+                                    <h2 class="page-heading">Rate Your Bike</h2>
                                     <div class="form-group">
-                                        <label class="radio">Was there any Restaurant/cafe ?</label>
-                                        <div class="custom-control custom-radio custom-control-inline">
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="is_restaurant_0" value="1" onChange="showHideField(this.value,0,'restaurant_comment')">
-                                                <label class="form-check-label">Yes</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="is_restaurant_0" value="0" onChange="showHideField(this.value,0,'restaurant_comment')" checked>
-                                                <label class="form-check-label">No</label>
-                                            </div>
-                                        </div>
+                                        <label>Comfortness</label>
+                                        <input type="number" name="comfortness" value="{{isset($comfortness) ? $comfortness : ''}}">
                                     </div>
+                                    <div class="form-group">
+                                        <label>Visual Appeal</label>
+                                        <input type="number" name="visual_appeal" value="{{isset($visual_appeal) ? $visual_appeal : ''}}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Reliability</label>
+                                        <input type="number" name="reliability" value="{{isset($reliability) ? $reliability : ''}}">
+                                     </div>
+                                    <div class="form-group">
+                                        <label>Performance</label>
+                                        <input type="number" name="performance" value="{{isset($performance) ? $performance : ''}}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Service Experience</label>
+                                        <input type="number" name="service_experience" value="{{isset($service_experience) ? $service_experience : ''}}">
+                                    </div>
+                                </div>
 
-                                    <div class="form-group restaurant_comment_0" style="display:none">
-                                        <input type="text" class="form-control" name="is_restaurant_comment_0" placeholder="Add Your Comment">
+                                <div class="login-input">
+                                    <h2 class="page-heading">Other Optional</h2>
+                                    <div class="form-group">
+                                        <textarea id="form7" class="md-textarea form-control" name="info" id="description" rows="3" placeholder="Anything else you want to share about this bike ? Write it down here">{{isset($info) ? $info : ''}}</textarea>
                                     </div>
+                                </div>
 
-                                    <div class="form-group">
-                                        <label class="radio">Was there any hotel available ?</label>
-                                        <div class="custom-control custom-radio custom-control-inline">
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="is_hotel_0" value="1" onChange="showHideField(this.value,0,'is_hotel')">
-                                                <label class="form-check-label">Yes</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="is_hotel_0" value="0" onChange="showHideField(this.value,0,'is_hotel')" checked>
-                                                <label class="form-check-label">No</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group is_hotel_0" style="display:none">
-                                        <input type="text" class="form-control" name="hotel_name_0" placeholder="Hotel name and location">
-                                    </div>
-
-                                    <div class="form-group is_hotel_0" style="display:none">
-                                        <label class="radio">Parking was available at hotel ?</label>
-                                        <div class="custom-control custom-radio custom-control-inline">
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="is_parking_0" value="1">
-                                                <label class="form-check-label">Yes</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="is_parking_0" value="0" checked>
-                                                <label class="form-check-label">No</label>
-                                            </div>
-                                        </div>
-                                    </div>                                    
-
-                                    <div class="form-group is_hotel_0" style="display:none">
-                                        <label class="radio">Wifi was available at hotel room ?</label>
-                                        <div class="custom-control custom-radio custom-control-inline">
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="is_wifi_0" value="1">
-                                                <label class="form-check-label">Yes</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="is_wifi_0" value="0" checked>
-                                                <label class="form-check-label">No</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label>Road Type</label>
-                                        <select class="custom-select" name="road_type_0" style="width:150px;"> 
-                                            <option value="1">Highway</option>
-                                        </select> 
-                                    </div>
-
-                                    <div class="form-group">
-                                        <input type="number" class="form-control" name="road_quality_0" min="1" max="5" placeholder="Road Quality">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <input type="number" class="form-control" name="road_quality_0" min="1" max="5" placeholder="Road Scenic">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Add Images</label>
-                                        <input type="file" class="form-control" name="ride_images_0[]" multiple >
-                                    </div>
-                                
-                                    <div class="form-group">
-                                        <textarea id="form7" class="md-textarea form-control" name="day_description_0"  rows="3" placeholder="Day description. i.e, How was your experience on this day"></textarea>
-                                    </div>
-                                    <div id="dynamic_field">
-                                    </div>
-                                    <div class="form-group">
-                                        <button type="button" id="save_later2" class="btn btn-danger w-20">SAVE FOR LATER</button>
-                                        <button type="button" class="btn btn-danger w-20">BACK</button>
-                                        <button type="button" id="rideStep2" class="btn btn-danger w-40">CONTINUE</button>
-                                    </div>
+                                <div class="form-group">
+                                    <button type="button" id="backBikeStep1" class="btn btn-default w-40 back-btn"><< BACK</button>
+                                    <button type="button" id="submitBikeStep2" class="btn btn-danger w-40">CONTINUE</button>
+                                </div>
                                 </div>
                             </form>
                         </div>
                     </div>
 				</div>
             </div>
-            <div id="review_ride"></div>
+            <div class="row" id="review_bike" style="display:none"></div>
 		  </div>
 		</div>
 		<div class="col-md-4 d-none d-md-block">
@@ -190,23 +149,16 @@
 			<div class="card mt-2 mb-3 border-0"  >
 			 <ul class="list-group list-group-flush cust-notify">
 			   <li class="list-group-item">
-				   <h4 class="notify-heading">
-						   Select your bike
-					</h4>
+				   <h4 class="notify-heading" id="progressStep1">Select your bike</h4>
 				</li>
 			   <li class="list-group-item">
-				   <h4 class="notify-heading">
-					   Add Bike Details
-					</h4>
+				   <h4 class="notify-heading progress-frm" id="progressStep2">Add Bike Details</h4>
                 </li>
                 <li class="list-group-item">
-				   <h4 class="notify-heading">
-					   Review And Done
-					</h4>
+				   <h4 class="notify-heading progress-frm" id="progressStep3">Review And Done</h4>
 				</li>
 			 </ul>
-		   </div>
-		   
+		   </div>		   
 		  </div>
 		</div>
 	  </div>

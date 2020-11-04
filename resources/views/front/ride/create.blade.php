@@ -17,7 +17,7 @@
 			  <!-- repeat div from here START -->
 				<div class="col-12 mb-3">
                     <div class="row">
-                        <div class="col-6 mb-3">                        
+                        <div class="col-8 mb-3">                        
                             <form id="addRideForm1" method="post">
                                 <input type="hidden" name="csrf" content="{{ csrf_token() }}">
                                 <div class="alert alert-danger print-error-msg" style="display:none">
@@ -40,10 +40,10 @@
                                 <h2 class="page-heading">Other Details</h2>
                                 <div class="login-input">
                                     <div class="form-group">
-                                        <input type="text" class="form-control datepicker" name="start_date" id="start_date" placeholder="Start Date">
+                                        <input type="text" class="form-control" name="start_date" id="start_date" placeholder="Start Date">
                                     </div>
                                     <div class="form-group">
-                                        <input type="text" class="form-control datepicker" name="end_date" id="end_date" placeholder="End Date">
+                                        <input type="text" class="form-control" name="end_date" id="end_date" placeholder="End Date">
                                     </div>
                                     
                                     <div class="form-group">
@@ -51,13 +51,43 @@
                                     </div>
                                     
                                     <div class="form-group">
-                                        <textarea id="form7" class="md-textarea form-control" name="short_description" id="short_description" rows="3" placeholder="Write short description about this ride"></textarea>
+                                        <textarea class="md-textarea form-control" name="short_description" id="short_description" rows="3" placeholder="Write short description about this ride"></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <button type="button" id="save_later1" class="btn btn-danger w-30">SAVE FOR LATER</button>
-                                        <button type="button" id="rideStep1" class="btn btn-danger w-50">CONTINUE</button>
+                                        <input type="hidden" name="luggage" id="ride_luggage">
                                     </div>
-                                </div>
+                                    
+                                    <div class="review-more-details">
+                                        <h2 class="page-heading">Things to carry on this Ride</h2>
+                                            <div class="d-flex align-items-center filter-details mb-4">
+                                            <span class="filter-block1">We've accurated list of things to carry on. If you wish to edit or add anything just tap on Edit Button</span>
+                                            <a href="javascript:void(0)" class="review-details" data-toggle="modal" data-target="#rideLuggageModal">Edit/Add</a>
+                                        </div>
+                                        
+                                    </div>
+
+                                    <h4 class="page-sub-heading">Bags</h4>
+                                    <div>
+                                        <ul class="list-content">
+                                            <li>A sailor bag would be perfect, a walker bag too (without steel bar)</li>
+                                            <li>You can close it with a padlock if you want to (Don't forget to tag it before leaving with your address</li>
+                                            <li>A small backpack of 20 litres is advised for daily necessities such as camera, suncreen lotion</li>
+                                        </ul>                               
+                                    </div>
+
+                                    <h4 class="page-sub-heading">Clothing and Personal Equipments</h4>
+                                    <div>
+                                        <ul class="list-content">
+                                            <li>2 light pants</li>
+                                            <li>4 shirts (including some with long sleeves, to protect yourself from the sun)</li>
+                                            <li>1 bathing suit</li>
+                                        </ul>                               
+                                    </div>
+                                    <div class="form-group">
+                                        <!-- <button type="button" id="save_later1" class="btn back-btn w-30">SAVE FOR LATER</button> -->
+                                        <button type="button" id="rideStep1" class="btn btn-danger w-30">CONTINUE</button>
+                                    </div>
+                                </div>                                
                             </form>
                         </div>
                         
@@ -65,22 +95,22 @@
 				</div>
             </div>
             
-            <div class="row" id="tab2" style="display:none">
+            <div class="row" id="tab2" style="display:none;">
 				<div class="col-12 mb-3">
                     <div class="row">                        
-                        <div class="col-6 mb-3">
-                        <button type="button" class="btn btn-success" name="add" id="add" >+ Add Days</button>
+                        <div class="col-8 mb-3">                            
+                            <button type="button" class="btn btn-default back-btn" id="first_day">Day 1</button>
+                            <button type="button" class="btn btn-success" name="add" id="add" >+ Add Days</button>
                             <form id="addRideForm2" method="post" enctype="multipart/form-data">
-                                <input type="hidden" name="csrf" content="{{ csrf_token() }}">
                                 <div class="alert alert-danger print-error-msg" style="display:none">
                                     <ul></ul>
                                 </div>
                                 <div class="login-input">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="start_location_0" placeholder="Start Location">
+                                        <input type="text" class="form-control" autocomplete="off" name="start_location_0" placeholder="Start Location" readonly id="start_location_0">
                                     </div>                                   
                                     <div class="form-group">
-                                        <input type="email" class="form-control" name="end_location_0" placeholder="End Location">
+                                        <input type="email" class="form-control" autocomplete="off" name="end_location_0" placeholder="End Location">
                                     </div>                                    
                                 </div>
                                 <h4>Road Amenties</h4>
@@ -192,8 +222,8 @@
                                     <div id="dynamic_field">
                                     </div>
                                     <div class="form-group">
-                                        <button type="button" id="save_later2" class="btn btn-danger w-20">SAVE FOR LATER</button>
-                                        <button type="button" class="btn btn-danger w-20">BACK</button>
+                                        <!-- <button type="button" id="save_later2" class="btn back-btn w-20">SAVE FOR LATER</button> -->
+                                        <button type="button" id="backRideStep1" class="btn back-btn w-20"><< BACK</button>
                                         <button type="button" id="rideStep2" class="btn btn-danger w-40">CONTINUE</button>
                                     </div>
                                 </div>

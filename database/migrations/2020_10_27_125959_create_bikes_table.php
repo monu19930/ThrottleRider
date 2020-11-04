@@ -18,8 +18,14 @@ class CreateBikesTable extends Migration
             $table->string('name');
             $table->unsignedInteger('rider_id');
             $table->unsignedBigInteger('total_km');
-            $table->string('image');
-            $table->text('info');
+            $table->unsignedBigInteger('total_rides');
+            $table->text('image')->nullable();
+            $table->unsignedBigInteger('comfortness')->nullable();
+            $table->unsignedBigInteger('reliability')->nullable();
+            $table->unsignedBigInteger('visual_appeal')->nullable();
+            $table->unsignedBigInteger('performance')->nullable();
+            $table->unsignedBigInteger('service_experience')->nullable();
+            $table->text('info')->nullable();
             $table->timestamps();
         });
     }

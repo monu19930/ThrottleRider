@@ -1,7 +1,7 @@
 @extends('layouts.frontLayout.front-layout')
 @section('content')
 <section class="main-bg">
-	<div class="container ">
+	<div class="container">
 	  <div class="row">
 		<div class="col-md-8">
 		  <div class="cust-left-block">
@@ -13,7 +13,7 @@
 				<div class="col-12 mb-3">
 				<div class="rides-block d-none d-md-flex">
 					<div class="rider-img-block mr-md-3 ml-3 ml-md-0 order-2 order-md-1">
-					<img src="{{ asset('public/images/rider_images')}}/{{isset($rider->image) ? $rider->image : 'dummy.png'}}" class="img-fluid">
+					<img src="{{ asset('public/images/rider_images')}}/{{isset($rider->image) ? $rider->image : 'rider.jpg'}}" class="img-fluid" width="150" height="150">
 					</div>
 					<div class="rider-details-block w-100 order-1 order-md-2">
 					<div class="location-heading-block ">
@@ -81,7 +81,7 @@
 		</div>
 		<div class="col-md-4 d-none d-md-block">
 		  <div class="right-block">
-		  <img src="{{ asset('public/images/rider_images/567898.jpg')}}" class="img-circle" alt="Cinque Terre" width="200" height="150">
+		  	<img src="{{ asset('public/images/rider_images/rider.jpg')}}" style="position: relative;margin-left:50px;"class="img-circle" alt="Cinque Terre" width="200" height="180">
 			<div class="card mt-2 mb-3 border-0"  >
 			 <ul class="list-group list-group-flush cust-notify">
 			   <li class="list-group-item">
@@ -94,13 +94,16 @@
 					   <a href="{{ route('rides')}}">Rides</a>
 					</h4>
 				</li>
-			   <li class="list-group-item">
-				   
+			   <li class="list-group-item">				   
 			   	<h4 class="notify-heading">
 					<a href="{{ route('bikes')}}">Bikes</a>
 				</h4>
 				</li>
-			   <li class="list-group-item"><h4 class="notify-heading">Groups</h4></li>
+			   <li class="list-group-item">
+				   <h4 class="notify-heading">
+				   <a href="{{ route('groups')}}">Groups</a>
+					</h4>
+				</li>
 			 </ul>
 		   </div>
 		   <div class="card mt-4 mb-3 border-0"  >
@@ -116,4 +119,13 @@
 	  </div>
 	</div>
   </section>
+  <script>
+	var is_social = "{{$is_social}}";
+	if(is_social !=''){
+		if(window.name == 'socialWindow') {
+			window.close();
+			window.opener.location = "{{route('my-profile')}}";
+		}
+	}	  
+  </script>
 @stop

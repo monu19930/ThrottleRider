@@ -38,6 +38,15 @@
 								<input type="number" class="form-control" name="riding_year" value="{{isset($rider->riding_year) ? $rider->riding_year : ''}}">
 							</div>
 							<div class="form-group">
+								<label>City</label>
+								<select class="custom-select" name="city" >
+									<option value="">Select your city </option>
+									@foreach($cities as $key => $city)
+										<option value="{{$key}}" {{ ( $city == $rider_city) ? 'selected' : '' }} >{{$city}}</option>										
+									@endforeach
+								</select>								
+							</div>
+							<div class="form-group">
 								<label>Description</label>
 								<textarea class="md-textarea form-control" name="description" rows="3"> {{isset($rider->description) ? $rider->description : ''}}</textarea>
 							</div>					
@@ -65,12 +74,17 @@
 					</h4>
 				</li>
 			   <li class="list-group-item">
-				   
 			   	<h4 class="notify-heading">
 					<a href="{{ route('bikes')}}">Bikes</a>
 				</h4>
 				</li>
-			   <li class="list-group-item"><h4 class="notify-heading">Groups</h4></li>
+
+				<li class="list-group-item">
+					<h4 class="notify-heading">
+						<a href="{{ route('groups')}}">Groups</a>
+					</h4>
+				</li>
+				
 			 </ul>
 		   </div>
 		   <div class="card mt-4 mb-3 border-0"  >

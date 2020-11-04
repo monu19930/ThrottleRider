@@ -24,6 +24,7 @@ class CreateRidesTable extends Migration
             $table->unsignedInteger('no_of_people');
             $table->text('short_description')->nullable();
             $table->text('ride_days');
+            $table->float('total_km')->default(0);
             $table->timestamps();
         });
     }

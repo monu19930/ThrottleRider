@@ -62,7 +62,7 @@ class LoginController extends Controller
         $user = $this->createUser($userDetails,$social);
         Auth::login($user);
         if ($user) {
-            return redirect('/profile');
+            return redirect('/my-profile');
         } else {
             return redirect()->back();
         }

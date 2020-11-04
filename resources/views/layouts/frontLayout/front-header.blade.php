@@ -2,7 +2,7 @@
  <header>  
         <nav id="navbar_top" class="navbar navbar-expand-lg cust-nav ">
         <div class="container">
-          <a class="navbar-brand" href="#"><img src="{{ asset('public/rider/images/logo.png')}}" class="img-fluid light-logo"> <img src="{{ asset('public/rider/images/logo-dark.png')}}" class="img-fluid dark-logo"></a>
+          <a class="navbar-brand" href="{{url('/')}}"><img src="{{ asset('public/rider/images/logo.png')}}" class="img-fluid light-logo"> <img src="{{ asset('public/rider/images/logo-dark.png')}}" class="img-fluid dark-logo"></a>
           <a class="mob-search-btn" href="#"><img src="{{ asset('public/rider/images/search.png')}}" /></a>
           <a class="navbar-toggler" href="#" class="text-white">
            <img src="{{ asset('public/rider/images/notification.png')}}" class="notify-icon">
@@ -10,18 +10,18 @@
           </a>
           <div class="collapse navbar-collapse" id="main_nav">	
             <ul class="navbar-nav ml-auto cust-links">
-              <li class="nav-item"><a class="nav-link active" href="#"> Whats New</a></li>
-              <li class="nav-item"><a class="nav-link" href="#"> Rides</a></li>
-              <li class="nav-item"><a class="nav-link" href="#"> Bikers</a></li>
-              <li class="nav-item"><a class="nav-link" href="#"> Groups</a></li>
-              <li class="nav-item"><a class="nav-link" href="#"> More</a></li>
+              <li class="nav-item"><a class="nav-link active" href="{{url('/')}}"> Whats New</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{url('/')}}"> Rides</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{url('/')}}"> Bikers</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{url('/')}}"> Groups</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{url('/')}}"> More</a></li>
               @auth
               <li class="dropdown">
                       <button class="bnr-dropdown" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       {{ Auth::user()->name}} <i class="fa fa-angle-down drop-arrow">  </i>
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="{{route('logout')}}">Logout</a>
+                        <a class="dropdown-item" href="{{route('rider-logout')}}">Logout</a>
                         <a class="dropdown-item" href="{{route('my-profile')}}">My Profile</a>
                       </div>
                     </div>
@@ -80,8 +80,8 @@
                     Show me the Rider, Bikers and Groups from 
                     <div class="dropdown d-inline-block bnr-select">
                       <label class="location-lbl">Your Location</label>
-                      <button class="bnr-dropdown" type="button" id="dropdownMenuButton" content="Bangaluru" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Bangaluru <i class="fa fa-angle-down drop-arrow">  </i>
+                        <button class="bnr-dropdown" type="button" id="dropdownMenuButton" content="{{getCurrentLocation()}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{getCurrentLocation()}} <i class="fa fa-angle-down drop-arrow">  </i>
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="#">Action</a>
@@ -92,8 +92,8 @@
                   </div>
                   <div class="cust-search-bar">
                         <div class="search-block">
-                          <input type="search" class="search-input" onkeyup="findResult(this.value)" placeholder="Where to? i.e. Delhi or Rides to Delhi" />
-                          <a href="#" class="bnr-search-btn"><i class="fa fa-search"></i></a>
+                          <input type="text" class="search-input" id="search-input" placeholder="Where to? i.e. Delhi or Rides to Delhi" />
+                          <a href="javascript:void(0)" id="submit-search" class="bnr-search-btn"><i class="fa fa-search"></i></a>
                         </div>
                   </div>
                   <div class="trending-txt d-md-flex align-items-center">
