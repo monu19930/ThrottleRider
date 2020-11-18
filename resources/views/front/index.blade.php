@@ -1,17 +1,18 @@
 @extends('layouts.frontLayout.front-layout')
 @section('content')
-<section class="main-bg">
-	<div class="container ">
+<?php $page="Home"?>
+<section class="main-bg" id="search_res">
+	<div class="container">
 	  <div class="row">
-		<div class="col-md-8" id="search_res">
+		<div class="col-md-8">
 		  <div class="cust-left-block">
 			<h2 class="page-heading">
 			  Latest Rides
 			</h2>
-			<div class="d-flex align-items-center filter-details mb-4">
+		 	<div class="d-flex align-items-center filter-details mb-4">
 			  <span class="filter-block1">{{count($rides)}} new rides from <strong>{{$location}}</strong></span>
-			  <span class="filter-block2 left-seperater">Not your city? <a href="#">Change here</a></span>
-			  <span class="ml-auto filter-block3 mob-filter"><a href="#">View all Rides</a></span>
+			  <span class="filter-block2 left-seperater">Not your city? <a href="">Change here</a></span>
+			  <span class="ml-auto filter-block3 mob-filter"><a href="{{route('front-rides')}}">View all Rides</a></span>
 			</div>
 			<div class="row">
 			  <!-- repeat div from here START -->
@@ -25,9 +26,9 @@
 				<div class="rider-details-block w-100 order-1 order-md-2">
 				   <div class="location-heading-block ">
 					 <div>
-					   <h4 class="location-title">{{ $ride['via_location']}},{{$ride['end_location']}}</h4>
+					   <h4 class="location-title">Ride To {{$ride['end_location']}} Via {{ $ride['via_location']}}</h4>
 					   <div class="d-flex align-items-center location-block">
-						 <span class="location">Banglore, Karnatka, India</span>
+						 <span class="location">from {{ $ride['start_location']}}</span>
 						 <span class="time left-seperater">in month of <span>{{$ride['start_date']}}</span></span></span>
 					   </div>
 					 </div>
@@ -55,16 +56,16 @@
 				  <div class="location-heading-block ">
 					<div>
 					 <div class="location-details  p-0">
-					   <span class="rating d-flex align-items-center"><i class="fa fa-star"></i>4.5 <small class="ml-2">Rating</small></span>
+					   <span class="rating d-flex align-items-center"><i class="fa fa-star"></i>{{$ride['ride_rating']}} <small class="ml-2">Rating</small></span>
 					 </div>
-					  <h4 class="location-title my-2">Ooty, Banglore-Mysore Highway</h4>
+					  <h4 class="location-title my-2">Ride To {{$ride['end_location']}} Via {{ $ride['via_location']}}</h4>
 					  <div class="d-flex align-items-center location-block mb-2">
 						<!-- <span class="location">Banglore, Karnatka, India</span> -->
-						<span class="time">in month of <span>June 2019</span></span></span>
+						<span class="time">in month of <span>{{$ride['start_date']}}</span></span></span>
 					  </div>
 					  <div class="location-details d-flex align-items-center ">
 					 
-					   <span class="other-details"><i class="fa fa-map-o"></i>2176 km <small>from bengaluru</small></span>
+					   <span class="other-details"><i class="fa fa-map-o"></i>{{$ride['total_km']}} km <small>from {{$location}}</small></span>
 					   <!-- <span class="other-details"><i class="fa fa-calendar-o"></i>12 <small>Days trip</small></span> -->
 					   <span class="other-details"><i class="fa fa-road"></i>Highway <small>Road Type</small></span>
 					 </div>
@@ -78,10 +79,10 @@
 			  </div>
 			   <div class="d-flex align-items-center mt-1">
 				 <div class="userdetails d-flex align-items-center">
-				 <span class="userimg mr-2"><img src="{{ asset('public/rider/images/userpic.png')}}" class="img-fluid" /></span>
+				 <span class="userimg mr-2"><img src="{{ asset('public/images/rider_images/')}}/{{$ride['rider_image']}}" class="img-fluid" /></span>
 				 <span class="username">
-				   <span class="d-block">Ekene Obasey</span>
-				   <span class="badge badge-warning"><i class="fa fa-star"></i> 4.5</span>
+				   <span class="d-block">{{$ride['rider_name']}}</span>
+				   <span class="badge badge-warning"><i class="fa fa-star"></i> {{$ride['rider_rating']}}</span>
 				 </span>
 				 </div> 
 				 <div class="bookmark ml-auto"><a href="#"><i class="fa fa-bookmark-o"></i></a></div>
@@ -127,7 +128,7 @@
 			  Top Bikers
 				
 			 </h4>
-			 <span class="ml-auto filter-block3"><a href="#">View all Bikers</a></span>
+			 <span class="ml-auto filter-block3"><a href="{{route('front-bikers')}}">View all Bikers</a></span>
 		   </div> 
 		   <div class="top-riders-slider slider  mb-2">
 			@if(count($riders) > 0)
@@ -147,24 +148,31 @@
 						<div class="location-details d-flex align-items-center">
 						<span class="rating pl-0 d-none d-md-inline-block">{{$rider['rating']}} <small>Rating</small></span>
 						<span class="other-details pl-0">{{$rider['total_rides']}} <small>Rides</small></span>
-						<span class="other-details pl-0">{{$rider['total_km']}} km <small>Driven</small></span>
-						
+						<span class="other-details pl-0">{{$rider['total_km']}} km <small>Driven</small></span>						
 						</div>
-						<button class="follow-btn w-100 mt-2"><i class="fa fa-plus mr-2"></i>FOLLOW</button>
+						@if($rider['current_rider_follow_status'] == false)
+							<button class="follow-btn w-100 mt-2 follow-rider" id="follow_rider_{{$rider['id']}}" content="{{$rider['id']}}">
+								<i class="fa fa-plus mr-2"></i>Follow
+							</button>
+						@else
+							<button class="join-btn flex-grow-1 mt-2 mr-1" >
+								Followed
+							</button>
+						@endif
 					</div>
 					</div>
 					</div>
 				</div>
 				@endforeach			 
 			@else
-				Bikers Not available
+				Not available
 			@endif
 		   </div>
 		   <div class="d-flex align-items-center filter-details">
 			 <h4 class="page-sub-heading mt-4 mb-3">
 			   Top Groups				
 			 </h4>
-			 <span class="ml-auto filter-block3"><a href="#">View all Groups</a></span>
+			 <span class="ml-auto filter-block3"><a href="{{route('front-groups')}}">View all Groups</a></span>
 		   </div> 
 		   <div class="top-group-slider slider mb-3">
 			@if(count($groups) > 0)
@@ -185,7 +193,7 @@
 					   <span class="other-details pl-0">{{$group['total_km']}} km <small>Driven</small></span>
 					   <div class="d-flex followers-block align-items-center">
 						@foreach($group['group_member_list'] as $group_member_list)
-						 	<span class="follow-users"><img src="{{ asset('public/images/rider_images/')}}/{{$group_member_list}}" style="height: 25px; width:25px;" /></span>
+						 	<span class="follow-users"><img src="{{ asset('public/images/rider_images/')}}/{{!empty($group_member_list) ? $group_member_list:'rider.jpg'}}" class="profile-pic" /></span>
 						 @endforeach
 						 
 						 <span class="joined-grp">{{$group['total_group_members']}} People<small>Joined the group</small></span>
@@ -209,7 +217,7 @@
 			 </div>
 			 @endforeach
 			@else
-				Groups Not available
+				Not available
 			@endif
 		   </div>
 		   <h2 class="page-heading mt-4">
@@ -218,7 +226,7 @@
 		   </h2>
 		   <div class="city-filter d-flex align-items-center">
 			@foreach($explore_rides as $key => $explore_ride)
-			 <span class="{{($key==0)?'left-seperater':''}}"><a href="#">{{$key}}</a></span>
+			 <span class="{{($key==0)?'left-seperater':''}}"><a href="">{{$key}}</a></span>
 			 @endforeach	
 		   </div>
 		   <div class="full-banner-content">
@@ -228,7 +236,7 @@
 			   <div class="banner-inner-heading">BIKES</div>
 			   <h4>Riding your own bike?</h4>
 			   <div class="banner-tagline">Add your bike here and get personalized feed and rides suggestions. </div>
-			   <div><button class="white-btn mt-4">ADD BIKE NOW</button></div>
+			   <div><button class="white-btn mt-4 front-bike-add">ADD BIKE NOW</button></div>
 			 </div>
 		   </div>
 		   <h2 class="page-heading mt-5">
@@ -236,81 +244,23 @@
 			 <small>Top-rated experiences, Book activities led by local hosts on your next trip</small>
 		   </h2>
 		   <div class="events-details slider border-bottom pb-5 mt-4 mb-2">
+			@foreach($upcoming_events as $upcoming_event)
 			 <div class="slide">
 			   <img src="{{ asset('public/rider/images/byke.png')}}">
 			   <div class="img-content">
 				 <div class="calender-block">
-				   <span class="calender-head">TUESDAY</span>
+				   <span class="calender-head">{{formatDate($upcoming_event['start_date'],'l')}}</span>
 				   <span class="calender-body">
-					 25
-					 <small>May 19</small>
+				   {{formatDate($upcoming_event['start_date'],'d')}}
+					 <small>{{formatDate($upcoming_event['start_date'],'M Y')}}</small>
 				   </span>
 			   </div>
 				 <span class="event-name">Get a chance to become
 our influencer</span>
-				 <span class="ride-state">Whitefield, Bengaluru</span>
+				 <span class="ride-state">{{$upcoming_event['start_location']}}</span>
 			   </div>
 			 </div>
-			 <div class="slide">
-			   <img src="{{ asset('public/rider/images/byke.png')}}">
-			   <div class="img-content">
-				 <div class="calender-block">
-				   <span class="calender-head">TUESDAY</span>
-				   <span class="calender-body">
-					 16
-					 <small>May 19</small>
-				   </span>
-			   </div>
-				 <span class="event-name">Get a chance to become
-our influencer</span>
-				 <span class="ride-state">Chennai, India</span>
-			   </div>
-			 </div>
-			 <div class="slide">
-			   <img src="{{ asset('public/rider/images/byke.png')}}">
-			   <div class="img-content">
-				 <div class="calender-block">
-				   <span class="calender-head">TUESDAY</span>
-				   <span class="calender-body">
-					 29
-					 <small>May 19</small>
-				   </span>
-			   </div>
-				 <span class="event-name">Get a chance to become
-our influencer</span>
-				 <span class="ride-state">Dhanushkodi, India</span>
-			   </div>
-			 </div>
-			 <div class="slide">
-			   <img src="{{ asset('public/rider/images/byke.png')}}">
-			   <div class="img-content">
-				 <div class="calender-block">
-				   <span class="calender-head">TUESDAY</span>
-				   <span class="calender-body">
-					 31
-					 <small>May 19</small>
-				   </span>
-			   </div>
-				 <span class="event-name">Get a chance to become
-our influencer</span>
-				 <span class="ride-state">Goa, India</span>
-			   </div>
-			 </div>
-			 <div class="slide">
-			   <img src="{{ asset('public/rider/images/byke.png')}}">
-			   <div class="img-content">
-				 <div class="calender-block">
-					 <span class="calender-head">TUESDAY</span>
-					 <span class="calender-body">
-					   17
-					   <small>May 19</small>
-					 </span>
-				 </div>
-				 <span class="event-name">Get a chance to become
-our influencer</span>
-				 <span class="ride-state">Mysure, India</span>
-			   </div>
-			 </div>
+			@endforeach			 
 			  
 		   </div>
 		   <h2 class="page-heading mt-5">
@@ -318,44 +268,48 @@ our influencer</span>
 			 <small>Updates from your followers</small>
 		   </h2>
 		   <div class="d-flex align-items-center filter-details">
+		@if(count($events) > 0)
 			 <h2 class="page-heading mt-4 mb-3">
-			  <small><strong>Rickie Baroch</strong> added two trips in his profile.</small>
+			  <small><strong>{{$events[0]['rider_name']}}</strong> added {{count($events)}} trips in his profile.</small>
 				
 			 </h2>
-			 <span class="ml-auto filter-block3"><a href="#">Ask a question?</a></span>
+			 <span class="ml-auto filter-block3"><a href="">Ask a question?</a></span>
 		   </div>
 		   <div class="row  mb-3 pb-3">
-			 <div class="col-12 mb-3">
+		
+			@foreach($events as $event)
+			 <div class="col-12 mb-3">			 
 			   <div class="rides-block d-none d-md-flex">
 				 <div class="rider-img-block mr-md-3 ml-3 ml-md-0 order-2 order-md-1">
-				   <img src="{{ asset('public/rider/images/rider.jpg')}}" class="img-fluid">
+				 <img src="{{ asset('public/images/groups/events/')}}/{{$event['ride_image']}}" class="img-fluid" style="width:200px;height:150px;">
 				 </div>
 				 <div class="rider-details-block w-100 order-1 order-md-2">
 					<div class="location-heading-block ">
 					  <div>
-						<h4 class="location-title">Ooty, Banglore-Mysore Highway</h4>
+						<h4 class="location-title">Ride To {{$event['end_location']}} Via {{$event['via_location']}}</h4>
 						<div class="d-flex align-items-center location-block">
-						  <span class="location">Banglore, Karnatka, India</span>
-						  <span class="time left-seperater">in month of <span>June 2019</span></span></span>
+						  <span class="location"> from {{$event['start_location']}}</span>
+						  <span class="time left-seperater">in month of <span>{{$event['created_at']}}</span></span></span>
 						</div>
 					  </div>
 					  <div class="bookmark ml-auto"><a href="#"><i class="fa fa-bookmark-o"></i></a></div>
 					</div>
 					<div class="location-details d-flex align-items-center">
-					  <span class="rating"><i class="fa fa-star"></i>4.5 <small>Rating</small></span>
-					  <span class="other-details"><i class="fa fa-map-o"></i>2176 km <small>from bengaluru</small></span>
+					  <span class="rating"><i class="fa fa-star"></i>{{$event['ride_rating']}} <small>Rating</small></span>
+					  <span class="other-details"><i class="fa fa-map-o"></i>{{$event['total_km']}} km <small>from {{$event['start_location']}}</small></span>
 					  <span class="other-details"><i class="fa fa-calendar-o"></i>12 <small>Days trip</small></span>
 					  <span class="other-details"><i class="fa fa-road"></i>Highway <small>Road Type</small></span>
 					</div>
 					<div class="userdetails d-flex align-items-center">
-					  <span class="userimg mr-2"><img src="{{ asset('public/rider/images/userpic.png')}}" class="img-fluid" /></span>
+					  <span class="userimg mr-2"><img src="{{ asset('public/images/rider_images/')}}/{{$event['rider_image']}}" style="width:60px;height:50px;" class="img-fluid" /></span>
 					  <span class="username">
-						<span class="d-block">Ekene Obasey</span>
-						<span class="badge badge-warning"><i class="fa fa-star"></i> 4.5</span>
+						<span class="d-block">{{$event['rider_name']}}</span>
+						<span class="badge badge-warning"><i class="fa fa-star"></i> {{$event['rider_rating']}}</span>
 					  </span>
 					</div>
 				 </div>
 			   </div>
+			  
 			   <!-- <mobile div start from here -->
 			   <div class="rides-block flex-column d-md-none">
 				<div class="d-flex"> 
@@ -365,14 +319,14 @@ our influencer</span>
 					  <div class="location-details  p-0">
 						<span class="rating d-flex align-items-center"><i class="fa fa-star"></i>4.5 <small class="ml-2">Rating</small></span>
 					  </div>
-					   <h4 class="location-title my-2">Ooty, Banglore-Mysore Highway</h4>
+					   <h4 class="location-title my-2">{{$event['start_location']}}</h4>
 					   <div class="d-flex align-items-center location-block mb-2">
 						 <!-- <span class="location">Banglore, Karnatka, India</span> -->
-						 <span class="time">in month of <span>June 2019</span></span></span>
+						 <span class="time">in month of <span>{{$event['start_date']}}</span></span></span>
 					   </div>
 					   <div class="location-details d-flex align-items-center ">
 					  
-						<span class="other-details"><i class="fa fa-map-o"></i>2176 km <small>from bengaluru</small></span>
+						<span class="other-details"><i class="fa fa-map-o"></i>{{$event['total_km']}} km <small>from {{$event['start_location']}}</small></span>
 						<!-- <span class="other-details"><i class="fa fa-calendar-o"></i>12 <small>Days trip</small></span> -->
 						<span class="other-details"><i class="fa fa-road"></i>Highway <small>Road Type</small></span>
 					  </div>
@@ -383,15 +337,15 @@ our influencer</span>
 				   
 				</div>
 				<div class="rider-img-block ml-3 ">
-				  <img src="{{ asset('public/rider/images/rider.jpg')}}" class="img-fluid">
+				<img src="{{ asset('public/images/groups/events/')}}/{{$event['ride_image']}}" class="img-fluid" style="width:200px;height:150px;">
 				</div>
 			   </div>
 				<div class="d-flex align-items-center mt-1">
 				  <div class="userdetails d-flex align-items-center">
-				  <span class="userimg mr-2"><img src="{{ asset('public/rider/images/userpic.png')}}" class="img-fluid" /></span>
+				  <span class="userimg mr-2"><img src="{{ asset('public/images/rider_images/')}}/{{$event['rider_image']}}" style="width:60px;height:50px;" class="img-fluid" /></span>
 				  <span class="username">
-					<span class="d-block">Ekene Obasey</span>
-					<span class="badge badge-warning"><i class="fa fa-star"></i> 4.5</span>
+					<span class="d-block">{{$event['rider_name']}}</span>
+					<span class="badge badge-warning"><i class="fa fa-star"></i> {{$event['rider_rating']}}</span>
 				  </span>
 				  </div> 
 				  <div class="bookmark ml-auto"><a href="#"><i class="fa fa-bookmark-o"></i></a></div>
@@ -399,80 +353,10 @@ our influencer</span>
 			  </div>
 			  <!-- <mobile div END here -->
 			 </div>
-			 <div class="col-12 mb-3">
-			   <div class="rides-block d-none d-md-flex">
-				 <div class="rider-img-block mr-md-3 ml-3 ml-md-0 order-2 order-md-1">
-				   <img src="{{ asset('public/rider/images/rider.jpg')}}" class="img-fluid">
-				 </div>
-				 <div class="rider-details-block w-100 order-1 order-md-2">
-					<div class="location-heading-block ">
-					  <div>
-						<h4 class="location-title">Ooty, Banglore-Mysore Highway</h4>
-						<div class="d-flex align-items-center location-block">
-						  <span class="location">Banglore, Karnatka, India</span>
-						  <span class="time left-seperater">in month of <span>June 2019</span></span></span>
-						</div>
-					  </div>
-					  <div class="bookmark ml-auto"><a href="#"><i class="fa fa-bookmark-o"></i></a></div>
-					</div>
-					<div class="location-details d-flex align-items-center">
-					  <span class="rating"><i class="fa fa-star"></i>4.5 <small>Rating</small></span>
-					  <span class="other-details"><i class="fa fa-map-o"></i>2176 km <small>from bengaluru</small></span>
-					  <span class="other-details"><i class="fa fa-calendar-o"></i>12 <small>Days trip</small></span>
-					  <span class="other-details"><i class="fa fa-road"></i>Highway <small>Road Type</small></span>
-					</div>
-					<div class="userdetails d-flex align-items-center">
-					  <span class="userimg mr-2"><img src="{{ asset('public/rider/images/userpic.png')}}" class="img-fluid" /></span>
-					  <span class="username">
-						<span class="d-block">Ekene Obasey</span>
-						<span class="badge badge-warning"><i class="fa fa-star"></i> 4.5</span>
-					  </span>
-					</div>
-				 </div>
-			   </div>
-			   <!-- <mobile div start from here -->
-			   <div class="rides-block flex-column d-md-none">
-				<div class="d-flex"> 
-				<div class="rider-details-block w-100 ">
-				   <div class="location-heading-block ">
-					 <div>
-					  <div class="location-details  p-0">
-						<span class="rating d-flex align-items-center"><i class="fa fa-star"></i>4.5 <small class="ml-2">Rating</small></span>
-					  </div>
-					   <h4 class="location-title my-2">Ooty, Banglore-Mysore Highway</h4>
-					   <div class="d-flex align-items-center location-block mb-2">
-						 <!-- <span class="location">Banglore, Karnatka, India</span> -->
-						 <span class="time">in month of <span>June 2019</span></span></span>
-					   </div>
-					   <div class="location-details d-flex align-items-center ">
-					  
-						<span class="other-details"><i class="fa fa-map-o"></i>2176 km <small>from bengaluru</small></span>
-						<!-- <span class="other-details"><i class="fa fa-calendar-o"></i>12 <small>Days trip</small></span> -->
-						<span class="other-details"><i class="fa fa-road"></i>Highway <small>Road Type</small></span>
-					  </div>
-					 </div>
-					 
-				   </div>
-				   
-				   
-				</div>
-				<div class="rider-img-block ml-3 ">
-				  <img src="{{ asset('public/rider/images/rider.jpg')}}" class="img-fluid">
-				</div>
-			   </div>
-				<div class="d-flex align-items-center mt-1">
-				  <div class="userdetails d-flex align-items-center">
-				  <span class="userimg mr-2"><img src="{{ asset('public/rider/images/userpic.png')}}" class="img-fluid" /></span>
-				  <span class="username">
-					<span class="d-block">Ekene Obasey</span>
-					<span class="badge badge-warning"><i class="fa fa-star"></i> 4.5</span>
-				  </span>
-				  </div> 
-				  <div class="bookmark ml-auto"><a href="#"><i class="fa fa-bookmark-o"></i></a></div>
-				</div>
-			  </div>
-			  <!-- <mobile div END here -->
-			 </div>
+			 @endforeach
+		@else
+			
+		@endif			 
 		   </div>
 		   <div class="full-banner-content">
 			 <img src="{{ asset('public/rider/images/mob-byke.png')}}" class="img-fluid d-md-none">
@@ -481,44 +365,47 @@ our influencer</span>
 			   <div class="banner-inner-heading">BIKES</div>
 			   <h4>Riding your own bike?</h4>
 			   <div class="banner-tagline">Add your bike here and get personalized feed and rides suggestions. </div>
-			   <div><button class="white-btn mt-4">ADD BIKE NOW</button></div>
+			   <div><button class="white-btn mt-4 front-bike-add">ADD BIKE NOW</button></div>
 			 </div>
 		   </div>
 		   <div class="d-flex align-items-center filter-details">
+		   @if(count($events) > 0)
 			 <h2 class="page-heading mt-4 mb-3">
-			  <small><strong>Nikhil</strong> added two trips in his profile.</small>
+			  <small><strong>{{$events[0]['rider_name']}}</strong> added {{count($events)}} trips in his profile.</small>
 				
 			 </h2>
-			 <span class="ml-auto filter-block3"><a href="#">Ask a question?</a></span>
+			 <span class="ml-auto filter-block3"><a href="">Ask a question?</a></span>
 		   </div>
 		   <div class="row">
+		   
+			@foreach($events as $event)
 			 <div class="col-12 mb-3">
 			   <div class="rides-block d-none d-md-flex">
 				 <div class="rider-img-block mr-md-3 ml-3 ml-md-0 order-2 order-md-1">
-				   <img src="{{ asset('public/rider/images/rider.jpg')}}" class="img-fluid">
+				 <img src="{{ asset('public/images/groups/events/')}}/{{$event['ride_image']}}" class="img-fluid" style="width:200px;height:150px;">
 				 </div>
 				 <div class="rider-details-block w-100 order-1 order-md-2">
 					<div class="location-heading-block ">
 					  <div>
-						<h4 class="location-title">Ooty, Banglore-Mysore Highway</h4>
+						<h4 class="location-title">Ride To {{$event['end_location']}} Via {{$event['via_location']}}</h4>
 						<div class="d-flex align-items-center location-block">
-						  <span class="location">Banglore, Karnatka, India</span>
-						  <span class="time left-seperater">in month of <span>June 2019</span></span></span>
+						  <span class="location"> from {{$event['start_location']}}</span>
+						  <span class="time left-seperater">in month of <span>{{$event['created_at']}}</span></span></span>
 						</div>
 					  </div>
 					  <div class="bookmark ml-auto"><a href="#"><i class="fa fa-bookmark-o"></i></a></div>
 					</div>
 					<div class="location-details d-flex align-items-center">
-					  <span class="rating"><i class="fa fa-star"></i>4.5 <small>Rating</small></span>
-					  <span class="other-details"><i class="fa fa-map-o"></i>2176 km <small>from bengaluru</small></span>
+					  <span class="rating"><i class="fa fa-star"></i>{{$event['ride_rating']}} <small>Rating</small></span>
+					  <span class="other-details"><i class="fa fa-map-o"></i>2176 km <small>from {{$event['start_location']}}</small></span>
 					  <span class="other-details"><i class="fa fa-calendar-o"></i>12 <small>Days trip</small></span>
 					  <span class="other-details"><i class="fa fa-road"></i>Highway <small>Road Type</small></span>
 					</div>
 					<div class="userdetails d-flex align-items-center">
-					  <span class="userimg mr-2"><img src="{{ asset('public/rider/images/userpic.png')}}" class="img-fluid" /></span>
+					  <span class="userimg mr-2"><img src="{{ asset('public/images/rider_images/')}}/{{$event['rider_image']}}" style="width:60px;height:50px;" class="img-fluid" /></span>
 					  <span class="username">
-						<span class="d-block">Ekene Obasey</span>
-						<span class="badge badge-warning"><i class="fa fa-star"></i> 4.5</span>
+						<span class="d-block">{{$event['rider_name']}}</span>
+						<span class="badge badge-warning"><i class="fa fa-star"></i> {{$event['rider_rating']}}</span>
 					  </span>
 					</div>
 				 </div>
@@ -530,16 +417,16 @@ our influencer</span>
 				   <div class="location-heading-block ">
 					 <div>
 					  <div class="location-details  p-0">
-						<span class="rating d-flex align-items-center"><i class="fa fa-star"></i>4.5 <small class="ml-2">Rating</small></span>
+						<span class="rating d-flex align-items-center"><i class="fa fa-star"></i>{{$event['ride_rating']}} <small class="ml-2">Rating</small></span>
 					  </div>
-					   <h4 class="location-title my-2">Ooty, Banglore-Mysore Highway</h4>
+					   <h4 class="location-title my-2">{{$event['start_location']}}</h4>
 					   <div class="d-flex align-items-center location-block mb-2">
 						 <!-- <span class="location">Banglore, Karnatka, India</span> -->
-						 <span class="time">in month of <span>June 2019</span></span></span>
+						 <span class="time">in month of <span>{{$event['start_date']}}</span></span></span>
 					   </div>
 					   <div class="location-details d-flex align-items-center ">
 					  
-						<span class="other-details"><i class="fa fa-map-o"></i>2176 km <small>from bengaluru</small></span>
+						<span class="other-details"><i class="fa fa-map-o"></i>{{$event['total_km']}} km <small>from {{$event['start_location']}}</small></span>
 						<!-- <span class="other-details"><i class="fa fa-calendar-o"></i>12 <small>Days trip</small></span> -->
 						<span class="other-details"><i class="fa fa-road"></i>Highway <small>Road Type</small></span>
 					  </div>
@@ -550,15 +437,15 @@ our influencer</span>
 				   
 				</div>
 				<div class="rider-img-block ml-3 ">
-				  <img src="{{ asset('public/rider/images/rider.jpg')}}" class="img-fluid">
+				<img src="{{ asset('public/images/groups/events/')}}/{{$event['ride_image']}}" class="img-fluid" style="width:200px;height:150px;">
 				</div>
 			   </div>
 				<div class="d-flex align-items-center mt-1">
 				  <div class="userdetails d-flex align-items-center">
-				  <span class="userimg mr-2"><img src="{{ asset('public/rider/images/userpic.png')}}" class="img-fluid" /></span>
+				  <span class="userimg mr-2"><img src="{{ asset('public/images/rider_images/')}}/{{$event['rider_image']}}" style="width:60px;height:50px;" class="img-fluid" /></span>
 				  <span class="username">
-					<span class="d-block">Ekene Obasey</span>
-					<span class="badge badge-warning"><i class="fa fa-star"></i> 4.5</span>
+					<span class="d-block">{{$event['rider_name']}}</span>
+					<span class="badge badge-warning"><i class="fa fa-star"></i> {{$event['rider_rating']}}</span>
 				  </span>
 				  </div> 
 				  <div class="bookmark ml-auto"><a href="#"><i class="fa fa-bookmark-o"></i></a></div>
@@ -566,80 +453,10 @@ our influencer</span>
 			  </div>
 			  <!-- <mobile div END here -->
 			 </div>
-			 <div class="col-12 mb-3">
-			   <div class="rides-block d-none d-md-flex">
-				 <div class="rider-img-block mr-md-3 ml-3 ml-md-0 order-2 order-md-1">
-				   <img src="{{ asset('public/rider/images/rider.jpg')}}" class="img-fluid">
-				 </div>
-				 <div class="rider-details-block w-100 order-1 order-md-2">
-					<div class="location-heading-block ">
-					  <div>
-						<h4 class="location-title">Ooty, Banglore-Mysore Highway</h4>
-						<div class="d-flex align-items-center location-block">
-						  <span class="location">Banglore, Karnatka, India</span>
-						  <span class="time left-seperater">in month of <span>June 2019</span></span></span>
-						</div>
-					  </div>
-					  <div class="bookmark ml-auto"><a href="#"><i class="fa fa-bookmark-o"></i></a></div>
-					</div>
-					<div class="location-details d-flex align-items-center">
-					  <span class="rating"><i class="fa fa-star"></i>4.5 <small>Rating</small></span>
-					  <span class="other-details"><i class="fa fa-map-o"></i>2176 km <small>from bengaluru</small></span>
-					  <span class="other-details"><i class="fa fa-calendar-o"></i>12 <small>Days trip</small></span>
-					  <span class="other-details"><i class="fa fa-road"></i>Highway <small>Road Type</small></span>
-					</div>
-					<div class="userdetails d-flex align-items-center">
-					  <span class="userimg mr-2"><img src="{{ asset('public/rider/images/userpic.png')}}" class="img-fluid" /></span>
-					  <span class="username">
-						<span class="d-block">Ekene Obasey</span>
-						<span class="badge badge-warning"><i class="fa fa-star"></i> 4.5</span>
-					  </span>
-					</div>
-				 </div>
-			   </div>
-			   <!-- <mobile div start from here -->
-			   <div class="rides-block flex-column d-md-none">
-				<div class="d-flex"> 
-				<div class="rider-details-block w-100 ">
-				   <div class="location-heading-block ">
-					 <div>
-					  <div class="location-details  p-0">
-						<span class="rating d-flex align-items-center"><i class="fa fa-star"></i>4.5 <small class="ml-2">Rating</small></span>
-					  </div>
-					   <h4 class="location-title my-2">Ooty, Banglore-Mysore Highway</h4>
-					   <div class="d-flex align-items-center location-block mb-2">
-						 <!-- <span class="location">Banglore, Karnatka, India</span> -->
-						 <span class="time">in month of <span>June 2019</span></span></span>
-					   </div>
-					   <div class="location-details d-flex align-items-center ">
-					  
-						<span class="other-details"><i class="fa fa-map-o"></i>2176 km <small>from bengaluru</small></span>
-						<!-- <span class="other-details"><i class="fa fa-calendar-o"></i>12 <small>Days trip</small></span> -->
-						<span class="other-details"><i class="fa fa-road"></i>Highway <small>Road Type</small></span>
-					  </div>
-					 </div>
-					 
-				   </div>
-				   
-				   
-				</div>
-				<div class="rider-img-block ml-3 ">
-				  <img src="{{ asset('public/rider/images/rider.jpg')}}" class="img-fluid">
-				</div>
-			   </div>
-				<div class="d-flex align-items-center mt-1">
-				  <div class="userdetails d-flex align-items-center">
-				  <span class="userimg mr-2"><img src="{{ asset('public/rider/images/userpic.png')}}" class="img-fluid" /></span>
-				  <span class="username">
-					<span class="d-block">Ekene Obasey</span>
-					<span class="badge badge-warning"><i class="fa fa-star"></i> 4.5</span>
-				  </span>
-				  </div> 
-				  <div class="bookmark ml-auto"><a href="#"><i class="fa fa-bookmark-o"></i></a></div>
-				</div>
-			  </div>
-			  <!-- <mobile div END here -->
-			 </div>
+		@endforeach
+	@else
+		
+	@endif
 		   </div>
 		  </div>
 		</div>

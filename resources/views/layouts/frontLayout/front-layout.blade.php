@@ -11,7 +11,7 @@
               Light 300
               Regular 400
               Bold 700
-              Black 900
+               Black 900
 
            font-family: 'Oswald', sans-serif;
             Light 300
@@ -24,8 +24,14 @@
 
          
     </head>
-    <body class="">
-	  
+    <?php $page=$_SERVER['REQUEST_URI'];
+ //  dd($page);
+      ?>
+    @if($page=="/throttle/")
+      <body class="">
+     @else
+     <body class="inner-pages">
+     @endif
 
 		<div class="PleaseWaitDiv" style="display:none;">
         	<b><p style="color: #000;">Please wait...</p></b>

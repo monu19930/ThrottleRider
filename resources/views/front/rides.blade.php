@@ -9,7 +9,7 @@
 			  Rides
 			</h2>
 			<div class="d-flex align-items-center filter-details mb-4">			
-			  <span class="ml-auto filter-block3 mob-filter"><a href="#">View all Rides</a></span>
+			  
 			</div>
 			<div class="row">
 			  <!-- repeat div from here START -->
@@ -23,9 +23,9 @@
 				<div class="rider-details-block w-100 order-1 order-md-2">
 				   <div class="location-heading-block ">
 					 <div>
-					   <h4 class="location-title">{{ $ride['via_location']}},{{$ride['end_location']}}</h4>
+					   <h4 class="location-title">Ride To {{ $ride['end_location']}} Via {{ $ride['via_location']}}</h4>
 					   <div class="d-flex align-items-center location-block">
-						 <span class="location">Banglore, Karnatka, India</span>
+						 <span class="location">from {{$ride['start_location']}}</span>
 						 <span class="time left-seperater">in month of <span>{{$ride['start_date']}}</span></span></span>
 					   </div>
 					 </div>
@@ -100,7 +100,11 @@
 		</div>
 		<div class="col-md-4 d-none d-md-block">
 		  <div class="right-block">
-			<button class="post-btn w-100 mb-3">POST A RIDE<small>LOGIN REQUIRED</small></button>
+			<button class="post-btn w-100 mb-3">POST A RIDE
+			@guest
+				<small>LOGIN REQUIRED</small>
+			@endguest
+			</button>
 			<div class="card mt-2 mb-3 border-0"  >
 			 <ul class="list-group list-group-flush cust-notify">
 			   <li class="list-group-item"><h4 class="notify-heading">Notifications</h4></li>

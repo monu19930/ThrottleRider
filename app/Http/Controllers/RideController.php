@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ride;
+use App\Models\RideDay;
+use App\Models\RoadType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -11,21 +13,25 @@ use App\User;
 class RideController extends Controller
 {
     public function index() {
-
+        $loggedInRiderId = user()->id;
+        $user = User::find($loggedInRiderId);
         $data = [
-            'rides' => $this->getRidesList()
+            'rider' => $user->profile,
+            'rides' => $this->getRidesList($user)
         ];
         return view('front/ride/index',$data);
     }
 
-    protected function getRidesList() {
-        $loggedInRiderId = user()->id;
-        $user = User::find($loggedInRiderId);
-        $rides = $user->rides;
+    protected function getRidesList($user) {
+        //$loggedInRiderId = user()->id;
+        //$user = User::find($loggedInRiderId);
+        $rides = $user->rides->sortByDesc('created_at');
         $result = [];
         foreach($rides as $key => $ride) {
             $rideDays = $this->formateRideDays($ride->ride_days);
+            $status_comment = $ride->approvalComments;
             $result[$key] = [
+                'i' => 1,
                 'id' => $ride->id,
                 'rider_name' => $user->name,
                 'rider_id' => $user->id,
@@ -39,6 +45,8 @@ class RideController extends Controller
                 'description' => $ride->short_description,
                 'rider_rating' => isset($user->profile->rating) ? $user->profile->rating: 0,
                 'ride_rating' => 4,
+                'is_approved' => $ride->is_approved,
+                'status_comment' => $status_comment,
                 'ride_image' => !empty($rideDays[0]['image']) ? $rideDays[0]['image'] : 'not_found.png',
             ];
         }
@@ -72,7 +80,8 @@ class RideController extends Controller
     }
 
     public function create() {
-        return view('front/ride/create');
+        $result['road_types'] = RoadType::all();
+        return view('front/ride/create', $result);
     }
 
     public function addRideStep1(Request $request) {
@@ -121,7 +130,8 @@ class RideController extends Controller
     }
 
     public function addRideDay(Request $request) {
-        $html = view('front.ride.ride-more')->with(['i'=>$request->val])->render();
+        $road_types = RoadType::all();
+        $html = view('front.ride.ride-more')->with(['i'=>$request->val, 'road_types' => $road_types, 'start_location' => $request->end_location])->render();
         return $html;
     }
 
@@ -132,19 +142,35 @@ class RideController extends Controller
         $ride->via_location = json_encode($ride->via_location);
         $ride->rider_id = $user->id;        
         $ride->ride_days = json_encode($ride->rideDay);
-        Ride::create([
-            'rider_id' => $user->id,
-            'start_location' => $ride->start_location,
-            'via_location' => $ride->via_location,
-            'end_location' => $ride->end_location,
-            'start_date' => formatDate($ride->start_date),
-            'end_date' => formatDate($ride->end_date),
-            'no_of_people' => $ride->no_of_people,
-            'short_description' => $ride->short_description,
-            'ride_days' => $ride->ride_days,
-            'luggage' => $ride->luggage
-        ]);
+
+        $rideDetails = Ride::create([
+                'rider_id' => $user->id,
+                'start_location' => $ride->start_location,
+                'via_location' => $ride->via_location,
+                'end_location' => $ride->end_location,
+                'start_date' => formatDate($ride->start_date),
+                'end_date' => formatDate($ride->end_date),
+                'no_of_people' => $ride->no_of_people,
+                'short_description' => $ride->short_description,
+                'ride_days' => $ride->ride_days,
+                'luggage' => $ride->luggage
+            ]); 
+            
+        $this->storeRideDays($ride->rideDay,$rideDetails->id, $ride->start_date);
         return $response = ['msg'=>'Ride Added Successfully', 'status'=>true];       
+    }
+
+    protected function storeRideDays($rideDays, $ride_id, $start_date){
+        foreach($rideDays as $key => $rideDay) {
+            $rideDays[$key]['ride_id'] = $ride_id;
+            $rideDays[$key]['ride_rating'] = ($rideDay['road_quality']+$rideDay['road_scenic'])/2;
+            $rideDays[$key]['number_of_day'] = $key+1;
+            $rideDays[$key]['start_date'] = addNumberOfDate($start_date,$key+1);
+            if(!empty($rideDay['ride_images'])) {
+                $rideDays[$key]['ride_images'] = json_encode($rideDay['ride_images']);
+            }
+            RideDay::create($rideDays[$key]);
+        }
     }
 
     

@@ -99,6 +99,23 @@ if (!function_exists('dateDifference')) {
 }
 
 
+if (!function_exists('addNumberOfDate')) {
+   
+    function addNumberOfDate($start_date,$days)
+    {   
+        $start_date = \Carbon\Carbon::parse(formatDate($start_date));
+        $new_date = $start_date->addDays($days);
+        return $new_date->format("Y-m-d");
+    }
+    
+}
+
+
+
+
+
+
+
 
 
 

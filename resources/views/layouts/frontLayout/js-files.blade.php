@@ -5,11 +5,9 @@
 <script src="{{ asset('public/rider/js/bootstrap-datepicker.js')}}"></script>
 <script src="{{ asset('public/rider/js/sweetalert.min.js')}}"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
-    
-<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" /> 
-
+<script src="{{ asset('public/rider/js/jquery.multiselect.js')}}"></script>
+<script src="{{ asset('public/rider/js/jquery-ui.min.js')}}" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script> 
+<script src="{{ asset('public/rider/js/jquery.email.multiple.js')}}"></script>
 
 @yield('javascript')
 <script type="text/javascript">
@@ -41,36 +39,15 @@
                             }
                             document.getElementById("signupForm").reset();
                             location.replace("{{ route('my-profile') }}");
-                        }, 3000);
+                        }, 5000);
                     }
                 },
                 error: function(response) {
-                    var error = response.responseJSON.errors;
                     $('#signup').html('CREATE A NEW ACCOUNT');
                     $("#signup"). attr("disabled", false);
-                    $(".print-error-msg").find("ul").html('');
-                    $(".print-error-msg").css('display','block');
-                    $.each( error, function( key, value ) {
-                        $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
-                    });
-                    $(".print-error-msg").addClass('alert-danger').removeClass('alert-success');
-                    setTimeout(function () {
-                        if ($(".alert").is(":visible")){
-                            $(".alert").fadeOut("fast");
-                        }
-                    }, 3000);
+                    showErrorMessage(response.responseJSON.errors);
                 }
             });
-        });
-    }
-
-    function removeAlert() {
-        $(function() {
-            setTimeout(function () {
-                if ($(".alert").is(":visible")){
-                    $(".alert").fadeOut("fast");
-                }
-            }, 3000);
         });
     }
 
@@ -84,18 +61,22 @@
             type: "POST",
             data: $('#loginForm').serialize(),
             success: function( response ) {
+                $(".response-msg").find("ul").html('');
+                $(".response-msg").css('display','block');
                 if(response.status==true) {
-                    $(".response-msg").css('display','block');
                     $(".response-msg").find("ul").append('<li>'+response.msg+'</li>');
                     $(".response-msg").removeClass('alert-danger').addClass('alert-success');
                     location.replace("{{ route('my-profile') }}");
                 }
                 else {
-                    $(".response-msg").css('display','block');
                     $.each( response.error, function( key, value ) {
                         $(".response-msg").find("ul").append('<li>'+value+'</li>');
                     });
-                    removeAlert();
+                    setTimeout(function () {
+                        if ($(".alert").is(":visible")){
+                            $(".alert").fadeOut("fast");
+                        }
+                    }, 3000);
                 }
             }
             });
@@ -119,23 +100,26 @@
                 cache:false,
                 success: function( response ) {
                     if(response.status==true) {
-                        showMessage('Success', 'Profile updated successfully!', 'success');
+                        swal('Success', 'Profile updated successfully!', 'success');
                         setTimeout(function () {                            
                             location.replace("{{ route('my-profile') }}");
                         }, 3000);
                     }
                     else {
-                        document.body.scrollTop = 0;
-                        document.documentElement.scrollTop = 100;
-                        $(".print-error-msg").find("ul").html('');
-                        $(".print-error-msg").css('display','block');
-                        $.each( response.error, function( key, value ) {
-                            $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
-                        });
+                        showErrorMessage(response.error);
                     }
                 }
             });
         });
+
+        //
+        $("#invite_group_member_email").email_multiple({
+                data: '',
+                color:"#343a40",
+                textColor:"#000000"
+
+                // reset: true
+            });
 
         
         $("#bike_list").autocomplete({ 
@@ -158,7 +142,7 @@
                 }); 
             },
             select : getBikeDetails
-        }); 
+        });
 
         //submit bike form step 1
         $('#submitBikeStep1').on('click', function(){
@@ -175,18 +159,8 @@
                     $('#progressStep1').css('color','#047922');
                     $('#progressStep2').css('color','black');                 
                 },
-                error: function(response) {                    
-                    var error = response.responseJSON.errors;
-                    $(".print-error-msg").find("ul").html('');
-                    $(".print-error-msg").css('display','block');
-                    $.each( error, function( key, value ) {                           
-                        $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
-                    });
-                    setTimeout(function () {
-                        if ($(".alert").is(":visible")){
-                            $(".alert").fadeOut("fast");
-                        }
-                    }, 3000)
+                error: function(response) {
+                    showErrorMessage(response.responseJSON.errors);
                 } 
             });
         });
@@ -205,19 +179,8 @@
                 contentType: false,
                 cache:false,
                 success: function( response ) {
-                    if(response.status==false) {
-                        document.body.scrollTop = 0;
-                        document.documentElement.scrollTop = 100;
-                        $(".print-error-msg").find("ul").html('');
-                        $(".print-error-msg").css('display','block');
-                        $.each( response.error, function( key, value ) {
-                            $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
-                        });
-                        setTimeout(function () {
-                            if ($(".alert").is(":visible")){
-                                $(".alert").fadeOut("fast");
-                            }
-                        }, 5000)
+                    if(response.status==false) {                        
+                        showErrorMessage(response.error);
                     }
                     else {
                         $('#bike_tab2').hide();
@@ -249,19 +212,8 @@
                         }
                         $('#start_location_0').val(response.start_location);
                         $('#first_day').attr('content', response.days);
-                    } else {
-                        scroll();
-                        $(".print-error-msg").find("ul").html('');
-                        $(".print-error-msg").css('display','block');
-                        $.each( response.error, function( key, value ) {
-                            $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
-                        });
-
-                        setTimeout(function () {
-                            if ($(".alert").is(":visible")){
-                                $(".alert").fadeOut("fast");
-                            }
-                        }, 3000)
+                    } else {                        
+                        showErrorMessage(response.error);
 
                     }
                 }
@@ -309,20 +261,8 @@
                         $('#start_location_0').val(response.start_location);
                         $('#first_day').attr('content', response.days);
                     }
-                }, error: function(response){
-                    var error = response.responseJSON.errors;
-                    scroll();
-                    $(".print-error-msg").find("ul").html('');
-                    $(".print-error-msg").css('display','block');
-                    $.each( error, function( key, value ) {
-                        $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
-                    });
-
-                    setTimeout(function () {
-                        if ($(".alert").is(":visible")){
-                            $(".alert").fadeOut("fast");
-                        }
-                    }, 3000)
+                }, error: function(response){                   
+                    showErrorMessage(response.responseJSON.errors);
                 }
             });
         });
@@ -348,47 +288,13 @@
             });
         });
 
+        //Add Group 
         $('#submitGroup').on('click', function(){
-            $.ajaxSetup({
-                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
-            });
-            $.ajax({
-                url: "{{route('group-submit')}}",
-                type: "POST",
-                data: new FormData($('#groupForm')[0]),
-                processData: false,
-                contentType: false,
-                cache:false,
-                success: function( response ) {
-                    if(response.status == true) {
-                        $(".print-error-msg").find("ul").html('');
-                        $(".print-error-msg").css('display','block');
-                        $(".print-error-msg").addClass('alert-success').removeClass('alert-danger');
-                        $(".print-error-msg").find("ul").append('<li>'+response.msg+'</li>');
-                        document.getElementById("groupForm").reset();
-                        setTimeout(function () {
-                            if ($(".alert").is(":visible")){
-                                $(".alert").fadeOut("fast");
-                            }
-                            location.replace("{{ route('groups') }}");
-                        }, 3000)
-                    }
-                }, error: function(response) {
-                    var error = response.responseJSON.errors;
-                    $(".print-error-msg").find("ul").html('');
-                    $(".print-error-msg").css('display','block');
-                    $.each( error, function( key, value ) {
-                        $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
-                    });
-                    $(".print-error-msg").addClass('alert-danger').removeClass('alert-success');
-                    setTimeout(function () {
-                        if ($(".alert").is(":visible")){
-                            $(".alert").fadeOut("fast");
-                        }
-                    }, 3000);
-                }
-            });
-        })
+            var form_id = 'groupForm';
+            var url = "{{route('groups.store')}}"; 
+            var redirectUrl = "{{route('groups.index')}}"; 
+            submitForm(form_id, url, redirectUrl)
+        });
 
         //social login
         $('.social_login').on('click', function(){
@@ -436,11 +342,22 @@
             });
         });
 
+        //Ride Submit Step
+        $('.group_past_experience').on('click',function(){
+            $('#past_experience_id').val($(this).attr('content'));
+            $('#pastExperienceModal').modal('show');
+        });
+
         //Start Added Code For Add More Ride Day
         var i=0;
         $('#add').click(function(){
             var max = $('#first_day').attr('content');
+            var end_loc = $('input[name=end_location_'+i+']').val();
 
+            if(end_loc == ''){
+                swal('Failed', 'Please enter end location of Day '+(i+parseInt(1)), 'error');
+                return false;
+            }
             if(i < max) {
                 i++;                
                 if(i == parseInt(max)) {
@@ -452,7 +369,7 @@
                 $.ajax({
                     url: "{{route('ride-day')}}",
                     type: "POST",
-                    data: {val: i},
+                    data: {val: i, end_location: end_loc},
                     success: function( response ) {                        
                         $('#dynamic_field').append(response);
                     }
@@ -468,6 +385,9 @@
         }); 
         //End Added Code For Add More Ride Day
 
+        //multiselect
+       
+
 
         //Add More Via Location
         var max_fields_limit = 4;
@@ -476,7 +396,9 @@
             e.preventDefault(); 
             if(j < max_fields_limit){
                 j++;
-                $('#via_location_more').append('<div class="form-group"><input type="text" autocomplete="off" class="form-control" name="via_location[]" class="via_location" placeholder="Via Location"><i class="fa fa-minus remove_field"></i></div>'); //add input field 
+                $('#via_location_more').append('<div class="form-group">'+
+                '<input type="text" autocomplete="off" class="form-control" name="via_location[]" class="via_location" placeholder="Via Location">'+
+                '<i class="fa fa-minus remove_field"></i></div>');
             } 
         }); 
         $('#via_location_more').on("click",".remove_field", function(e){ 
@@ -484,20 +406,59 @@
         })
 
 
+        //Add More Spare Parts
+        var max_spare_parts = 8;
+        var k = 1;
+        $('#more_spare_parts').click(function(e){
+            e.preventDefault(); 
+            if(k < max_spare_parts){
+                k++;
+                $('#spare_parts_div').append('<div class="form-group">'+
+                '<input type="text" autocomplete="off" class="form-control" name="spare_part_name[]" placeholder="Name">'+
+                '<input type="text" autocomplete="off" class="form-control" name="spare_part_number[]" placeholder="Serial Number">'+
+                '<input type="file" class="form-control" name="spare_part_image[]"><i class="fa fa-minus-circle review-details remove_field"></i>'+
+                '</div>');
+            } 
+        }); 
+        $('#spare_parts_div').on("click",".remove_field", function(e){ 
+            e.preventDefault(); $(this).parent('div').remove(); 
+            k--; 
+        })
+
+
         //Add More Ride Luggage
         var max_fields_limit = 8;
-        var j = 1;
+        var m = 1;
         $('#add_more_ride_luggage').click(function(e){
             e.preventDefault(); 
-            if(j < max_fields_limit){
-                j++;
-                $('#ride_luggage_list').append('<div class="form-group"><input type="text" autocomplete="off" class="form-control" name="ride_luggage[]" placeholder="Add your point"><a href="javascript:void(0)" class="remove_field">Remove</a></div>'); //add input field 
+            if(m < max_fields_limit){
+                m++;
+                $('#ride_luggage_list').append('<div class="form-group">'+
+                '<input type="text" autocomplete="off" class="form-control" name="ride_luggage[]" placeholder="Add your point">'+
+                '<a href="javascript:void(0)" class="remove_field">Remove</a></div>');
             } 
         }); 
         $('#ride_luggage_list').on("click",".remove_field", function(e){ 
-            e.preventDefault(); $(this).parent('div').remove(); j--; 
+            e.preventDefault(); $(this).parent('div').remove(); m--; 
         })
 
+
+        //add more polls options
+        var max_options_limit = 5;
+        var opt = 1;
+        $('.add_more_options').click(function(e){
+            e.preventDefault(); 
+            if(opt < max_options_limit){
+                opt++;
+                $('#more_options_list').append('<div class="form-group">'+
+                    '<input type="text" autocomplete="off" class="form-control" name="options[]" class="form-control" placeholder="Option">'+
+                    '<input type="checkbox" name="right_option[]" value="'+opt+'">Correct'+
+                    '<i class="fa fa-minus remove_field"></i></div>');
+            } 
+        }); 
+        $('#more_options_list').on("click",".remove_field", function(e){ 
+            e.preventDefault(); $(this).parent('div').remove(); opt--; 
+        })
 
         //Back Bike Step Event
         $('#backBikeStep1').on('click', function(){
@@ -520,8 +481,9 @@
         $('#rideLuggageSubmit').on('click', function(){
             var luggage = [];
             var inps = document.getElementsByName('ride_luggage[]');
-            for (var i = 0; i < inps.length; i++) {
-                var inp=inps[i];
+            var ttl = inps.length;
+            for (var n = 0; n < ttl; n++) {
+                var inp=inps[n];
                 if(inp.value != '') {
                     luggage.push(inp.value);
                 }
@@ -540,19 +502,49 @@
                     }
                     $('#rideLuggageModal').modal('hide');
                 }, 3000);
-            } else {
+            } else {   
+                $(".print-error-msg").removeClass("alert-success").addClass('alert-danger');            
                 $(".print-error-msg").find("ul").append('<li>Field is required</li>');
-                $(".print-error-msg").addClass("alert-danger").removeClass('alert-success');
-                setTimeout(function () {
-                    if ($(".alert").is(":visible")){
-                        $(".alert").fadeOut("fast");
-                    }
-                }, 3000);
             }
             
             
         })
 
+        //Add Supplier
+        $('#submitSupplier').on('click', function(){
+            var form_id = 'supplierForm';
+            var url = "{{route('suppliers.store')}}"; 
+            var redirectUrl = "{{route('suppliers.index')}}"; 
+            submitForm(form_id, url, redirectUrl)
+        });
+
+        //Add Tips
+        $('#submitTip').on('click', function(){
+            var form_id = 'tipForm';
+            var url = "{{route('tips.store')}}"; 
+            var redirectUrl = "{{route('tips.index')}}"; 
+            submitForm(form_id, url, redirectUrl)
+        });
+
+
+        //Show feedbackPoll Modal
+        $('.view-feedback-poll').on('click', function(){
+            var group = $(this).attr('data-content');
+            //console.log(group);return false;
+            $.ajaxSetup({
+                    headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+                });
+            $.ajax({ 
+                url:"{{route('get-group-polls')}}", 
+                type: "POST",
+                data: {group: group},                
+                success: function (response) {
+                    $('#feedbackPollModal').modal('show');
+                    $('.pollFeedbackQuestions').html(response); 
+                }, 
+            });            
+        })
+        
 
         //search filter
         $("#search-input").autocomplete({ 
@@ -576,6 +568,51 @@
                 }); 
             },
         });
+
+        //search filter
+        $("#search-input2").autocomplete({ 
+            source: function (request, response) {
+                $('#submit-search2').attr('content', request.term);
+                $.ajaxSetup({
+                    headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+                });
+                $.ajax({ 
+                    url:"{{route('search-location')}}", 
+                    type: "POST",
+                    format: "json",
+                    data: {
+                        limit: 8,
+                        search: request.term
+                    },
+                    
+                    success: function (data) {
+                        response(data);
+                    }, 
+                }); 
+            },
+        });
+
+        $('#submit-search2').on('click', function(){
+            var search_keyword = $('#search-input2').val();
+            var key = $('#submit-search2').attr('content');
+            $.ajaxSetup({
+                    headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+                });
+            $.ajax({ 
+                url:"{{route('search-location-result')}}", 
+                type: "POST",
+                format: "json",
+                data: {
+                    search: key,
+                    search_type: search_keyword
+                },
+                
+                success: function (response) {
+                    //response(data);
+                    $('#search_res').html(response);  
+                }, 
+            }); 
+        })
 
         $('#submit-search').on('click', function(){
             var search_keyword = $('#search-input').val();
@@ -601,28 +638,74 @@
 
 
         //Rider Group Join
+        var g=0;
         $('.rider-group-join').on('click', function(){
+
+            if(g == 0) { 
+                var is_user = "{{Auth::user()}}";
+                if(!is_user) {
+                    $('#loginmodal').modal('show');
+                }
+                
+                var group_id = $(this).attr('content');
+                $.ajaxSetup({
+                    headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+                });
+                $.ajax({
+                    url: "{{route('join-group')}}",
+                    type: "POST",
+                    data: {group_id:group_id},
+                    success: function( response ) {
+                        if(response.status==true) {
+                            g++;
+                            $('#group-join-'+group_id).removeClass('rider-group-join');                       
+                            $('#group-join-'+group_id).html('Joined');
+                            
+                        }         
+                    }
+                });
+            }
+        })
+
+
+        //Rider Follow UP
+        var f = 0;
+        $('.follow-rider').on('click', function(){
+
+            if(f == 0) {
+                var is_user = "{{Auth::user()}}";
+                if(!is_user) {
+                    $('#loginmodal').modal('show');
+                }
+                
+                var rider_id = $(this).attr('content');
+                $.ajaxSetup({
+                    headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+                });
+                $.ajax({
+                    url: "{{route('follow-rider')}}",
+                    type: "POST",
+                    data: {rider_id:rider_id},
+                    success: function( response ) {
+                        if(response.status==true) {
+                            f++;
+                            $('#follow_rider_'+rider_id).removeClass('follow-rider');                       
+                            $('#follow_rider_'+rider_id).html('Followed');
+                        }         
+                    }
+                });
+            }
+        })
+
+        //add bike home
+         $('.front-bike-add').on('click', function(){
             var is_user = "{{Auth::user()}}";
             if(!is_user) {
                 $('#loginmodal').modal('show');
             }
-            
-            var group_id = $(this).attr('content');
-            $.ajaxSetup({
-                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
-            });
-            $.ajax({
-                url: "{{route('join-group')}}",
-                type: "POST",
-                data: {group_id:group_id},
-                success: function( response ) {
-                    if(response.status==true) {
-                        $('#group-join-'+group_id).removeClass('rider-group-join');                       
-                        $('#group-join-'+group_id).html('<i class="fa fa-send mr-2"></i>Joined');
-                        
-                    }         
-                }
-            });
+            else {
+                location.replace("{{route('add-bike')}}");
+            }
         })
 
         //remove bike
@@ -640,21 +723,79 @@
             var cls = "bike-refferer";
             deleteRecord(id,url,cls);            
         })
+
+        $('.remove_record').on('click', function(){
+            var url = $(this).attr('data-content');
+            var cls = $(this).attr('id');
+            deleteRecordSource(url,cls);            
+        })
+
+        
     });
 
-    function scroll() {
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 100;
+    function submitForm(form_id, url, redirect_url) {
+        $.ajaxSetup({
+                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+        });
+        $.ajax({
+            url: url,
+            type: "POST",
+            data: new FormData($('#'+form_id)[0]),
+            processData: false,
+            contentType: false,
+            cache:false,
+            success: function( response ) {
+                if(response.status == true) {
+                    $(".print-error-msg").find("ul").html('');
+                    document.getElementById(form_id).reset();
+                    swal('Success', response.msg, 'success');
+                    setTimeout(function () {
+                        location.replace(redirect_url);
+                    }, 3000)
+                } else {
+                    showErrorMessage(response.error);
+                }
+            }, error: function(response) {
+                
+                showErrorMessage(response.responseJSON.errors);
+            }
+        });
+    }
+
+    function showErrorMessage(error,type='') {
+        if(type=='') {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 100;
+        }
+        $(".print-error-msg").find("ul").html('');
+        $(".print-error-msg").css('display','block');
+        $.each( error, function( key, value ) {
+            $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
+        });
+        $(".print-error-msg").addClass('alert-danger').removeClass('alert-success');
+        setTimeout(function () {
+            if ($(".alert").is(":visible")){
+                $(".alert").fadeOut("fast");
+            }
+        }, 3000);
     }
 
     function sendGroupInvitation() {
+
+        var emails = [];
+        $('.email-ids').each(function(){
+            var email = $(this).text();
+            emails.push(email);
+        })
+        var member = $('#group_member').val();
+
         $.ajaxSetup({
                 headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
             });
         $.ajax({
             url: "{{route('invite-group-members')}}",
             type: "POST",
-            data: $('#inviteGroupMembersForm').serialize(),
+            data: {email: emails, member: member},
             success: function( response ) {
                 if(response.status==true) {
                     $(".invite-error-msg").find("ul").html('');
@@ -739,17 +880,7 @@
                 $('#review_bike_change').hide();               
             },
             error: function(response) {                    
-                var error = response.responseJSON.errors;
-                $(".print-error-msg").find("ul").html('');
-                $(".print-error-msg").css('display','block');
-                $.each( error, function( key, value ) {                           
-                    $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
-                });
-                setTimeout(function () {
-                    if ($(".alert").is(":visible")){
-                        $(".alert").fadeOut("fast");
-                    }
-                }, 3000)
+                showErrorMessage(response.responseJSON.errors);
             } 
         });
     }
@@ -771,23 +902,43 @@
                     data: {id:id},
                     success: function( response ) {
                         if(response.status==true) {
-                            alertSwal('Deleted', response.msg, 'success');                            
+                            swal('Deleted', response.msg, 'success');                            
                             $('.'+cls+'-'+id).remove();                           
                         }         
                     }, error(){
-                        alertSwal('Failed', 'Something goes wrong, Please try again', 'error');                        
+                        swal('Failed', 'Something goes wrong, Please try again', 'error');                        
                     }
                 });
             }
         });         
     }
 
-    function alertSwal(ttl,msg,icn) {
+
+    function deleteRecordSource(url,cls) {
         swal({
-            title: ttl,
-            text: msg,
-            icon: icn
-        })
+            title: 'Are you sure?',
+            text: 'This record and it`s details will be permanantly deleted!',
+            icon: 'warning',
+            buttons: ["Cancel", "Yes!"],
+        }).then(function(isConfirm) {
+            if (isConfirm) {                    
+                $.ajaxSetup({
+                    headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+                });
+                $.ajax({
+                    url: url,
+                    type: "DELETE",
+                    success: function( response ) {
+                        if(response.status==true) {
+                            swal('Deleted', response.msg, 'success');                            
+                            $('.'+cls).remove();                           
+                        }         
+                    }, error(){
+                        swal('Failed', 'Something goes wrong, Please try again', 'error');                        
+                    }
+                });
+            }
+        });         
     }
 
     function getBikeDetails(event, ui) { 
@@ -800,7 +951,7 @@
                 type: "POST",
                 data: {keyword:ui.item.label},
                 success: function( response ) {
-                    var img = "{{ asset('public/images/bike_models/')}}/"+response.image;
+                    var img = "http://localhost/gull-html-laravel/public/images/bike_models/"+response.image;
                     $('#bike-icon').hide();
                     $('.selected_bike').show();
                     $('#selected_bike').attr('src', img);
@@ -825,13 +976,13 @@
                 contentType: false,
                 success: function( response ) {
                     if(response.status==true) {
-                        showMessage('Success', response.msg, 'success');
+                        swal('Success', response.msg, 'success');
                         setTimeout(function () {                            
                             location.replace("{{ route('rides') }}");
                         }, 3000);                        
                     }
                     else {
-                        showMessage('Failed', response.msg, 'error');
+                        swal('Failed', response.msg, 'error');
                     }
                     
                 }
@@ -855,13 +1006,13 @@
                 contentType: false,
                 success: function( response ) {
                     if(response.status==true) {
-                        showMessage('Success', response.msg, 'success');
+                        swal('Success', response.msg, 'success');
                         setTimeout(function () {                            
                             location.replace(response.redirect);
                         }, 3000);                        
                     }
                     else {
-                        showMessage('Failed', response.msg, 'error');
+                        swal('Failed', response.msg, 'error');
                     }
                     
                 }
@@ -883,13 +1034,13 @@
                 data: {id:id},
                 success: function( response ) {
                     if(response.status==true) {
-                        showMessage('Success', response.msg, 'success');
+                        swal('Success', response.msg, 'success');
                         setTimeout(function () {                            
                             location.replace("{{ route('bikes') }}");
                         }, 3000)
                     }
                     else {
-                        showMessage('Failed', response.msg, 'error');
+                        swal('Failed', response.msg, 'error');
                     }
                     
                 }
@@ -917,10 +1068,6 @@
             $('#tab1').hide();
             $('#review_ride').hide();
         });
-    }
-    //sweat alert
-    function showMessage(status_mg, msg, status) {
-        sweetAlert(status_mg, msg, status);
     }
 
     function showHideField(val,field_key,content) {
@@ -955,10 +1102,8 @@
     //get brand list   
     function showBikeModelList(id) {
         $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                }
-            });
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+        });
         $.ajax({
             url: "{{route('brand-list')}}",
             type: "POST",
@@ -967,6 +1112,42 @@
 
                 $('#bikeListModal').modal('show');
                 $('#bike_models').html(response);         
+            }
+        });
+    }
+
+    //save poll
+    function savePoll(){
+        $.ajaxSetup({
+                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+        });
+        $.ajax({
+            url: "{{route('polls.store')}}",
+            type: "POST",
+            data: $('#pollForm').serialize(),
+            success: function( response ) {                
+                var redirectUrl = "{{route('polls.index')}}";
+                showSuccessMessage(response.msg,'pollForm','pollModal',redirectUrl);        
+            }, error: function(response){
+                showErrorMessage(response.responseJSON.errors);
+            }
+        });
+    }
+
+    function savePastExperience() {
+        $.ajaxSetup({
+                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+        });
+        $.ajax({
+            url: "{{route('group.experience.save')}}",
+            type: "POST",
+            data: $('#pastExperienceForm').serialize(),
+            success: function( response ) {
+                if(response.status == true) {                   
+                    showSuccessMessage(response.msg,'pastExperienceForm','pastExperienceModal')
+                } else {
+                    showErrorMessage(response.error, 'modal');
+                }
             }
         });
     }
@@ -989,9 +1170,14 @@
     function submitReviewBikeModel() {
         var model_name = $('#review_bike_models option:selected').val();
         var img = $('#review_bike_models option:selected').attr('data-content');
+    
         $('#review_bike_list').val(model_name);
-        console.log(model_name);
-        var model_image = "{{ asset('public/images/bike_models/')}}/"+img;
+        var model_image = "http://localhost/gull-html-laravel/public/images/bike_models/"+img;
+
+        if(img==undefined){
+            model_image = "http://localhost/throttle/public/images/rider/bikes/not_found.jpg";
+        }
+        
         $('#reviewBikeListModal').modal('hide');
         $('#review_selected_bike').attr('src', model_image);
     }
@@ -1012,18 +1198,8 @@
                 $('.review-bike-selected').show();
                 $('#review_bike_change').hide();        
             },
-            error: function(response) {                    
-                var error = response.responseJSON.errors;
-                $(".print-error-msg").find("ul").html('');
-                $(".print-error-msg").css('display','block');
-                $.each( error, function( key, value ) {                           
-                    $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
-                });
-                setTimeout(function () {
-                    if ($(".alert").is(":visible")){
-                        $(".alert").fadeOut("fast");
-                    }
-                }, 3000)
+            error: function(response) {
+                showErrorMessage(response.responseJSON.errors);
             } 
         });
     }
@@ -1048,18 +1224,8 @@
                 $('.review-bike-moredetails-selected').show();
                 $('#review-bike-moredetails-change').hide();        
             },
-            error: function(response) {                    
-                var error = response.responseJSON.errors;
-                $(".print-error-msg").find("ul").html('');
-                $(".print-error-msg").css('display','block');
-                $.each( error, function( key, value ) {                           
-                    $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
-                });
-                setTimeout(function () {
-                    if ($(".alert").is(":visible")){
-                        $(".alert").fadeOut("fast");
-                    }
-                }, 3000)
+            error: function(response) {
+                showErrorMessage(response.responseJSON.errors);
             } 
         });
     }
@@ -1077,18 +1243,8 @@
                 $('.review-bike-description-selected').show();
                 $('#review-bike-description-change').hide();        
             },
-            error: function(response) {                    
-                var error = response.responseJSON.errors;
-                $(".print-error-msg").find("ul").html('');
-                $(".print-error-msg").css('display','block');
-                $.each( error, function( key, value ) {                           
-                    $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
-                });
-                setTimeout(function () {
-                    if ($(".alert").is(":visible")){
-                        $(".alert").fadeOut("fast");
-                    }
-                }, 3000)
+            error: function(response) {
+                showErrorMessage(response.responseJSON.errors);
             } 
         });
     }
@@ -1109,18 +1265,8 @@
                 $('.review-bike-image-selected').show();
                 $('#review_bike_images_change').hide();        
             },
-            error: function(response) {                    
-                var error = response.responseJSON.errors;
-                $(".print-error-msg").find("ul").html('');
-                $(".print-error-msg").css('display','block');
-                $.each( error, function( key, value ) {                           
-                    $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
-                });
-                setTimeout(function () {
-                    if ($(".alert").is(":visible")){
-                        $(".alert").fadeOut("fast");
-                    }
-                }, 3000)
+            error: function(response) {
+                showErrorMessage(response.responseJSON.errors);
             } 
         });
     }
@@ -1139,10 +1285,98 @@
         var model_name = $('#bike_models option:selected').val();
         var img = $('#bike_models option:selected').attr('data-content');
         $('#bike_list').val(model_name);
-        var model_image = "{{ asset('public/images/bike_models/')}}/"+img;
+        var model_image = "http://localhost/gull-html-laravel/public/images/bike_models/"+img;
+        if(img==undefined){
+            model_image = "http://localhost/throttle/public/images/rider/bikes/not_found.jpg";
+        }
         $('#bikeListModal').modal('hide');
         $('#bike-icon').hide();
         $('#selected_bike').attr('src', model_image);
         $('.selected_bike').show();
+    }
+
+
+    function shareContact(group_id){
+        $.ajaxSetup({
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+        });
+        $.ajax({
+            url: "{{route('group_member-list')}}",
+            type: "POST",
+            data: {group_id:group_id},
+            success: function( response ) {
+                if(response.status == false){
+                    swal('Failed', response.msg, 'error');
+                }
+                else{
+                    $('#shareContactModal').modal('show');                   
+                    $('#group_members').html(response.html);
+                    $('#group_members').multiselect({
+                        columns: 1,
+                        placeholder: 'Select Group Members',
+                        search: true,
+                        searchOptions: {
+                            'default': 'Search Group Members'
+                        },
+                        selectAll: true,
+                    });
+                }   
+            }
+        });
+    }
+
+    function sendContact() {
+        $.ajaxSetup({
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+        });
+        $.ajax({
+            url: "{{route('send-contact-detail')}}",
+            type: "POST",
+            data: $('#shareContactForm').serialize(),
+            success: function( response ) {
+                if(response.status==true) {
+                    $('#group_members').multiselect('reset');
+                    showSuccessMessage(response.msg,'shareContactForm','shareContactModal');
+                }
+                else{
+                    showErrorMessage([response.msg],'modal');
+                }
+            }
+        });
+    }
+
+    function showSuccessMessage(message,form_id,modal_id,redirectUrl=''){
+        $(".print-error-msg").find("ul").html('');
+        $(".print-error-msg").css('display','block');                 
+        $(".print-error-msg").find("ul").append('<li>'+message+'</li>');
+        $(".print-error-msg").addClass("alert-success").removeClass('alert-danger');                    
+        setTimeout(function () {
+            if ($(".alert").is(":visible")){
+                $(".alert").fadeOut("fast");
+            }
+            document.getElementById(form_id).reset();            
+            $('#'+modal_id).modal('hide');
+            if(redirectUrl!=''){
+                location.replace(redirectUrl);
+            }
+
+        }, 3000);
+    }
+
+    function saveRiderFeedback(){
+        $.ajaxSetup({
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+        });
+        $.ajax({
+            url: "{{route('save-rider-polls-feedback')}}",
+            type: "POST",
+            data: $('#pollFeedbackForm').serialize(),
+            success: function( response ) {
+                if(response.status==true) {                   
+                    showSuccessMessage(response.msg,'pollFeedbackForm','feedbackPollModal');
+                    $('.view-feedback-poll').remove();
+                }
+            }
+        });
     }
 </script>

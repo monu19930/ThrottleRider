@@ -77,10 +77,12 @@
 					<div class="login-input">
 						<div class="form-group">
 							<input type="text" class="form-control" autocomplete="off" name="name" placeholder="Your Name">
-							<span class="text-danger p-1">{{ $errors->first('name') }}</span>
 						</div>
 						<div class="form-group">
 							<input type="email" class="form-control" autocomplete="off" name="email" placeholder="Email address">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" autocomplete="off" name="phone" placeholder="Phone Number">
 						</div>
 						<div class="form-group">
 							<input type="password" class="form-control" name="password" placeholder="Password">
@@ -238,7 +240,7 @@
 		</div>
 	  </div>
 
-	  <!--Invite Members Model-->
+	<!--Invite Members Model-->
 	<div class="modal fade" id="inviteMembersModal" data-backdrop="static" data-keyboard="false" tabindex="-2" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered modal-lg">
 		  <div class="modal-content rounded-0" style="width:60%">			 
@@ -257,11 +259,122 @@
 						</div>
 						<div class="login-input">
 							<div class="form-group">
-								<input type="text" autocomplete="off" name="email" class="form-control">
+								<input type="text" autocomplete="off" name="email[]" id="invite_group_member_email" class="form-control">
 							</div>
 							<div class="form-group">						
 								<button type="button" class="btn btn-danger w-100" onclick="sendGroupInvitation();">SUBMIT</button>
 							</div>					
+						</div>
+					</form>
+				  </div>
+				</div>				
+			  </div>
+			</div>			 
+		  </div>
+		</div>
+	  </div>
+
+
+	<!---Add Past Experience--->
+	<div class="modal fade" id="pastExperienceModal" data-backdrop="static" data-keyboard="false" tabindex="-2" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+		  <div class="modal-content rounded-0" style="width:60%">			 
+			<div class="modal-body p-0">
+			  <button type="button" class="close login-close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			  <div class="row no-gutters">
+				<div class="col-md-12">
+				  <div class="login-block">
+					<form id="pastExperienceForm" method="post">
+						<h4 class="login-heading">Add Past Experience<small>Past Experience</small></h4>
+						<input type="hidden" name="group_id" id="past_experience_id">
+						<div class="alert alert-danger print-error-msg" style="display:none">
+							<ul></ul>
+						</div>
+						<div class="login-input">
+							<div class="form-group">
+								<input type="text" autocomplete="off" name="title" class="form-control" placeholder="Title">
+							</div>
+							<div class="form-group">
+								<input type="text" autocomplete="off" name="added_on" id="start_date" class="form-control" placeholder="Date">
+							</div>
+							<div class="form-group">
+								<textarea class="md-textarea form-control" name="description"  rows="3" placeholder="Description"></textarea>
+							</div>
+							<div class="form-group">						
+								<button type="button" class="btn btn-danger w-100" onclick="savePastExperience();">SUBMIT</button>
+							</div>					
+						</div>
+					</form>
+				  </div>
+				</div>				
+			  </div>
+			</div>			 
+		  </div>
+		</div>
+	  </div>
+
+
+	<!--Share Contact Model-->
+	<div class="modal fade" id="shareContactModal" data-backdrop="static" data-keyboard="false" tabindex="-2" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+		  <div class="modal-content rounded-0" style="width:60%">			 
+			<div class="modal-body p-0">
+			  <button type="button" class="close login-close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			  <div class="row no-gutters">
+				<div class="col-md-12">
+				  <div class="login-block">
+					<form id="shareContactForm" method="post">
+						<h2 class="login-heading">Share Contact<small>With group members</small></h2>
+						<div class="alert alert-danger print-error-msg" style="display:none">
+							<ul></ul>
+						</div>
+						<div class="login-input">
+							<div class="form-group">
+								<select class="custom-select" name="group_member[]" id="group_members" multiple="multiple">
+								</select> 
+							</div>
+							<div class="form-group">						
+								<button type="button" class="btn btn-danger w-100" onclick="sendContact();">SUBMIT</button>
+							</div>					
+				  		</div>
+					</form>
+				  </div>
+				</div>				
+			  </div>
+			</div>
+			 
+		  </div>
+		</div>
+	  </div>
+
+
+
+	  <!---Add Polls--->
+	<div class="modal fade" id="feedbackPollModal" data-backdrop="static" data-keyboard="false" tabindex="-2" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+		  <div class="modal-content rounded-0" style="width:60%">			 
+			<div class="modal-body p-0">
+			  <button type="button" class="close login-close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			  <div class="row no-gutters">
+				<div class="col-md-12">
+				  <div class="login-block">
+					<form id="pollFeedbackForm" method="post">
+						<h4 class="login-heading">Polls<small>Give your feedback</small></h4>
+						<div class="alert alert-danger print-error-msg" style="display:none">
+							<ul></ul>
+						</div>
+						<div class="login-input pollFeedbackQuestions"></div>
+						<div class="login-input">
+							<div class="form-group">						
+								<button type="button" class="btn btn-danger w-100" onclick="saveRiderFeedback();">SUBMIT</button>
+							</div>
+						</div>												
 						</div>
 					</form>
 				  </div>

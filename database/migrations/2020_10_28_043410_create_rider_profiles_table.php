@@ -20,6 +20,7 @@ class CreateRiderProfilesTable extends Migration
             $table->unsignedInteger('total_km')->default(0);
             $table->unsignedInteger('total_rides')->default(0);
             $table->string('image')->nullable();
+            $table->string('cover_image')->nullable();
             $table->float('rating')->default(0);
             $table->text('description')->nullable();
             $table->timestamps();

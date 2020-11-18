@@ -1,7 +1,7 @@
 <div id="row{{ $i }}">
         <button type="button" name="remove" id="{{ $i }}" class="btn btn-danger btn_remove">Day {{$i+1}} x</button><div class="login-input">
         <div class="form-group">
-            <input type="text" class="form-control" name="start_location_{{$i}}" placeholder="Start Locations">
+            <input type="text" class="form-control" name="start_location_{{$i}}" value="{{$start_location}}" placeholder="Start Locations" readonly>
         </div>                                   
         <div class="form-group">
             <input type="email" class="form-control" name="end_location_{{$i}}" placeholder="End Locations">
@@ -53,7 +53,7 @@
                     <label class="form-check-label">Yes</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="is_hotel_{{$i}}" value="1" onChange="showHideField(this.value,'{{$i}}','is_hotel')" checked>
+                    <input class="form-check-input" type="radio" name="is_hotel_{{$i}}" value="0" onChange="showHideField(this.value,'{{$i}}','is_hotel')" checked>
                     <label class="form-check-label">No</label>
                 </div>
             </div>
@@ -94,16 +94,58 @@
         <div class="form-group">
             <label>Road Type</label>
             <select class="custom-select" name="road_type_{{$i}}" style="width:150px;"> 
-                <option value="1">Highway</option>
+            @foreach($road_types as $road_type)
+                <option value="{{$road_type->id}}">{{$road_type->road_type}}</option>
+            @endforeach
             </select> 
         </div>
 
         <div class="form-group">
-            <input type="number" class="form-control" name="road_quality_{{$i}}" min="1" max="5" id="road_quality" placeholder="Road Quality">
+            <p>Road Quality</p>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="road_quality_{{$i}}" value="1">
+                <label class="form-check-label" for="exampleRadios2"> 1</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="road_quality_{{$i}}" value="2" checked>
+                <label class="form-check-label" for="exampleRadios2">2</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="road_quality_{{$i}}" value="3">
+                <label class="form-check-label" for="exampleRadios2">3</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="road_quality_{{$i}}" value="4">
+                <label class="form-check-label" for="exampleRadios2">4</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="road_quality_{{$i}}" value="5">
+                <label class="form-check-label" for="exampleRadios2">5</label>
+            </div>
         </div>
 
         <div class="form-group">
-            <input type="number" class="form-control" name="road_scenic_{{$i}}" min="1" max="5" id="road_scenic" placeholder="Road Scenic">
+            <p>Road Scenic</p>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="road_scenic_{{$i}}" value="1">
+                <label class="form-check-label" for="exampleRadios2"> 1</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="road_scenic_{{$i}}" value="2">
+                <label class="form-check-label" for="exampleRadios2">2</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="road_scenic_{{$i}}" value="3" checked>
+                <label class="form-check-label" for="exampleRadios2">3</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="road_scenic_{{$i}}" value="4">
+                <label class="form-check-label" for="exampleRadios2">4</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="road_scenic_{{$i}}" value="5">
+                <label class="form-check-label" for="exampleRadios2">5</label>
+            </div>
         </div>
 
         <div class="form-group">

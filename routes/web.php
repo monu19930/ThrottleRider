@@ -16,16 +16,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/', 'HomeController@index')->name('login');
 
-
 Route::get('/ride', 'HomeController@rides')->name('front-rides');
-Route::get('/biker', 'HomeController@bikers')->name('front-bikers');
+Route::get('/bikers', 'HomeController@bikers')->name('front-bikers');
 Route::get('/group', 'HomeController@groups')->name('front-groups');
 
-Route::group(['middleware'=>['auth','admin']],function(){
-    Route::get('dashboard', 'AdminController@index');
-    Route::get('dashboard', 'AdminController@index')->name('admin-dashboard');
-});
-
+Route::get('/verify/{token}', 'VerifyController@VerifyEmail')->name('verify');
 
 Route::post('/rider-signup', 'RiderController@register')->name('rider-register');
 Route::post('/rider-login', 'RiderController@login')->name('rider-login');
@@ -66,15 +61,9 @@ Route::group(['middleware'=>['auth']],function(){
     Route::post('group-join', 'RiderController@joinGroup')->name('join-group');
     Route::post('invite-members', 'RiderController@inviteGroupMembers')->name('invite-group-members');
 
-    
     Route::get('group/{id}/join', 'RiderController@invitationJoinGroup');
     
-
-    Route::get('groups', 'GroupController@index')->name('groups');
-    Route::get('groups/add-group', 'GroupController@create')->name('add-group');
-    Route::post('save-group', 'GroupController@saveGroup')->name('group-submit');
-    Route::post('save-group', 'GroupController@saveGroup')->name('group-submit');
-
+    Route::resource('groups', 'GroupController');
 
     Route::get('group/{id}/events', 'EventController@index')->name('group.events');
     Route::get('group/{id}/events/add', 'EventController@create')->name('group.events.add');
@@ -82,7 +71,20 @@ Route::group(['middleware'=>['auth']],function(){
     Route::post('group/events/add-2', 'EventController@eventAddStep2')->name('group.events.add.step2');
     Route::post('group/events/save', 'EventController@eventSave')->name('group.events.submit');
 
+    Route::post('group/past-experience/save', 'GroupController@savePastExperience')->name('group.experience.save');
+   
+    Route::post('get-group_members', 'RiderController@groupMemberList')->name('group_member-list');
+    Route::post('chat/add', 'RiderController@saveDataChat')->name('send-contact-detail');
 
+    Route::resource('suppliers', 'SupplierController');
+    Route::resource('tips', 'TipController');
+
+    Route::resource('polls', 'PollController');
+    Route::post('group/polls', 'PollController@groupPollsList')->name('get-group-polls');
+    Route::post('poll/feedback/save', 'PollController@savePollsFeedback')->name('save-rider-polls-feedback');
+
+
+    Route::post('follow-rider', 'RiderController@followRider')->name('follow-rider');
 });
 
 Route::get('login/{social}', 'Auth\LoginController@redirectToSocial')->where('social', 'facebook|google');
@@ -90,4 +92,6 @@ Route::get('login/{social}/callback', 'Auth\LoginController@handleSocialCallback
 
 Route::post('search-filter', 'HomeController@searchToLocation')->name('search-location');
 Route::post('search-data', 'HomeController@searchToLocationData')->name('search-location-result');
+
+Route::post('ride-filter-search', 'HomeController@RideSearchFilter')->name('ride-filter-search');
 

@@ -128,22 +128,23 @@ class EventController extends Controller
 
     protected function getEventsList($id) {
         $user = user();
-        $rides = $user->rides;
+        $group = Group::find($id);
+        $events = $group->events;
         $result = [];
-        foreach($rides as $key => $ride) {
-            $rideDays = $this->formateRideDays($ride->ride_days);
+        foreach($events as $key => $event) {
+            $rideDays = $this->formateRideDays($event->ride_days);
             $result[$key] = [
-                'id' => $ride->id,
+                'id' => $event->id,
                 'rider_name' => $user->name,
                 'rider_id' => $user->id,
                 'rider_image' => isset($user->profile->image) ? $user->profile->image : '',
-                'start_location' => $ride->start_location,
-                'via_location' => $this->formateViaLocation($ride->via_location),
-                'end_location' => $ride->end_location,
-                'start_date' => formatDate($ride->start_date, 'M Y'),
-                'total_km' => $ride->total_km,
-                'no_of_people' => $ride->no_of_people,
-                'description' => $ride->short_description,
+                'start_location' => $event->start_location,
+                'via_location' => $this->formateViaLocation($event->via_location),
+                'end_location' => $event->end_location,
+                'start_date' => formatDate($event->start_date, 'M Y'),
+                'total_km' => $event->total_km,
+                'no_of_people' => $event->no_of_people,
+                'description' => $event->short_description,
                 'rider_rating' => isset($user->profile->rating) ? $user->profile->rating: 0,
                 'ride_rating' => 4,
                 'ride_image' => !empty($rideDays[0]['image']) ? $rideDays[0]['image'] : '',

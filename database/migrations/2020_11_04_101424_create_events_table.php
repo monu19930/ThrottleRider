@@ -27,6 +27,9 @@ class CreateEventsTable extends Migration
             $table->text('ride_days');
             $table->float('total_km')->default(0);
             $table->text('luggage')->nullable();
+            $table->integer('is_approved')->default(0);
+            $table->integer('updated_by')->default(0);
+            $table->string('ip_address')->nullable();
             $table->timestamps();
         });
     }

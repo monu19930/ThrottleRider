@@ -14,7 +14,7 @@
 					<a href="javascript:void(0)" class="review-details" onclick="reviewBikeDetails()">Change Bike</a>
 				</div>
 				<div>
-					<img src="{{ asset('public/images/bike_models/')}}/{{$result['bike_model_image']}}" id="review_bike_image" width="200" height="200">
+					<img src="http://localhost/gull-html-laravel/public/images/bike_models/{{$result['bike_model_image']}}" id="review_bike_image" width="200" height="200">
 					<h4 class="review-h4 review-bike-name">{{$result['bike_details']['name']}}</h4>
 				</div>
 			</div>
@@ -44,7 +44,7 @@
 							<div class="row">
 								@foreach($result['brands'] as $brand)
 									<div class="col-3">
-										<img src="{{ asset('public/images/logo/bike_brands/')}}/{{$brand->logo}}" onclick="showReviewBikeModelList('{{$brand->id}}')" width="100" height="80"/>
+										<img src="http://localhost/gull-html-laravel/public/images/bike_brands/{{$brand->logo}}" onclick="showReviewBikeModelList('{{$brand->id}}')" width="100" height="80"/>
 									</div>
 								@endforeach
 							</div>                                
@@ -52,7 +52,7 @@
 					</div>
 					<div class="col-md-6">						
 						<div class="selected_bike">
-							<img src="{{ asset('public/images/bike_models/')}}/{{$result['bike_model_image']}}" alt="" width="200" height="200" id="review_selected_bike"/>
+							<img src="http://localhost/gull-html-laravel/public/images/bike_models/{{$result['bike_model_image']}}" alt="" width="200" height="200" id="review_selected_bike"/>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -116,7 +116,7 @@
 				
 				<div class="d-flex align-items-center filter-details mb-4">
 					<span class="filter-block1">KMs Driven</span>
-					<h4 class="review-h4 review_total_km">{{$result['bike_details']['total_km']}} km</h4>
+					<h4 class="review-h4 review_total_km"> <i class="fa fa-map"></i>{{$result['bike_details']['total_km']}} km</h4>
 				</div>
 				<div class="d-flex align-items-center filter-details mb-4">
 					<span class="filter-block1">Rides Completed</span>
@@ -126,23 +126,23 @@
 				<div class="review-rating">
 					<div class="d-flex align-items-center filter-details mb-4">
 						<span class="filter-block1">Comfortness</span>
-						<h4 class="review-h4 review_comfortness">{{$result['bike_details']['comfortness']}}</h4>
+						<h4 class="review-h4 review_comfortness"> {{$result['bike_details']['comfortness']}} <i class="fa fa-star"></i></h4>
 					</div>
 					<div class="d-flex align-items-center filter-details mb-4">
 						<span class="filter-block1">Visual Appeal</span>
-						<h4 class="review-h4 review_visual_appeal">{{$result['bike_details']['visual_appeal']}}</h4>
+						<h4 class="review-h4 review_visual_appeal"> {{$result['bike_details']['visual_appeal']}} <i class="fa fa-star"></i></h4>
 					</div>
 					<div class="d-flex align-items-center filter-details mb-4">
 						<span class="filter-block1">Reliability</span>
-						<h4 class="review-h4 review_reliability">{{$result['bike_details']['reliability']}}</h4>
+						<h4 class="review-h4 review_reliability"> {{$result['bike_details']['reliability']}} <i class="fa fa-star"></i></h4>
 					</div>
 					<div class="d-flex align-items-center filter-details mb-4">
 						<span class="filter-block1">Performance</span>
-						<h4 class="review-h4 review_performance">{{$result['bike_details']['performance']}}</h4>
+						<h4 class="review-h4 review_performance"> {{$result['bike_details']['performance']}} <i class="fa fa-star"></i></h4>
 					</div>
 					<div class="d-flex align-items-center filter-details mb-4">
 						<span class="filter-block1">Service Experience</span>
-						<h4 class="review-h4 review_service_experience">{{$result['bike_details']['service_experience']}}</h4>
+						<h4 class="review-h4 review_service_experience"> {{$result['bike_details']['service_experience']}} <i class="fa fa-star"></i> </h4>
 					</div>
 				</div>
 			</div>

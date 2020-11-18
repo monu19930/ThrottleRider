@@ -25,6 +25,7 @@ class GroupRequest extends FormRequest
     {
         return [
             'group_name' => 'required|max:255',
+            'city' => 'required',
             'group_description' => 'required',
             'profile' => 'required|mimes:png,jpeg,jpg|max:2048'       
         ];

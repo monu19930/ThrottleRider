@@ -8,7 +8,8 @@
 			<h2 class="page-heading">
 			  Group {{$group_name}} 
             </h2>
-            <h4>Events</h4>
+			<h4>Events</h4>
+			<a href="{{route('groups.index')}}" class="href"> << Back </a>
 			<div class="d-flex align-items-center filter-details mb-4">
 			  <span class="filter-block1">{{ count($rides) }} Events Added</span><br/>
 			</div>
@@ -22,7 +23,7 @@
 				<div class="col-12 mb-3 ride-refferer-{{$ride['id']}}">
 				<div class="rides-block d-none d-md-flex">
 					<div class="rider-img-block mr-md-3 ml-3 ml-md-0 order-2 order-md-1">
-					<img src="{{ asset('public/images/rides/')}}/{{ $ride['ride_image'] }}" style="width: 200px; height: 150px;" class="img-fluid">
+					<img src="{{ asset('public/images/groups/events/')}}/{{ $ride['ride_image'] }}" style="width: 200px; height: 150px;" class="img-fluid">
 					</div>
 					<div class="rider-details-block w-100 order-1 order-md-2">
 					<div class="location-heading-block ">
@@ -99,49 +100,14 @@
 				@endforeach
 			@else
 				<div class="col-12 mb-3">
-					<h2 class="page-heading">Rides is not available</h2>
+					<h2 class="page-heading">Event is not available</h2>
 				</div>
 			@endif		   
 			</div>		   
 		  </div>
 		</div>
 		<div class="col-md-4 d-none d-md-block">
-		  <div class="right-block">
-		  <img src="{{ asset('public/images/rider_images/rider.jpg')}}" style="position: relative;margin-left:50px;"class="img-circle" alt="Cinque Terre" width="200" height="180">
-			<div class="card mt-2 mb-3 border-0"  >
-			 <ul class="list-group list-group-flush cust-notify">
-			   <li class="list-group-item">
-				   <h4 class="notify-heading">
-				   <a href="{{route('my-profile')}}">Profile</a>
-					</h4>
-				</li>
-			   <li class="list-group-item">
-				   <h4 class="notify-heading">
-					   <a href="{{ route('rides')}}">Rides</a>
-					</h4>
-				</li>
-			   <li class="list-group-item">
-			   	<h4 class="notify-heading">
-					<a href="{{ route('bikes')}}">Bikes</a>
-				</h4>
-				</li>
-
-				<li class="list-group-item">
-					<h4 class="notify-heading">
-						<a href="{{ route('groups')}}">Groups</a>
-					</h4>
-				</li>
-			 </ul>
-		   </div>
-		   <div class="card mt-4 mb-3 border-0"  >
-			 <div class="card-body text-center">
-			   <div class="badge-icon"><img src="{{ asset('public/rider/images/badge.png')}}"></div>
-			   <div class="badge-status">Current status of Badge</div>
-			   <p class="badge-txt">Also we’ll show the available points in your account here.</p>
-			 </div>
-		   </div>
-		   <div class="sponser-ads"><span>SPONSERED ADS</span></div>
-		  </div>
+		@include('layouts.frontLayout.profile-sidebar')
 		</div>
 	  </div>
 	</div>

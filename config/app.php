@@ -176,7 +176,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         Stevebauman\Location\LocationServiceProvider::class,
-        Illuminate\Notifications\NotificationServiceProvider::class
+        Illuminate\Notifications\NotificationServiceProvider::class,
+        \Chatify\ChatifyServiceProvider::class,
     ],
 
     /*
@@ -229,7 +230,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
-        'Location' => Stevebauman\Location\Facades\Location::class
+        'Location' => Stevebauman\Location\Facades\Location::class,
+        'Chatify' => Chatify\Facades\ChatifyMessenger::class,
 
     ],
 

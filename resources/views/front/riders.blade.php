@@ -9,14 +9,15 @@
 			  Bikers
 			</h2>
 			<div class="d-flex align-items-center filter-details mb-4">			
-			  <span class="ml-auto filter-block3 mob-filter"><a href="#">View all Bikers</a></span>
+			  
 			</div>
 			
 			  <!-- repeat div from here START -->
-              <div class="top-riders-slider slider  mb-2">
+              <div class="col-md-12">
+				  <div class="row">
 			@if(count($riders) > 0)
 				@foreach($riders as $rider)
-				<div class="slide">
+				<div class="col-md-6 mt-2">
 					<div class="top-riders-block">
 					<div class="card" >
 					<img src="{{ asset('public/rider/images/top-rider1.png')}}" class="card-img-top" alt="">
@@ -29,7 +30,7 @@
 						<h3 class="user-name">{{$rider['rider_name']}}<small>{{$rider['rider_email']}}</small></h3>
 						<blockquote class="blockquote-block d-none d-md-block">“{{$rider['description']}}”</blockquote>
 						<div class="location-details d-flex align-items-center">
-						<span class="rating pl-0 d-none d-md-inline-block">{{$rider['rating']}} <small>Rating</small></span>
+						<span class="rating d-none d-md-inline-block"><i class="fa fa-star"></i>{{$rider['rating']}} <small>Rating</small></span>
 						<span class="other-details pl-0">{{$rider['total_rides']}} <small>Rides</small></span>
 						<span class="other-details pl-0">{{$rider['total_km']}} km <small>Driven</small></span>
 						
@@ -48,10 +49,15 @@
 			</div>
 		   
 		  </div>
+		</div>
 		
 		<div class="col-md-4 d-none d-md-block">
 		  <div class="right-block">
-			<button class="post-btn w-100 mb-3">POST A RIDE<small>LOGIN REQUIRED</small></button>
+			<button class="post-btn w-100 mb-3">POST A RIDE
+			@guest
+				<small>LOGIN REQUIRED</small>
+			@endguest
+			</button>
 			<div class="card mt-2 mb-3 border-0"  >
 			 <ul class="list-group list-group-flush cust-notify">
 			   <li class="list-group-item"><h4 class="notify-heading">Notifications</h4></li>

@@ -26,6 +26,7 @@ class RiderRequest extends FormRequest
         return [
             'name' => 'required',
             'email' => 'required|email|unique:users|max:255',
+            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
             'password' => 'required|min:6'           
         ];
     }

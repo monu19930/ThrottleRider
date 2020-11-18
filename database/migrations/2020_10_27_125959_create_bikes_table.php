@@ -26,7 +26,9 @@ class CreateBikesTable extends Migration
             $table->unsignedBigInteger('performance')->nullable();
             $table->unsignedBigInteger('service_experience')->nullable();
             $table->text('info')->nullable();
-            $table->boolean('is_approved')->default(1);
+            $table->integer('is_approved')->default(0);
+            $table->integer('updated_by')->default(0);
+            $table->string('ip_address')->nullable();
             $table->timestamps();
         });
     }

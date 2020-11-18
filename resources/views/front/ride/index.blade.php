@@ -17,7 +17,7 @@
 			<div class="row">
 			  <!-- repeat div from here START -->
 			@if(count($rides) > 0)
-				@foreach($rides as $ride)
+				@foreach($rides as $key => $ride)
 				<div class="col-12 mb-3 ride-refferer-{{$ride['id']}}">
 				<div class="rides-block d-none d-md-flex">
 					<div class="rider-img-block mr-md-3 ml-3 ml-md-0 order-2 order-md-1">
@@ -28,12 +28,12 @@
 						<div>
 						<h4 class="location-title">{{ $ride['start_location']}} To {{ $ride['end_location']}} Via {{$ride['via_location']}}</h4>
 						<div class="d-flex align-items-center location-block">
-							<span class="location">Banglore, Karnatka, India</span>
+							<span class="location">{{$ride['via_location']}}, {{ $ride['end_location']}}</span>
 							<span class="time left-seperater">in month of <span>{{$ride['start_date']}}</span></span></span>
 						</div>
 						</div>
 						<div class="bookmark ml-auto">
-							<a href="#"><i class="fa fa-bookmark-o"></i></a>
+							<a href="javascript:void(0)"><i class="fa fa-edit"></i></a>
 							<a href="javascript:void(0)" class="ride-remove" content="{{$ride['id']}}"><i class="fa fa-remove"></i></a>
 						</div>
 					</div>
@@ -48,9 +48,43 @@
 						<span class="username">
 						<span class="d-block">{{$ride['description']}}</span>
 						<span class="badge badge-warning"></span>
-						</span>
+						</span>						
+						@if($ride['is_approved']==1)
+                            <button class="btn btn-success" data-target="#status_comment{{$key}}" data-toggle="collapse">Approved</button>
+						@elseif($ride['is_approved']==0)
+							<button class="btn btn-dark">Pending</button>
+						@elseif($ride['is_approved']==2)
+							<button class="btn btn-danger">Rejected</button>
+						@else
+							<button class="btn btn-warning">UnApproved</button>
+						@endif   
+					</div>
+					<div class="collapse" id="status_comment{{$key}}">
+						@if(count($ride['status_comment']) > 0)						
+						<div class="table-responsive mt-5">
+							<table class="table table-striped table-sm">
+								<thead>
+									<tr>
+									<th>#</th>                        
+									<th>Comment</th>
+									<th>Added On</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach($ride['status_comment'] as $key => $comment)
+										<tr>
+											<td>{{$ride['i']++}}.</td>
+											<td>{{$comment['description']}}</td>
+											<td>{{formatDate($comment['created_at'], 'd-M-Y')}}</td>
+										</tr>
+									@endforeach            
+								</tbody>
+							</table>
+						</div>
+						@endif						
 					</div>
 					</div>
+					
 				</div>
 				<!-- <mobile div start from here -->
 				<div class="rides-block flex-column d-md-none">
@@ -105,42 +139,7 @@
 		  </div>
 		</div>
 		<div class="col-md-4 d-none d-md-block">
-		  <div class="right-block">
-		  <img src="{{ asset('public/images/rider_images/rider.jpg')}}" style="position: relative;margin-left:50px;"class="img-circle" alt="Cinque Terre" width="200" height="180">
-			<div class="card mt-2 mb-3 border-0"  >
-			 <ul class="list-group list-group-flush cust-notify">
-			   <li class="list-group-item">
-				   <h4 class="notify-heading">
-				   <a href="{{route('my-profile')}}">Profile</a>
-					</h4>
-				</li>
-			   <li class="list-group-item">
-				   <h4 class="notify-heading">
-					   <a href="{{ route('rides')}}">Rides</a>
-					</h4>
-				</li>
-			   <li class="list-group-item">
-			   	<h4 class="notify-heading">
-					<a href="{{ route('bikes')}}">Bikes</a>
-				</h4>
-				</li>
-
-				<li class="list-group-item">
-					<h4 class="notify-heading">
-						<a href="{{ route('groups')}}">Groups</a>
-					</h4>
-				</li>
-			 </ul>
-		   </div>
-		   <div class="card mt-4 mb-3 border-0"  >
-			 <div class="card-body text-center">
-			   <div class="badge-icon"><img src="{{ asset('public/rider/images/badge.png')}}"></div>
-			   <div class="badge-status">Current status of Badge</div>
-			   <p class="badge-txt">Also we’ll show the available points in your account here.</p>
-			 </div>
-		   </div>
-		   <div class="sponser-ads"><span>SPONSERED ADS</span></div>
-		  </div>
+		@include('layouts.frontLayout.profile-sidebar')
 		</div>
 	  </div>
 	</div>

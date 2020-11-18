@@ -33,7 +33,7 @@
                                 <div class="row">
                                     @foreach($brands as $brand)
                                         <div class="col-3">
-                                            <img src="{{ asset('public/images/logo/bike_brands/')}}/{{$brand->logo}}" onclick="showBikeModelList('{{$brand->id}}')" width="100" height="80"/>
+                                            <img src="http://localhost/gull-html-laravel/public/images/bike_brands/{{$brand->logo}}" onclick="showBikeModelList('{{$brand->id}}')" width="100" height="80"/>
                                         </div>
                                     @endforeach
                                 </div>                                
@@ -102,24 +102,219 @@
                                 <div class="login-input">
                                     <h2 class="page-heading">Rate Your Bike</h2>
                                     <div class="form-group">
-                                        <label>Comfortness</label>
-                                        <input type="number" name="comfortness" value="{{isset($comfortness) ? $comfortness : ''}}">
+                                        <p>Comfortness</p>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="comfortness" value="1"
+                                            @if(isset($comfortness) && $comfortness==1)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2"> 1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="comfortness" value="2" 
+                                            @if(isset($comfortness) && $comfortness==2)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="comfortness" value="3"
+                                            @if(isset($comfortness) && $comfortness==3)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2">3</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="comfortness" value="4"
+                                            @if(isset($comfortness) && $comfortness==4)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2">4</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="comfortness" value="5"
+                                            @if(isset($comfortness) && $comfortness==5)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2">5</label>
+                                        </div>
                                     </div>
                                     <div class="form-group">
-                                        <label>Visual Appeal</label>
-                                        <input type="number" name="visual_appeal" value="{{isset($visual_appeal) ? $visual_appeal : ''}}">
+                                        <p>Visual Appeal</p>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="visual_appeal" value="1"
+                                            @if(isset($visual_appeal) && $visual_appeal==1)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2"> 1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="visual_appeal" value="2" 
+                                            @if(isset($visual_appeal) && $visual_appeal==2)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="visual_appeal" value="3"
+                                            @if(isset($visual_appeal) && $visual_appeal==3)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2">3</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="visual_appeal" value="4"
+                                            @if(isset($visual_appeal) && $visual_appeal==4)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2">4</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="visual_appeal" value="5"
+                                            @if(isset($visual_appeal) && $visual_appeal==5)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2">5</label>
+                                        </div>
                                     </div>
                                     <div class="form-group">
-                                        <label>Reliability</label>
-                                        <input type="number" name="reliability" value="{{isset($reliability) ? $reliability : ''}}">
+                                        <p>Reliability</p>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="reliability" value="1"
+                                            @if(isset($reliability) && $reliability==1)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2"> 1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="reliability" value="2" 
+                                            @if(isset($reliability) && $reliability==2)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="reliability" value="3"
+                                            @if(isset($reliability) && $reliability==3)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2">3</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="reliability" value="4"
+                                            @if(isset($reliability) && $reliability==4)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2">4</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="reliability" value="5"
+                                            @if(isset($reliability) && $reliability==5)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2">5</label>
+                                        </div>
                                      </div>
                                     <div class="form-group">
-                                        <label>Performance</label>
-                                        <input type="number" name="performance" value="{{isset($performance) ? $performance : ''}}">
+                                        <p>Performance</p>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="performance" value="1"
+                                            @if(isset($performance) && $performance==1)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2"> 1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="performance" value="2" 
+                                            @if(isset($performance) && $performance==2)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="performance" value="3"
+                                            @if(isset($performance) && $performance==3)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2">3</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="performance" value="4"
+                                            @if(isset($performance) && $performance==4)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2">4</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="performance" value="5"
+                                            @if(isset($performance) && $performance==5)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2">5</label>
+                                        </div>
                                     </div>
                                     <div class="form-group">
-                                        <label>Service Experience</label>
-                                        <input type="number" name="service_experience" value="{{isset($service_experience) ? $service_experience : ''}}">
+                                        <p>Service Experience</p>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="service_experience" value="1"
+                                            @if(isset($service_experience) && $service_experience==1)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2"> 1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="service_experience" value="2" 
+                                            @if(isset($service_experience) && $service_experience==2)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="service_experience" value="3"
+                                            @if(isset($service_experience) && $service_experience==3)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2">3</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="service_experience" value="4"
+                                            @if(isset($service_experience) && $service_experience==4)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2">4</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="service_experience" value="5"
+                                            @if(isset($service_experience) && $service_experience==5)
+                                            checked
+                                            @endif
+                                            >
+                                            <label class="form-check-label" for="exampleRadios2">5</label>
+                                        </div>
                                     </div>
                                 </div>
 

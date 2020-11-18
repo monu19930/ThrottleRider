@@ -17,8 +17,31 @@ class BikeController extends Controller
     public function index() {
         $id = user()->id;
         $user = User::find($id);
-        $data['bikes'] = $user->bikes;
-        return view('front/bike/index',$data);
+        $bikes = $user->bikes->sortBydesc('created_at');
+        $result = [];
+        foreach($bikes as $key => $bike) {
+            $status_comment = $bike->approvalComments->sortBydesc('created_at');
+            $result[$key] = [
+                'id' => $bike->id,
+                'image' => $this->filterBikeImage($bike->image),
+                'bike_name' => $bike->name,
+                'added_on' => formatDate($bike->created_at, 'd M Y'),
+                'total_km' => $bike->total_km,
+                'total_rides' => $bike->total_rides,
+                'rider' => $user->profile,
+                'description' => $bike->info,
+                'status' => $bike->is_approved,
+                'status_comment' => $status_comment,
+            ];
+        }
+        $bikes = (object)$result;$i=1;
+        return view('front/bike/index',compact('bikes', 'i'));
+    }
+
+    protected function filterBikeImage($images) {
+        $image_list = json_decode($images,true);
+        $image = !empty($image_list[0]) ? $image_list[0] : 'not_found.jpg';
+        return $image;
     }
 
     public function create() {

@@ -25,12 +25,13 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    public function redirectTo() {
+        if(user()->is_admin) {
+            return 'admin/dashboard';
+        } else {
+            return 'my-profile';
+        }
+    }
 
     /**
      * Create a new controller instance.
@@ -79,6 +80,17 @@ class LoginController extends Controller
             ]);
         }
         return $user;
+    }
+
+    public function showLoginForm()
+    {
+        $view = property_exists($this, 'loginView')
+            ? $this->loginView : 'auth.authenticate';
+
+        if (view()->exists($view)) {
+            return view($view);
+        }
+        return view('auth.login');
     }
 
 }

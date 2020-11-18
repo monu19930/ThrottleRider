@@ -25,7 +25,9 @@ class CreateRidesTable extends Migration
             $table->text('short_description')->nullable();
             $table->text('ride_days');
             $table->float('total_km')->default(0);
-            $table->boolean('is_approved')->default(1);
+            $table->integer('is_approved')->default(0);
+            $table->integer('updated_by')->default(0);
+            $table->string('ip_address')->nullable();
             $table->timestamps();
         });
     }

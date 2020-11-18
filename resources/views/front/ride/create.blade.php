@@ -199,16 +199,58 @@
                                     <div class="form-group">
                                         <label>Road Type</label>
                                         <select class="custom-select" name="road_type_0" style="width:150px;"> 
-                                            <option value="1">Highway</option>
+                                            @foreach($road_types as $road_type)
+                                            <option value="{{$road_type->id}}">{{$road_type->road_type}}</option>
+                                            @endforeach
                                         </select> 
                                     </div>
 
                                     <div class="form-group">
-                                        <input type="number" class="form-control" name="road_quality_0" min="1" max="5" placeholder="Road Quality">
+                                        <p>Road Quality</p>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="road_quality_0" value="1">
+                                            <label class="form-check-label" for="exampleRadios2"> 1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="road_quality_0" value="2" checked>
+                                            <label class="form-check-label" for="exampleRadios2">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="road_quality_0" value="3">
+                                            <label class="form-check-label" for="exampleRadios2">3</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="road_quality_0" value="4">
+                                            <label class="form-check-label" for="exampleRadios2">4</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="road_quality_0" value="5">
+                                            <label class="form-check-label" for="exampleRadios2">5</label>
+                                        </div>
                                     </div>
 
                                     <div class="form-group">
-                                        <input type="number" class="form-control" name="road_quality_0" min="1" max="5" placeholder="Road Scenic">
+                                        <p>Road Scenic</p>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="road_scenic_0" value="1">
+                                            <label class="form-check-label" for="exampleRadios2"> 1</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="road_scenic_0" value="2">
+                                            <label class="form-check-label" for="exampleRadios2">2</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="road_scenic_0" value="3" checked>
+                                            <label class="form-check-label" for="exampleRadios2">3</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="road_scenic_0" value="4">
+                                            <label class="form-check-label" for="exampleRadios2">4</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="road_scenic_0" value="5">
+                                            <label class="form-check-label" for="exampleRadios2">5</label>
+                                        </div>
                                     </div>
 
                                     <div class="form-group">
@@ -217,7 +259,7 @@
                                     </div>
                                 
                                     <div class="form-group">
-                                        <textarea id="form7" class="md-textarea form-control" name="day_description_0"  rows="3" placeholder="Day description. i.e, How was your experience on this day"></textarea>
+                                        <textarea class="md-textarea form-control" name="day_description_0"  rows="3" placeholder="Day description. i.e, How was your experience on this day"></textarea>
                                     </div>
                                     <div id="dynamic_field">
                                     </div>

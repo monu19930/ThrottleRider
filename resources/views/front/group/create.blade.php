@@ -5,7 +5,7 @@
 	  <div class="row">
 		<div class="col-md-8">
 		  <div class="cust-left-block">
-          <a href="{{route('groups')}}">< Back to My Groups</a>
+          <a href="{{route('groups.index')}}">< Back to My Groups</a>
 			<div class="d-flex align-items-center filter-details mb-4">
 			  <span class="filter-block1"></span><br/>
       </div>
@@ -25,6 +25,15 @@
                           <div class="form-group">
                             <input type="file" class="form-control-file uplode_file dropzone"
                             required accept="image/*" name="profile" id="profile">
+                          </div>
+                          <div class="form-group">
+                            <label>City</label>
+                            <select class="custom-select" name="city" >
+                                <option value="">Select your city </option>
+                                @foreach($cities as $key => $city)
+                                  <option value="{{$key}}">{{$city}}</option>										
+                                @endforeach
+                            </select>								
                           </div>
                           <div class="form-group">
                               <textarea class="md-textarea form-control" name="group_description" rows="3" placeholder="Write short description about this Group"></textarea>

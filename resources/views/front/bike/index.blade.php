@@ -9,49 +9,86 @@
 			  My Bikes
 			</h2>
 			<div class="d-flex align-items-center filter-details mb-4">
-			  <span class="filter-block1">{{ $bikes->count() }} Bikes Added</span><br/>
+			  <span class="filter-block1">{{ count((array)$bikes) }} Bikes Added</span><br/>
 			</div>
 			<span><a href="{{route('add-bike')}}">Add New Bike</a></span>
 			
 			<div class="row">
 			  <!-- repeat div from here START -->
-			@if($bikes->count() > 0)
-				@foreach($bikes as $bike)
-				<div class="col-12 mb-3 bike-refferer-{{$bike->id}}">
+			@if(count((array)$bikes) > 0)
+				@foreach($bikes as $key =>$bike)
+				<div class="col-12 mb-3 bike-refferer-{{$bike['id']}}">
 				<div class="rides-block d-none d-md-flex">
-					<div class="rider-img-block mr-md-3 ml-3 ml-md-0 order-2 order-md-1">
-						@if(!empty($bike->image))
-							<img src="{{ asset('public/images/rider/bikes/')}}/{{isset(json_decode($bike->image,true)[0]) ? json_decode($bike->image,true)[0] : 'not_found.jpg'  }}" class="img-fluid" width="250" height="180">
-						@endif
+					<div class="rider-img-block mr-md-3 ml-3 ml-md-0 order-2 order-md-1">						
+						<img src="{{ asset('public/images/rider/bikes/')}}/{{$bike['image']}}" class="img-fluid" width="250" height="180">
 					</div>
 					<div class="rider-details-block w-100 order-1 order-md-2">
 					<div class="location-heading-block ">
 						<div>
-						<h4 class="location-title">{{ $bike->name}}</h4>
+						<h4 class="location-title">{{ $bike['bike_name']}}</h4>
 						<div class="d-flex align-items-center location-block">
-							<span class="time">Added on <span>{{formatDate($bike->created_at, 'd M Y')}}</span></span></span>
+							<span class="time">Added on <span>{{$bike['added_on']}}</span></span></span>
 						</div>
 						</div>
 						<div class="bookmark ml-auto">
-							<a href="{{url('bikes/edit/')}}/{{$bike->id}}"><i class="fa fa-edit"></i></a>
-							<a href="javascript:void(0)" class="bike-remove" content="{{$bike->id}}"><i class="fa fa-remove"></i></a>
+							<a href="{{url('bikes/edit/')}}/{{$bike['id']}}"><i class="fa fa-edit"></i></a>
+							<a class="bike-remove" content="{{$bike['id']}}" style="cursor:pointer;"><i class="fa fa-remove"></i></a>
 						</div>
 					</div>
 					<div class="location-details d-flex align-items-center">
 						<span class="rating"><i class="fa fa-star"></i>4.5 <small>Rating</small></span>
-						<span class="other-details"><i class="fa fa-map-o"></i>{{ $bike->total_km}} km <small>Bikes Driven</small></span>
-						<span class="other-details"><i class="fa fa-calendar-o"></i>{{ $bike->total_rides}} <small>Rides</small></span>
+						<span class="other-details"><i class="fa fa-map-o"></i>{{ $bike['total_km']}} km <small>Bikes Driven</small></span>
+						<span class="other-details"><i class="fa fa-calendar-o"></i>{{ $bike['total_rides']}} <small>Rides</small></span>
 					</div>
 					<div class="userdetails d-flex align-items-center">
 						
 						<span class="username">
 						<span class="d-block">
-						{{ $bike->info}}
+						{{ $bike['description']}}
 						</span>
 						<span class="badge badge-warning">
 						</span>
 						</span>
+						@if($bike['status']==1)
+                            <button class="btn btn-success" data-target="#status_comment{{$key}}" data-toggle="collapse">Approved</button>
+						@elseif($bike['status']==0)
+							<button class="btn btn-dark">Pending</button>
+						@elseif($bike['status']==2)
+							<button class="btn btn-danger">Rejected</button>
+						@else
+							<button class="btn btn-warning">UnApproved</button>
+						@endif   
 					</div>
+
+					<div class="collapse" id="status_comment{{$key}}">
+						@if(count($bike['status_comment']) > 0)						
+						<div class="table-responsive mt-5">
+							<table class="table table-striped table-sm">
+								<thead>
+									<tr>
+									<th>#</th>                        
+									<th>Comment</th>
+									<th>Added On</th>
+									</tr>
+								</thead>
+								<tbody>
+									@foreach($bike['status_comment'] as $key => $comment)
+										<tr>
+											<td>{{$i++}}.</td>
+											<td>{{$comment['description']}}</td>
+											<td>{{formatDate($comment['created_at'], 'd-M-Y')}}</td>
+										</tr>
+									@endforeach
+									
+									@php
+									$i=1;
+									@endphp      
+								</tbody>
+							</table>
+						</div>
+						@endif						
+					</div>
+					
 					</div>
 				</div>
 				<!-- <mobile div start from here -->
@@ -107,38 +144,7 @@
 		  </div>
 		</div>
 		<div class="col-md-4 d-none d-md-block">
-		  <div class="right-block">
-		  <img src="{{ asset('public/images/rider_images/rider.jpg')}}" style="position: relative;margin-left:50px;"class="img-circle" alt="Cinque Terre" width="200" height="180">
-			<div class="card mt-2 mb-3 border-0"  >
-			 <ul class="list-group list-group-flush cust-notify">
-			   <li class="list-group-item">
-				   <h4 class="notify-heading">
-						   <a href="{{route('my-profile')}}">Profile</a>
-					</h4>
-				</li>
-			   <li class="list-group-item">
-				   <h4 class="notify-heading">
-					   <a href="{{ route('rides')}}">Rides</a>
-					</h4>
-				</li>
-			   <li class="list-group-item">
-				   
-			   	<h4 class="notify-heading">
-					<a href="{{ route('bikes')}}">Bikes</a>
-				</h4>
-				</li>
-			   <li class="list-group-item"><h4 class="notify-heading"><a href="{{ route('groups')}}">Groups</a></h4></li>
-			 </ul>
-		   </div>
-		   <div class="card mt-4 mb-3 border-0"  >
-			 <div class="card-body text-center">
-			   <div class="badge-icon"><img src="{{ asset('public/rider/images/badge.png')}}"></div>
-			   <div class="badge-status">Current status of Badge</div>
-			   <p class="badge-txt">Also we’ll show the available points in your account here.</p>
-			 </div>
-		   </div>
-		   <div class="sponser-ads"><span>SPONSERED ADS</span></div>
-		  </div>
+		  @include('layouts.frontLayout.profile-sidebar')
 		</div>
 	  </div>
 	</div>
