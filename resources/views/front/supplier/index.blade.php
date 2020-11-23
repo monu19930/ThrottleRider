@@ -1,4 +1,5 @@
 @extends('layouts.frontLayout.front-layout')
+@section('title', 'Suppliers')
 @section('content')
 <section class="main-bg">
 	<div class="container ">

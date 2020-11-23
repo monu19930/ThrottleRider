@@ -1,13 +1,14 @@
 @extends('layouts.frontLayout.front-layout')
+@section('title', 'Add Event')
 @section('content')
 <section class="main-bg">
 	<div class="container ">
 	  <div class="row">
 		<div class="col-md-8">
 		  <div class="cust-left-block">
-              <a href="{{route('group.events', $group_id)}}">< Back to Group Events Page</a>
+              <a href="{{route('my-groups.events', $group_id)}}">< Back to Group Events Page</a>
 			<h2 class="page-heading">
-			  Ride Locations
+			  Event Locations
 			</h2>
 			<div class="d-flex align-items-center filter-details mb-4">
 			  <span class="filter-block1"></span><br/>
@@ -235,22 +236,22 @@
 		</div>
 		<div class="col-md-4 d-none d-md-block">
 		  <div class="right-block">
-			<button class="post-btn w-100 mb-3">Add Your Ride</button>
+			<button class="post-btn w-100 mb-3">Add Your Event</button>
 			<div class="card mt-2 mb-3 border-0"  >
 			 <ul class="list-group list-group-flush cust-notify">
 			   <li class="list-group-item">
 				   <h4 class="notify-heading">
-						   <a href="#" data-toggle="modal" data-target="#bikeModal">Ride Locations</a>
+						   <a href="#" data-toggle="modal" data-target="#bikeModal">Event Locations</a>
 					</h4>
 				</li>
 			   <li class="list-group-item">
 				   <h4 class="notify-heading">
-					   <a href="{{ route('add-ride')}}">Add Itinerary</a>
+					   <a href="#">Add Itinerary</a>
 					</h4>
                 </li>
                 <li class="list-group-item">
 				   <h4 class="notify-heading">
-					   <a href="{{ route('add-ride')}}">Review And Done</a>
+					   <a href="#">Review And Done</a>
 					</h4>
 				</li>
 			 </ul>

@@ -13,8 +13,8 @@
              <div class="mob-white-bg">
              <div class="location-details d-flex align-items-center pt-0 prof-mob-rating">						
                  <span class="rating"><i class="fa fa-star"></i>{{ isset(user()->profile) ? user()->profile->rating : 0}} <small>Rating</small></span>						
-                 <span class="other-details"><i class="fa fa-map"></i>{{ isset(user()->profile) ? user()->profile->total_rides : 0}} <small>Total Rides</small></span>						
-                 <span class="other-details"><i class="fa fa-calendar"></i>{{ isset(user()->profile) ? user()->profile->total_km : 0}} km <small>Total Driven</small></span>					
+                 <span class="other-details"><i class="fa fa-map-o"></i>{{ isset(user()->profile) ? user()->profile->total_rides : 0}} <small>Total Rides</small></span>						
+                 <span class="other-details"><i class="fa fa-calendar-o"></i>{{ isset(user()->profile) ? user()->profile->total_km : 0}} km <small>Total Driven</small></span>					
              </div>
              </div>
              <button class="join-btn w-100 d-none d-lg-block"><a href="{{route('my-profile.edit')}}"><i class="fa fa-pencil mr-2"></i> EDIT</a></button>					
@@ -24,9 +24,9 @@
     <div class="card mt-2 mb-3 mob-top-links"  >
        <ul class="list-group list-group-flush cust-profile-links">
           <li class="list-group-item"><a href="{{route('my-profile')}}" class="{{ Route::currentRouteName()=='my-profile' ? 'active' : '' }}">Profile</a></li>
-          <li class="list-group-item"><a href="{{ route('rides')}}" class="{{ Route::currentRouteName()=='rides' ? 'active' : '' }}">Rides</a></li>
+          <li class="list-group-item"><a href="{{ route('my-rides')}}" class="{{ Route::currentRouteName()=='my-rides' ? 'active' : '' }}">Rides</a></li>
           <li class="list-group-item"><a href="{{ route('bikes')}}" class="{{ Route::currentRouteName()=='bikes' ? 'active' : '' }}">Bikes</a></li>
-          <li class="list-group-item"><a href="{{ route('groups.index')}}" class="{{ Route::currentRouteName()=='groups.index' ? 'active' : '' }}">Groups</a></li>
+          <li class="list-group-item"><a href="{{ route('my-groups.index')}}" class="{{ Route::currentRouteName()=='my-groups.index' ? 'active' : '' }}">Groups</a></li>
           <li class="list-group-item"><a href="{{ route('suppliers.index')}}" class="{{ Route::currentRouteName()=='suppliers.index' ? 'active' : '' }}">Suppliers</a></li>
           <li class="list-group-item"><a href="{{ route('tips.index')}}" class="{{ Route::currentRouteName()=='tips.index' ? 'active' : '' }}">Tips</a></li>
           <li class="list-group-item"><a href="{{ route('polls.index')}}" class="{{ Route::currentRouteName()=='polls.index' ? 'active' : '' }}">Polls</a></li>

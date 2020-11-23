@@ -1,119 +1,189 @@
-<section class="main-bg">
-<div class="container ">
-	  <div class="row">
-		<div class="col-md-12">
-		  <div class="cust-left-block">
-			<h2 class="page-heading">
-			  Review Ride Information
-			</h2>
-			<div class="d-flex align-items-center filter-details mb-4">
-			  <span class="filter-block1">Ride Added Details</span>
-			</div>
-			
-			<div class="row">
-            <div class="col-12 mb-3">
-                            <h4>Ride to {{ $ride['end_location'] }} Via {{ implode(',',$ride['via_location'])}}</h4>
-                            </div>
-			  <!-- repeat div from here START -->			
-				<div class="col-12 mb-3">
+  <h5 class="add-bike-heading">Review Ride Information
+    <small>Verify Information you've entered and submit</small>
+  </h5>
 
-                <h4 class="location-title">Itinerary</h4>
-                        @foreach($ride['rideDay'] as $key => $field)
-                        
+  <h2 class="page-heading mt-3">
+    Ride to {{ $ride['end_location']}} via {{ implode(',',$ride['via_location'])}}
+    <small class="head-small-txt pt-2 d-block">from <span>{{ $ride['start_location']}}</span></small>
+  </h2>
+  
+  <div class="rider-overview mt-3 mt-lg-0">
+    {{$ride['short_description']}}
+    <br><a href="#" class="mt-2 font-weight-bold d-inline-block">Read more</a>
+  </div>
 
-                        <ul>
-                    <li class="col-12 mb-3">
-                      <span>Day {{$key+1}}</span>
-                      <div class="d-flex align-items-center location-block">
-                        <h4>{{$field['start_location']}} To {{$field['end_location']}}</h4>
-                      </div>
-                      <div class="row">
-                        @if(!empty($field['day_description']))
-                        <div class="col-md-6">
-                          <p>{{$field['day_description']}}</p>
-                        </div>
-                        @endif
-                        <div class="col-md-6">
-                          @if(isset($field['ride_images']))
-                          <div class="rider-img-block mr-md-3 ml-3 ml-md-0 order-2 order-md-1">
-                            <img src="{{ asset('public/images/rides/')}}/{{ $field['ride_images'][0]}}" class="img-fluid">
-                          </div>
-                          @endif
-                        </div>
-                      </div>
-                      
-                      <div class="row d-flex align-items-center">
-                        <div class="col-md-6">
-                          <span>
-                            <i class="fa fa-star"></i> {{$field['road_quality']}} <small>Road Quality</small>
-                          </span>
-<span>                            <i class="fa fa-star"></i> {{$field['road_scenic']}} <small>Road Scenic</small>
-                          </span>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-6">
-                        <span class="">
-                          <i class="fa fa-map"></i> 2176 km <small>from {{$field['start_location']}}</small>
-                        </span>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="col-md-6">
-                        <span class="{{($field['is_petrol_pump']==0) ? 'not-available' : ''}}">
-                          <i class="fa fa-home"></i> <small>Petrol Pump</small>
-                        </span>
-                        </div>
-                      </div>
-
-                      <div class="row">
-                        <div class="col-md-6">
-                        <span class="{{($field['is_restaurant']==0) ? 'not-available' : ''}}">
-                        <i class="fa fa-cutlery" aria-hidden="true"></i> <small>Restaurant Available</small>
-                        </span>
-                        </div>
-                      </div>
+  <div class="highlight-block-scroll">
+    <div class="highlight-block d-flex">
+      <div class="highlight-box1 d-inline-flex align-items-center mr-3 p-0">
+        <span class="ride-km-map">
+          <i class="fa fa-map-o"></i><span class="d-block">{{$ride['total_km']}} km </span><small class="sml-txt d-block">from {{$ride['start_location']}}</small>
+        </span>
+        <span class="ml-auto"><img src="{{ asset('public/rider/images/map.png')}}/" class="img-fluid rounded-right rider-map" /></span>
+      </div>
 
 
-                      <div class="row">
-                        <div class="col-md-6">
-                        <span class="{{($field['is_hotel']==0) ? 'not-available' : ''}}">
-                        <i class="fa fa-h-square" aria-hidden="true"></i> <small>Hotel Available</small>
-                        </span>
-                        </div>
-                      </div>
+      <div class="highlight-box2   mr-3">
+        <i class="fa fa-user-o"></i><span class="d-block">{{$ride['no_of_people']}} </span><small class="sml-txt d-block">People</small>
+      </div>
 
-                      <div class="row">
-                        <div class="col-md-6">
-                        <span class="{{($field['is_parking']==0) ? 'not-available' : ''}}">
-                          <i class="fa fa-road"></i> <small>Parking Available</small>
-                        </span>
-                        </div>
-                      </div>
 
-                      <div class="row">
-                        <div class="col-md-6">
-                        <span class="{{($field['is_wifi']==0) ? 'not-available' : ''}}">
-                        <i class="fa fa-wifi" aria-hidden="true"></i> <small>Wifi Available</small>
-                        </span>
-                        </div>
-                      </div>
 
-                      </div>
-                    </li>
-                  </ul>
-                        @endforeach
+      <div class="highlight-box2   mr-3">
+        <i class="fa fa-calendar-o"></i><span class="d-block">{{count($ride['rideDay'])}}</span><small class="sml-txt d-block">Days Trip</small>
+      </div>
 
-                        <div class="form-group">
-                        <!-- <button type="button" id="save_later3" class="btn back-btn w w-20">SAVE FOR LATER</button> -->
-                        <button type="button" onClick="rideDetailsPage()" class="btn back-btn w-20"> << BACK</button>
-                        <button type="button" onClick="submitRide()" id="riderSubmit" class="btn btn-danger w-40">DONE, SUBMIT</button>
-                    </div>
-				</div>
-				</div>
-			</div>		   
-		  </div>
-		</div>
-	  </div>
+
+
     </div>
+  </div>
+
+  <hr class="full-h-line mx-0">
+  <h5 class="mid-heading">Things to carry on this Ride</h5>
+  <div class="rider-overview">
+    Appropriate equipment is a component of a successful journey! Travel lightly, try to stay under 45 lb (20 kg).
+  </div>
+  <h4 class="page-sub-heading mt-4 mb-2">
+    Bags
+  </h4>
+  <div class="rider-overview">
+    - A sailor bag would be perfect, a walker's bag too (without steel bar). <br>
+    - You can close it with a padlock if you want to (Don't forget to tag it before leaving with your address<br>
+    - A small backpack of 20 litres is advised for daily necessities such as camera, sunscreen lotion
+  </div>
+  <h4 class="page-sub-heading mt-4 mb-2">
+    Clothing and Personal Equipments
+  </h4>
+  <div class="rider-overview">
+    - 2 light pants<br>
+    - 4 shirts (including some with long sleeves, to protect yourself from the sun)<br>
+    - 1 bathing suit
+    <br><a href="#" class="mt-2 font-weight-bold d-inline-block">Read more</a>
+  </div>
+
+  <hr class="full-h-line mx-0">
+  <h5 class="mid-heading">Itinerary</h5>
+    <ul class="cust-timeline">
+      @foreach($ride['rideDay'] as $key => $rideDay)
+      <li>
+        <div class="row">
+          <div class="col-12 col-md-2">
+            <h5 class="m-0 p-0 timeline-day">Day {{$key+1}}</h5>
+          </div>
+          <div class="col-9 col-md-7">
+            <h4 class="page-sub-heading">{{$rideDay['start_location']}} to {{$rideDay['end_location']}}</h4>
+            <div class="timeline-txt">Day {{$key+1}} {{$rideDay['day_description']}} <a href="#">read more</a> </div>
+            <div class="d-none d-md-block">
+              <div class="byker-profile-rate d-inline-flex align-items-center mt-3 ">
+
+                <span class="d-flex align-items-center px-4 h-100 border-right justify-content-center">
+                  <span class="star-txt"><i class="fa fa-star"></i> {{$rideDay['road_quality']}}</span>
+                  <small class="sml-txt">Road Quality</small>
+                </span>
+                <span class="d-flex align-items-center px-4 h-100 justify-content-center ">
+                  <span class="star-txt"><i class="fa fa-star"></i> {{$rideDay['road_scenic']}}</span>
+                  <small class="sml-txt">Scenery</small>
+                </span>
+
+              </div>
+              <div class="d-flex mt-3">
+                <div><img src="{{ asset('public/rider/images/icons-km.svg')}}"></div>
+                <div class="pl-2">
+                  <small class="sml-txt d-block">Distance from {{$rideDay['start_location']}}</small>
+                  <p class="timeline-keypoint">284 km</p>
+                </div>
+              </div>
+              <div class="d-flex mt-3">
+                <div><img src="{{ asset('public/rider/images/icons-km.svg')}}"></div>
+                <div class="pl-2">
+                  <small class="sml-txt d-block">Petrol Pump</small>
+                  <p class="timeline-keypoint">Yes, in mid-way</p>
+                </div>
+              </div>
+              <div class="d-flex mt-3">
+                <div><img src="{{ asset('public/rider/images/icons-km.svg')}}"></div>
+                <div class="pl-2">
+                  <small class="sml-txt d-block">Place of stay at Marvanthe</small>
+                  <p class="timeline-keypoint">Hotel Marvanthe, Karnataka, India <a href="#" class="ml-1 font-weight-bold">View on Map</a></p>
+                </div>
+              </div>
+              <div class="d-flex align-items-center mt-4">
+                <div class="d-flex align-items-center pr-2 pr-lg-4 border-right">
+                  <span><img src="{{ asset('public/rider/images/parking.png')}}" /></span>
+                  <span class="timeline-txt ml-2">Parking available</span>
+                </div>
+                <div class="d-flex align-items-center px-2 px-lg-4 border-right">
+                  <span><img src="{{ asset('public/rider/images/wifi.png')}}" /></span>
+                  <span class="timeline-txt ml-2">Wi-fi</span>
+                </div>
+                <div class="d-flex align-items-center pl-lg-4 pl-2">
+                  <span><img src="{{ asset('public/rider/images/food.png')}}" /></span>
+                  <span class="timeline-txt ml-2">Food available</span>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+          <div class="col-3 text-right">
+            <img src="{{ asset('public/images/rides/')}}/{{$rideDay['ride_images'][0]}}" class="img-fluid timeline-img"><small class="no-of-imgs">
+              @if(count($rideDay['ride_images']) > 1)
+              {{count($rideDay['ride_images'])}}+ Photos
+              @endif
+            </small>
+          </div>
+          <div class="col-12 d-md-none ">
+            <div class="byker-profile-rate d-inline-flex align-items-center mt-3 ">
+
+              <span class="d-flex align-items-center px-4 h-100 border-right justify-content-center"><span class="star-txt"><i class="fa fa-star"></i> 4.5</span> <small class="sml-txt">Road Quality</small></span>
+              <span class="d-flex align-items-center px-4 h-100 justify-content-center "><span class="star-txt"><i class="fa fa-star"></i> 4.5</span> <small class="sml-txt">Scenery</small></span>
+
+            </div>
+            <div class="d-flex mt-3">
+              <div><img src="{{ asset('public/rider/images/icons-km.svg')}}"></div>
+              <div class="pl-2">
+                <small class="sml-txt d-block">Distance from {{$rideDay['start_location']}}</small>
+                <p class="timeline-keypoint">284 km</p>
+              </div>
+            </div>
+            <div class="d-flex mt-3">
+              <div><img src="{{ asset('public/rider/images/icons-km.svg')}}"></div>
+              <div class="pl-2">
+                <small class="sml-txt d-block">Petrol Pump</small>
+                <p class="timeline-keypoint">Yes, in mid-way</p>
+              </div>
+            </div>
+            <div class="d-flex mt-3">
+              <div><img src="{{ asset('public/rider/images/icons-km.svg')}}"></div>
+              <div class="pl-2">
+                <small class="sml-txt d-block">Place of stay at Marvanthe</small>
+                <p class="timeline-keypoint">Hotel Marvanthe, Karnataka, India <a href="#" class="ml-1 font-weight-bold">View on Map</a></p>
+              </div>
+            </div>
+            <div class="d-flex align-items-center mt-4">
+              <div class="d-flex align-items-center pr-2 pr-lg-4 border-right">
+                <span><img src="{{ asset('public/rider/images/parking.png')}}" /></span>
+                <span class="timeline-txt ml-2">Parking available</span>
+              </div>
+              <div class="d-flex align-items-center px-2 px-lg-4 border-right">
+                <span><img src="{{ asset('public/rider/images/wifi.png')}}" /></span>
+                <span class="timeline-txt ml-2">Wi-fi</span>
+              </div>
+              <div class="d-flex align-items-center pl-lg-4 pl-2">
+                <span><img src="{{ asset('public/rider/images/food.png')}}" /></span>
+                <span class="timeline-txt ml-2">Food available</span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </li>
+      @endforeach
+    </ul>
+  </div>
+  <hr class="full-h-line my-4">
+  <div class="text-right pb-3">
+    <!-- <button type="button" id="save_later3" class="btn back-btn w w-20">SAVE FOR LATER</button> -->
+    <button type="button" onClick="rideDetailsPage()" class="post-btn  px-5">
+      BACK</button> <button type="button" onClick="submitRide()" id="riderSubmit" class="post-btn  px-5">DONE, SUBMIT
+    </button>
+  </div>

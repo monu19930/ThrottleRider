@@ -191,45 +191,41 @@
 			  </button>
 			  <div class="row no-gutters">
 				<div class="col-lg-12">					
-				  <div class="login-block">
-				 	 <div class="review-more-details">
-						<h2 class="page-heading">Things to carry on this Ride</h2>
-						<div class="d-flex align-items-center filter-details mb-4">
-							<span class="filter-block1"></span>
-						</div>
-						<div class="alert alert-success print-error-msg" style="display:none">
-							<ul></ul>
-						</div>
-					</div>
-					<h4 class="page-sub-heading">Bags</h4>
-					<div>
-						<ul class="list-content">
-							<li>A sailor bag would be perfect, a walker bag too (without steel bar)</li>
-							<li>You can close it with a padlock if you want to (Don't forget to tag it before leaving with your address</li>
-							<li>A small backpack of 20 litres is advised for daily necessities such as camera, suncreen lotion</li>
-						</ul>                               
-					</div>
+				  <div class="login-block">				 	 
+					<h4 class="page-sub-heading">Things to carry on this Ride</h4>
+					<hr class="full-h-line my-4">
+
+					<h4 class="page-sub-heading mt-2 mb-2">Bags</h4>
+                    <div class="rider-overview mt-3 mt-lg-0">- A sailor bag would be perfect, a walker's bag too (without steel bar). <br>
+                        - You can close it with a padlock if you want to (Don't forget to tag it before leaving with your address<br>
+                        - A small backpack of 20 litres is advised for daily necessities such as camera, sunscreen lotion
+                    </div>
+                    
 					<div class="col-10">
-					<form id="rideLuggageForm" method="post">						
-						<div class="login-input">
-							<div class="form-group">
-								<input type="text" autocomplete="off" class="form-control" name="ride_luggage[]" placeholder="Add Your Point"> <a href="javascript:void(0)" id="add_more_ride_luggage">Add</a>
+						<form id="rideLuggageForm" method="post">
+							<div class="alert alert-success print-error-msg" style="display:none">
+								<ul></ul>
+							</div>					
+							
+							<div class="d-flex align-items-center w-100 mt-4">
+								<div class="input-field  mb-0 w-100">
+									<input type="text" autocomplete="off" class="input-block" name="ride_luggage[]" placeholder=" "> 
+									<label for="search-bike" class="input-lbl">Add Your Point</label>
+								</div>
+								<a href="javascript:void(0)" id="add_more_ride_luggage">Add</a>
 							</div>
-							<div id="ride_luggage_list"></div>
-						</div>
-					</form>
+							<div id="ride_luggage_list"></div>							
+						</form>
 					</div>
-					<h4 class="page-sub-heading">Clothing and Personal Equipments</h4>
-					<div>
-						<ul class="list-content">
-							<li>2 light pants</li>
-							<li>4 shirts (including some with long sleeves, to protect yourself from the sun)</li>
-							<li>1 bathing suit</li>
-						</ul>                               
+					<h4 class="page-sub-heading mt-4 mb-2">Clothing and Personal Equipments</h4>
+                    <div class="rider-overview mt-3 mt-lg-0">- 2 light pants<br>
+                        - 4 shirts (including some with long sleeves, to protect yourself from the sun)<br>
+                        - 1 bathing suit
 					</div>
-					<div class="form-group">
+					<hr class="full-h-line my-4">
+					<div class="text-right pb-3 d-flex align-items-center">
 						<button type="button" data-dismiss="modal" aria-label="Close" class="btn back-btn w-30">CANCEL</button>
-						<button type="button" id="rideLuggageSubmit" class="btn btn-danger w-30">SAVE</button>
+						<button type="button" id="rideLuggageSubmit" class="post-btn lg px-5 ml-auto">SAVE</button>
 					</div>				
 				  </div>
 				</div>				

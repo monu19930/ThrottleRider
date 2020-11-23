@@ -1,4 +1,5 @@
 @extends('layouts.frontLayout.front-layout')
+@section('title', 'Bikes')
 @section('content')
 <section class="main-bg">
 	<div class="container ">
@@ -100,16 +101,16 @@
 						<div class="location-details  p-0">
 						<span class="rating d-flex align-items-center"><i class="fa fa-star"></i>4.5 <small class="ml-2">Rating</small></span>
 						</div>
-						<h4 class="location-title my-2">Ooty, Banglore-Mysore Highway</h4>
+						<h4 class="location-title my-2">{{ $bike['bike_name']}}</h4>
 						<div class="d-flex align-items-center location-block mb-2">
 							<!-- <span class="location">Banglore, Karnatka, India</span> -->
-							<span class="time">in month of <span>June 2019</span></span></span>
+							<span class="time">Added on  <span>{{ $bike['added_on']}}</span></span></span>
 						</div>
 						<div class="location-details d-flex align-items-center ">
 						
-						<span class="other-details"><i class="fa fa-map-o"></i>2176 km <small>from bengaluru</small></span>
+						<span class="other-details"><i class="fa fa-map-o"></i>{{ $bike['total_km']}} km <small>Driven</small></span>
 						<!-- <span class="other-details"><i class="fa fa-calendar-o"></i>12 <small>Days trip</small></span> -->
-						<span class="other-details"><i class="fa fa-road"></i>Highway <small>Road Type</small></span>
+						<span class="other-details"><i class="fa fa-road"></i>{{ $bike['total_rides']}} <small>Total Rides</small></span>
 						</div>
 						</div>
 						
@@ -118,15 +119,15 @@
 					
 				</div>
 				<div class="rider-img-block ml-3 ">
-					<img src="{{ asset('public/rider/images/mobe_byke.png')}}" class="img-fluid">
+				<img src="{{ asset('public/images/rider/bikes/')}}/{{$bike['image']}}" class="img-fluid">
 				</div>
 				</div>
 				<div class="d-flex align-items-center mt-1">
 					<div class="userdetails d-flex align-items-center">
-					<span class="userimg mr-2"><img src="{{ asset('public/rider/images/userpic.png')}}" class="img-fluid" /></span>
+					<span class="userimg mr-2"><img src="{{ asset('public/images/rider_images/')}}/{{$bike['rider_image']}}" class="img-fluid" /></span>
 					<span class="username">
-					<span class="d-block">Ekene Obasey</span>
-					<span class="badge badge-warning"><i class="fa fa-star"></i> 4.5</span>
+					<span class="d-block">{{$bike['rider_name']}}</span>
+					<span class="badge badge-warning"><i class="fa fa-star"></i> {{$bike['rider_rating']}}</span>
 					</span>
 					</div> 
 					<div class="bookmark ml-auto"><a href="#"><i class="fa fa-bookmark-o"></i></a></div>

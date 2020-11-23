@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\User;
+use Illuminate\Support\Str;
 
 class RideController extends Controller
 {
@@ -53,7 +54,7 @@ class RideController extends Controller
         return $result;
     }
 
-    public function delete(Request $request) {
+    public function destroy(Request $request) {
         $id = $request->id;
         $bike = Ride::find($id);
         $bike->delete();
@@ -103,6 +104,7 @@ class RideController extends Controller
          else {
             $data = $request->all();
             unset( $data['csrf'] );
+            $data['slug'] = $this->createSlug($data);            
             if(empty($request->session()->get('ride'))){
                 $ride = new Ride();
                 $ride->fill($data);
@@ -116,7 +118,12 @@ class RideController extends Controller
             $response = ['status' => true, 'days' => $different_days, 'start_location' => $request->start_location];
         }
         return response()->json($response);
+    }
 
+    protected function createSlug($data){
+        $str = $data['start_location']. ' '.implode(' ', $data['via_location']). ' '.$data['end_location'];
+        $slug = Str::slug($str, '-');
+        return $slug;
     }
 
     public function addRideStep2(Request $request) {
@@ -125,6 +132,9 @@ class RideController extends Controller
         $ride = $request->session()->get('ride');
         $ride->rideDay = $filterData;
         $request->session()->put('ride', $ride);
+
+        //dd($ride);
+
         $html = view('front.ride.ride-review', compact('ride'))->render();
         return $html;
     }
@@ -135,7 +145,7 @@ class RideController extends Controller
         return $html;
     }
 
-    public function saveRide(Request $request)
+    public function store(Request $request)
     {
         $user = user();
         $ride = $request->session()->get('ride');
@@ -153,7 +163,8 @@ class RideController extends Controller
                 'no_of_people' => $ride->no_of_people,
                 'short_description' => $ride->short_description,
                 'ride_days' => $ride->ride_days,
-                'luggage' => $ride->luggage
+                'luggage' => $ride->luggage,
+                'slug' => $ride->slug
             ]); 
             
         $this->storeRideDays($ride->rideDay,$rideDetails->id, $ride->start_date);

@@ -112,6 +112,22 @@ if (!function_exists('addNumberOfDate')) {
 
 
 
+if (!function_exists('isOwner')) {
+   
+    function isOwner($rider_id)
+    {   
+        $user = user();
+        $owner = false;
+        if(isset($user->id) && ($user->id == $rider_id)) {
+            $owner = true;
+        }
+        return $owner;
+    }
+    
+}
+
+
+
 
 
 

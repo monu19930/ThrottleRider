@@ -1,11 +1,12 @@
 @extends('layouts.frontLayout.front-layout')
+@section('title', 'Add Group')
 @section('content')
 <section class="main-bg">
 	<div class="container ">
 	  <div class="row">
 		<div class="col-md-8">
 		  <div class="cust-left-block">
-          <a href="{{route('groups.index')}}">< Back to My Groups</a>
+          <a href="{{route('my-groups.index')}}">< Back to My Groups</a>
 			<div class="d-flex align-items-center filter-details mb-4">
 			  <span class="filter-block1"></span><br/>
       </div>

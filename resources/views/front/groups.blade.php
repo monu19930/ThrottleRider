@@ -1,4 +1,5 @@
 @extends('layouts.frontLayout.front-layout')
+@section('title', 'Groups');
 @section('content')
 <section class="main-bg">
 	<div class="container ">
@@ -42,7 +43,8 @@
 						 @endif
 					   </div>
 					 </div>
-					 <div class="d-flex">
+					 @if($group['is_group_owner'] == false)
+					 <div class="d-flex group_{{$group['group_owner_id']}}">
 						@if($group['current_rider_join_status'] == false)
 							<button class="join-btn flex-grow-1 mt-2 mr-1 rider-group-join" id="group-join-{{$group['group_owner_id']}}" content="{{$group['group_owner_id']}}">
 								<i class="fa fa-send mr-2"></i>Join
@@ -53,6 +55,7 @@
 						@endif
 						<button class="follow-btn flex-grow-1  mt-2 ml-1"><i class="fa fa-plus mr-2"></i>FOLLOW</button>
 				   </div>
+				   @endif
 				   </div>
 				 </div>
 				</div>

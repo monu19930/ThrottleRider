@@ -25,9 +25,8 @@ class PollRequest extends FormRequest
     {
         return [
             'group_id' => 'required',
-            'poll_name' => 'required',
-            'options' => 'required',
-            'options.*' => 'required'
+            'question' => 'required',
+            'question.*' => 'required',
         ];
     }
 

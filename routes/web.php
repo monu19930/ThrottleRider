@@ -16,14 +16,17 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/', 'HomeController@index')->name('login');
 
-Route::get('/ride', 'HomeController@rides')->name('front-rides');
-Route::get('/bikers', 'HomeController@bikers')->name('front-bikers');
-Route::get('/group', 'HomeController@groups')->name('front-groups');
+Route::get('/rides', 'HomeController@rides')->name('rides.index');
+Route::get('/rides/{id}', 'HomeController@rideDetail')->name('rides.show');
+Route::get('/bikers', 'HomeController@bikers')->name('bikers.index');
+Route::get('/groups', 'HomeController@groups')->name('groups.index');
 
 Route::get('/verify/{token}', 'VerifyController@VerifyEmail')->name('verify');
 
 Route::post('/rider-signup', 'RiderController@register')->name('rider-register');
 Route::post('/rider-login', 'RiderController@login')->name('rider-login');
+
+Route::get('/signin', 'HomeController@signinForm')->name('signup-mob');
 
 Route::group(['middleware'=>['auth']],function(){
     Route::get('/logout', 'RiderController@logout')->name('rider-logout');
@@ -34,18 +37,18 @@ Route::group(['middleware'=>['auth']],function(){
     Route::get('bikes', 'BikeController@index')->name('bikes');
     Route::get('bikes/add', 'BikeController@create')->name('add-bike');
 
-    Route::get('rides', 'RideController@index')->name('rides');
-    Route::get('rides/add', 'RideController@create')->name('add-ride');
-    Route::post('register1', 'RideController@addRideStep1')->name('register1');
-    Route::post('add-ride-day', 'RideController@addRideDay')->name('ride-day');
-    Route::post('register2', 'RideController@addRideStep2')->name('register2');
-    Route::post('save-ride', 'RideController@saveRide')->name('ride-submit');
-    Route::post('ride-delete', 'RideController@delete')->name('delete-ride');
+    Route::get('my-rides', 'RideController@index')->name('my-rides');
+    Route::get('my-rides/create', 'RideController@create')->name('my-rides.create');
+    Route::post('my-rides/register1', 'RideController@addRideStep1')->name('my-rides.register1');
+    Route::post('my-rides/add-day', 'RideController@addRideDay')->name('my-rides.add-day');
+    Route::post('my-rides/register2', 'RideController@addRideStep2')->name('my-rides.register2');
+    Route::post('my-rides/store', 'RideController@store')->name('my-rides.store');
+    Route::post('my-rides/destroy', 'RideController@destroy')->name('my-rides.destroy');
 
     Route::post('search', 'HomeController@search')->name('search-result');
 
     Route::post('bikes/search', 'BikeController@search')->name('bike-search');
-    Route::get('bikes/edit/{id}', 'BikeController@edit');
+    Route::get('bikes/edit/{id}', 'BikeController@edit')->name('bikes.edit');
 
     Route::post('bikes/details', 'BikeController@searchBikeDetails')->name('search-bike-details');
     Route::post('bike-register1', 'BikeController@addBikeStep1')->name('bike-register1');
@@ -61,17 +64,17 @@ Route::group(['middleware'=>['auth']],function(){
     Route::post('group-join', 'RiderController@joinGroup')->name('join-group');
     Route::post('invite-members', 'RiderController@inviteGroupMembers')->name('invite-group-members');
 
-    Route::get('group/{id}/join', 'RiderController@invitationJoinGroup');
+    Route::get('my-groups/{id}/join', 'RiderController@invitationJoinGroup');
     
-    Route::resource('groups', 'GroupController');
+    Route::resource('my-groups', 'GroupController');
 
-    Route::get('group/{id}/events', 'EventController@index')->name('group.events');
-    Route::get('group/{id}/events/add', 'EventController@create')->name('group.events.add');
-    Route::post('group/events/add', 'EventController@eventAddStep1')->name('group.events.add.step1');
-    Route::post('group/events/add-2', 'EventController@eventAddStep2')->name('group.events.add.step2');
-    Route::post('group/events/save', 'EventController@eventSave')->name('group.events.submit');
+    Route::get('my-groups/{id}/events', 'EventController@index')->name('my-groups.events');
+    Route::get('my-groups/{id}/events/create', 'EventController@create')->name('my-groups.events.create');
+    Route::post('my-groups/events/add-step-1', 'EventController@eventAddStep1')->name('my-groups.events.add.step1');
+    Route::post('my-groups/events/add-step-2', 'EventController@eventAddStep2')->name('my-groups.events.add.step2');
+    Route::post('my-groups/events/store', 'EventController@store')->name('my-groups.events.store');
 
-    Route::post('group/past-experience/save', 'GroupController@savePastExperience')->name('group.experience.save');
+    Route::post('my-groups/past-experience/store', 'GroupController@savePastExperience')->name('my-groups.experience.store');
    
     Route::post('get-group_members', 'RiderController@groupMemberList')->name('group_member-list');
     Route::post('chat/add', 'RiderController@saveDataChat')->name('send-contact-detail');
@@ -80,7 +83,7 @@ Route::group(['middleware'=>['auth']],function(){
     Route::resource('tips', 'TipController');
 
     Route::resource('polls', 'PollController');
-    Route::post('group/polls', 'PollController@groupPollsList')->name('get-group-polls');
+    Route::post('my-groups/polls', 'PollController@groupPollsList')->name('get-group-polls');
     Route::post('poll/feedback/save', 'PollController@savePollsFeedback')->name('save-rider-polls-feedback');
 
 

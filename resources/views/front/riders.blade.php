@@ -1,4 +1,5 @@
 @extends('layouts.frontLayout.front-layout')
+@section('title', 'Bikers');
 @section('content')
 <section class="main-bg">
 	<div class="container ">
@@ -20,7 +21,7 @@
 				<div class="col-md-6 mt-2">
 					<div class="top-riders-block">
 					<div class="card" >
-					<img src="{{ asset('public/rider/images/top-rider1.png')}}" class="card-img-top" alt="">
+					<img src="{{ asset('public/images/rider/cover_images/')}}/{{$rider['cover_image']}}" class="card-img-top" alt="">
 					<div class="card-body position-relative">
 						<img src="{{ asset('public/images/rider_images/')}}/{{$rider['rider_image']}}" class="user-pic" widtj="60" height="60"/>
 						<div class="username mb-2">
@@ -35,7 +36,17 @@
 						<span class="other-details pl-0">{{$rider['total_km']}} km <small>Driven</small></span>
 						
 						</div>
-						<button class="follow-btn w-100 mt-2"><i class="fa fa-plus mr-2"></i>FOLLOW</button>
+						@if($rider['is_rider_owner'] == false)
+							@if($rider['current_rider_follow_status'] == false)
+								<button class="follow-btn w-100 mt-2 follow-rider" content="{{$rider['rider_id']}}">
+									<i class="fa fa-plus mr-2"></i>FOLLOW
+								</button>
+							@else
+								<button class="join-btn flex-grow-1 mt-2 mr-1" >
+									Followed
+								</button>
+							@endif
+						@endif
 					</div>
 					</div>
 					</div>

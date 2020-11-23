@@ -85,7 +85,7 @@ class EventController extends Controller
         return $result;
     }
     
-    public function eventSave(Request $request)
+    public function store(Request $request)
     {
         $user = user();
         $event = $request->session()->get('event');
@@ -106,7 +106,7 @@ class EventController extends Controller
             'luggage' => $event->luggage
         ]);
         
-        $route = route('group.events', $event->group_id);
+        $route = route('my-groups.events', $event->group_id);
 
         $this->sendNotificationToGroupMembers($event->group_id);
 

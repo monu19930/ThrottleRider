@@ -14,9 +14,9 @@
           <div class="collapse navbar-collapse" id="main_nav">	
             <ul class="navbar-nav ml-auto cust-links">
               <li class="nav-item"><a class="nav-link" href="{{url('/')}}"> Whats New</a></li>
-              <li class="nav-item"><a class="nav-link {{ Route::currentRouteName()=='front-rides' ? 'active' : '' }}" href="{{route('front-rides')}}"> Rides</a></li>
-              <li class="nav-item"><a class="nav-link {{ Route::currentRouteName()=='front-bikers' ? 'active' : '' }}" href="{{route('front-bikers')}}"> Bikers</a></li>
-              <li class="nav-item"><a class="nav-link {{ Route::currentRouteName()=='front-groups' ? 'active' : '' }}" href="{{route('front-groups')}}"> Groups</a></li>
+              <li class="nav-item"><a class="nav-link {{ Route::currentRouteName()=='rides.index' ? 'active' : '' }}" href="{{route('rides.index')}}"> Rides</a></li>
+              <li class="nav-item"><a class="nav-link {{ Route::currentRouteName()=='bikers.index' ? 'active' : '' }}" href="{{route('bikers.index')}}"> Bikers</a></li>
+              <li class="nav-item"><a class="nav-link {{ Route::currentRouteName()=='groups.index' ? 'active' : '' }}" href="{{route('groups.index')}}"> Groups</a></li>
               <li class="nav-item"><a class="nav-link" href="{{url('/')}}"> More</a></li>
               @auth
               <li class="dropdown user-profile-block">
@@ -43,7 +43,7 @@
           <div class="mob-nav d-md-none">
           <ul class="navbar-nav mob-menu text-center">
             <li class="nav-item">
-              <a href="#" class="active ">
+              <a href="{{url('/')}}" class="{{ Route::currentRouteName()=='login' ? 'active' : '' }}">
                 <span class="mob-icon"><img src="{{ asset('public/rider/images/home-active.png')}}" class="img-fluid active-icon"><img src="{{ asset('public/rider/images/home.png')}}" class="img-fluid main-icon"></span>
                 <span class="mob-links">Home</span>
               </a>
@@ -60,18 +60,29 @@
                 <span class="mob-links">Add</span>
               </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" >
               <a href="#" >
                 <span class="mob-icon"><img src="{{ asset('public/rider/images/bookmark-active.png')}}" class="img-fluid active-icon"><img src="{{ asset('public/rider/images/bookmark.png')}}" class="img-fluid main-icon"></span>
                 <span class="mob-links">Saved</span>
               </a>
             </li>
+            @auth
             <li class="nav-item">
-              <a href="#">
+              <a href="{{route('my-profile')}}" class="{{ Route::currentRouteName()=='my-profile' ? 'active' : '' }}">
                 <span class="mob-icon"><img src="{{ asset('public/rider/images/profile-active.png')}}" class="img-fluid active-icon"><img src="{{ asset('public/rider/images/profile.png')}}" class="img-fluid main-icon"></span>
                 <span class="mob-links">Profile</span>
               </a>
             </li>
+            @endauth
+
+            @guest
+            <li class="nav-item">
+              <a href="{{route('signup-mob')}}" class="{{ Route::currentRouteName()=='signup-mob' ? 'active' : '' }}">
+                <span class="mob-icon"><img src="{{ asset('public/rider/images/profile-active.png')}}" class="img-fluid active-icon"><img src="{{ asset('public/rider/images/profile.png')}}" class="img-fluid main-icon"></span>
+                <span class="mob-links">Sign Up</span>
+              </a>
+            </li>
+            @endguest
           </ul>
         </div>
         <!-- Mob Nav End-->
@@ -104,9 +115,9 @@
             <div class="collapse navbar-collapse" id="main_nav">	
               <ul class="navbar-nav ml-auto cust-links">
                 <li class="nav-item"><a class="nav-link" href="{{url('/')}}"> Whats New</a></li>
-                <li class="nav-item"><a class="nav-link {{ Route::currentRouteName()=='front-rides' ? 'active' : '' }}" href="{{route('front-rides')}}"> Rides</a></li>
-                <li class="nav-item"><a class="nav-link {{ Route::currentRouteName()=='front-bikers' ? 'active' : '' }}" href="{{route('front-bikers')}}"> Bikers</a></li>
-                <li class="nav-item"><a class="nav-link {{ Route::currentRouteName()=='front-groups' ? 'active' : '' }}" href="{{route('front-groups')}}"> Groups</a></li>
+                <li class="nav-item"><a class="nav-link {{ Route::currentRouteName()=='rides.index' ? 'active' : '' }}" href="{{route('rides.index')}}"> Rides</a></li>
+                <li class="nav-item"><a class="nav-link {{ Route::currentRouteName()=='bikers.index' ? 'active' : '' }}" href="{{route('bikers.index')}}"> Bikers</a></li>
+                <li class="nav-item"><a class="nav-link {{ Route::currentRouteName()=='groups.index' ? 'active' : '' }}" href="{{route('groups.index')}}"> Groups</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{url('/')}}"> More</a></li>
                 @auth
                 <li class="dropdown user-profile-block">
@@ -156,7 +167,7 @@
                         </div>
                   </div>
                   <div class="trending-txt d-md-flex align-items-center">
-                    <label>Trending Searches in Bangaluru :</label>
+                    <label>Trending Searches in {{getCurrentLocation()}} :</label>
                     <a href="#" class="ml-2">5-10km Rides</a>
                     <a href="#" class="left-seperater">2 days ride</a>
                     <a href="#" class="left-seperater">Scenic Rides</a>

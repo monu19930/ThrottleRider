@@ -1,4 +1,5 @@
 @extends('layouts.frontLayout.front-layout')
+@section('title', 'Throttle Rides')
 @section('content')
 <?php $page="Home"?>
 <section class="main-bg" id="search_res">
@@ -12,7 +13,7 @@
 		 	<div class="d-flex align-items-center filter-details mb-4">
 			  <span class="filter-block1">{{count($rides)}} new rides from <strong>{{$location}}</strong></span>
 			  <span class="filter-block2 left-seperater">Not your city? <a href="">Change here</a></span>
-			  <span class="ml-auto filter-block3 mob-filter"><a href="{{route('front-rides')}}">View all Rides</a></span>
+			  <span class="ml-auto filter-block3 mob-filter"><a href="{{route('rides.index')}}">View all Rides</a></span>
 			</div>
 			<div class="row">
 			  <!-- repeat div from here START -->
@@ -26,7 +27,7 @@
 				<div class="rider-details-block w-100 order-1 order-md-2">
 				   <div class="location-heading-block ">
 					 <div>
-					   <h4 class="location-title">Ride To {{$ride['end_location']}} Via {{ $ride['via_location']}}</h4>
+					   <h4 class="location-title"><a href="{{route('rides.show',$ride['slug'])}}" class="location-title">Ride To {{$ride['end_location']}} Via {{ $ride['via_location']}}</a></h4>
 					   <div class="d-flex align-items-center location-block">
 						 <span class="location">from {{ $ride['start_location']}}</span>
 						 <span class="time left-seperater">in month of <span>{{$ride['start_date']}}</span></span></span>
@@ -58,7 +59,7 @@
 					 <div class="location-details  p-0">
 					   <span class="rating d-flex align-items-center"><i class="fa fa-star"></i>{{$ride['ride_rating']}} <small class="ml-2">Rating</small></span>
 					 </div>
-					  <h4 class="location-title my-2">Ride To {{$ride['end_location']}} Via {{ $ride['via_location']}}</h4>
+					  <h4 class="location-title my-2"><a href="{{route('rides.show',$ride['slug'])}}" class="location-title">Ride To {{$ride['end_location']}} Via {{ $ride['via_location']}}</a></h4>
 					  <div class="d-flex align-items-center location-block mb-2">
 						<!-- <span class="location">Banglore, Karnatka, India</span> -->
 						<span class="time">in month of <span>{{$ride['start_date']}}</span></span></span>
@@ -74,7 +75,7 @@
 				  </div>
 			   </div>
 			   <div class="rider-img-block ml-3 ">
-				 <img src="{{ asset('public/rider/images/rider.jpg')}}" class="img-fluid">
+			   <img src="{{ asset('public/images/rides/')}}/{{$ride['ride_image']}}" class="img-fluid" >
 			   </div>
 			  </div>
 			   <div class="d-flex align-items-center mt-1">
@@ -128,7 +129,7 @@
 			  Top Bikers
 				
 			 </h4>
-			 <span class="ml-auto filter-block3"><a href="{{route('front-bikers')}}">View all Bikers</a></span>
+			 <span class="ml-auto filter-block3"><a href="{{route('bikers.index')}}">View all Bikers</a></span>
 		   </div> 
 		   <div class="top-riders-slider slider  mb-2">
 			@if(count($riders) > 0)
@@ -136,7 +137,7 @@
 				<div class="slide">
 					<div class="top-riders-block">
 					<div class="card" >
-					<img src="{{ asset('public/rider/images/top-rider1.png')}}" class="card-img-top" alt="">
+					<img src="{{ asset('public/images/rider/cover_images/')}}/{{$rider['cover_image']}}" class="card-img-top" alt="">
 					<div class="card-body position-relative">
 						<img src="{{ asset('public/images/rider_images/')}}/{{$rider['rider_image']}}" class="user-pic" widtj="60" height="60"/>
 						<div class="username mb-2">
@@ -150,14 +151,17 @@
 						<span class="other-details pl-0">{{$rider['total_rides']}} <small>Rides</small></span>
 						<span class="other-details pl-0">{{$rider['total_km']}} km <small>Driven</small></span>						
 						</div>
-						@if($rider['current_rider_follow_status'] == false)
-							<button class="follow-btn w-100 mt-2 follow-rider" id="follow_rider_{{$rider['id']}}" content="{{$rider['id']}}">
-								<i class="fa fa-plus mr-2"></i>Follow
-							</button>
-						@else
-							<button class="join-btn flex-grow-1 mt-2 mr-1" >
-								Followed
-							</button>
+
+						@if($rider['is_rider_owner'] == false)
+							@if($rider['current_rider_follow_status'] == false)
+								<button class="follow-btn w-100 mt-2 follow-rider" content="{{$rider['id']}}">
+									<i class="fa fa-plus mr-2"></i>Follow
+								</button>
+							@else
+								<button class="join-btn flex-grow-1 mt-2 mr-1" >
+									Followed
+								</button>
+							@endif
 						@endif
 					</div>
 					</div>
@@ -172,7 +176,7 @@
 			 <h4 class="page-sub-heading mt-4 mb-3">
 			   Top Groups				
 			 </h4>
-			 <span class="ml-auto filter-block3"><a href="{{route('front-groups')}}">View all Groups</a></span>
+			 <span class="ml-auto filter-block3"><a href="{{route('groups.index')}}">View all Groups</a></span>
 		   </div> 
 		   <div class="top-group-slider slider mb-3">
 			@if(count($groups) > 0)
@@ -196,9 +200,13 @@
 						 	<span class="follow-users"><img src="{{ asset('public/images/rider_images/')}}/{{!empty($group_member_list) ? $group_member_list:'rider.jpg'}}" class="profile-pic" /></span>
 						 @endforeach
 						 
+						 @if($group['total_group_members'] > 0)
 						 <span class="joined-grp">{{$group['total_group_members']}} People<small>Joined the group</small></span>
+						 @endif
 					   </div>
 					 </div>
+
+					 @if($group['is_group_owner'] == false)					 
 					 <div class="d-flex">
 						@if($group['current_rider_join_status'] == false)
 							<button class="join-btn flex-grow-1 mt-2 mr-1 rider-group-join" id="group-join-{{$group['group_owner_id']}}" content="{{$group['group_owner_id']}}">
@@ -211,6 +219,8 @@
 						@endif
 						<button class="follow-btn flex-grow-1  mt-2 ml-1"><i class="fa fa-plus mr-2"></i>FOLLOW</button>
 				   </div>
+				   @endif
+
 				   </div>
 				 </div>
 				</div>

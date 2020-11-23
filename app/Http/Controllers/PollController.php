@@ -8,6 +8,7 @@ use App\Models\Poll;
 use App\Models\PollFeedback;
 use Illuminate\Http\Request;
 use App\User;
+use Carbon\Carbon;
 
 class PollController extends Controller
 {
@@ -39,7 +40,7 @@ class PollController extends Controller
 
     protected function filterOptions($options) {
         $options = json_decode($options,true);
-        return $options['option'];
+        return $options;
     }
 
     /**
@@ -63,19 +64,34 @@ class PollController extends Controller
     public function store(PollRequest $request)
     {
         $data = $request->all();
-        $options = [
-            'option' => $request->options,
-            'correct' => $request->right_option
-        ];
-        $data = [
-            'rider_id' => user()->id,
-            'poll_name' => $request->poll_name,
-            'group_id' => $request->group_id,
-            'options' => json_encode($options),
-        ];
-        Poll::create($data);
-        $response = array('status'=>true, 'msg' => 'Poll added successfully');
+        $filterData = $this->filterPollsData($data);
+        $response = array('status'=>false, 'error'=> ['Something goes wrong, try again']);        
+        if(count($filterData) > 0) {
+            Poll::insert($filterData);
+            $response = array('status'=>true, 'msg' => 'Poll added successfully');
+        }
         return response()->json($response);
+    }
+
+    protected function filterPollsData($data) {
+        $rider_id = user()->id;
+        $questions = $data['question'];
+        $group_id = $data['group_id'];
+        $result = [];
+        unset($data['question']);unset($data['group_id']);
+        foreach($data as $key => $value) {
+            
+            $keyNew = rtrim(strrev(strstr(strrev($key), '_')), '_');
+            $index = intval(ltrim(strrchr($key, '_'), '_'));
+            $result[$index]['poll_name'] = $questions[$index];
+            if($keyNew == 'options') {
+                $result[$index][$keyNew] = json_encode($value);
+            }
+            $result[$index]['group_id'] = $group_id;
+            $result[$index]['rider_id'] = $rider_id;
+            $result[$index]['created_at'] = Carbon::now();
+        }
+        return $result;
     }
 
     /**

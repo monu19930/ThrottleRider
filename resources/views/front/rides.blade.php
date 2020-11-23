@@ -1,4 +1,5 @@
 @extends('layouts.frontLayout.front-layout')
+@section('title', 'Rides')
 @section('content')
 <section class="main-bg">
 	<div class="container ">
@@ -23,7 +24,7 @@
 				<div class="rider-details-block w-100 order-1 order-md-2">
 				   <div class="location-heading-block ">
 					 <div>
-					   <h4 class="location-title">Ride To {{ $ride['end_location']}} Via {{ $ride['via_location']}}</h4>
+					   <h4 class="location-title"><a href="{{route('rides.show',$ride['slug'])}}" class="location-title"> Ride To {{ $ride['end_location']}} Via {{ $ride['via_location']}}</a></h4>
 					   <div class="d-flex align-items-center location-block">
 						 <span class="location">from {{$ride['start_location']}}</span>
 						 <span class="time left-seperater">in month of <span>{{$ride['start_date']}}</span></span></span>
@@ -53,16 +54,16 @@
 				  <div class="location-heading-block ">
 					<div>
 					 <div class="location-details  p-0">
-					   <span class="rating d-flex align-items-center"><i class="fa fa-star"></i>4.5 <small class="ml-2">Rating</small></span>
+					   <span class="rating d-flex align-items-center"><i class="fa fa-star"></i>{{$ride['ride_rating']}} <small class="ml-2">Rating</small></span>
 					 </div>
-					  <h4 class="location-title my-2">Ooty, Banglore-Mysore Highway</h4>
+					  <h4 class="location-title my-2"><a href="{{route('rides.show',$ride['slug'])}}" class="location-title">Ride To {{ $ride['end_location']}} Via {{ $ride['via_location']}}</a></h4>
 					  <div class="d-flex align-items-center location-block mb-2">
 						<!-- <span class="location">Banglore, Karnatka, India</span> -->
-						<span class="time">in month of <span>June 2019</span></span></span>
+						<span class="time">in month of <span>{{$ride['start_date']}}</span></span></span>
 					  </div>
 					  <div class="location-details d-flex align-items-center ">
 					 
-					   <span class="other-details"><i class="fa fa-map-o"></i>2176 km <small>from bengaluru</small></span>
+					   <span class="other-details"><i class="fa fa-map-o"></i>{{ $ride['total_km']}} km <small>from {{ $ride['start_location']}}</small></span>
 					   <!-- <span class="other-details"><i class="fa fa-calendar-o"></i>12 <small>Days trip</small></span> -->
 					   <span class="other-details"><i class="fa fa-road"></i>Highway <small>Road Type</small></span>
 					 </div>
@@ -71,15 +72,15 @@
 				  </div>
 			   </div>
 			   <div class="rider-img-block ml-3 ">
-				 <img src="{{ asset('public/rider/images/rider.jpg')}}" class="img-fluid">
+				 <img src="{{ asset('public/images/rides/')}}/{{$ride['ride_image']}}" class="img-fluid">
 			   </div>
 			  </div>
 			   <div class="d-flex align-items-center mt-1">
 				 <div class="userdetails d-flex align-items-center">
-				 <span class="userimg mr-2"><img src="{{ asset('public/rider/images/userpic.png')}}" class="img-fluid" /></span>
+				 <span class="userimg mr-2"><img src="{{ asset('public/images/rider_images/')}}/{{$ride['rider_image']}}" class="img-fluid" /></span>
 				 <span class="username">
-				   <span class="d-block">Ekene Obasey</span>
-				   <span class="badge badge-warning"><i class="fa fa-star"></i> 4.5</span>
+				   <span class="d-block">{{$ride['rider_name']}}</span>
+				   <span class="badge badge-warning"><i class="fa fa-star"></i> {{$ride['rider_rating']}}</span>
 				 </span>
 				 </div> 
 				 <div class="bookmark ml-auto"><a href="#"><i class="fa fa-bookmark-o"></i></a></div>

@@ -1,4 +1,5 @@
 @extends('layouts.frontLayout.front-layout')
+@section('title', 'My Groups')
 @section('content')
 <section class="main-bg">
 	<div class="container ">
@@ -9,7 +10,7 @@
 			<div class="d-flex align-items-center filter-details mb-4">
 			  <span class="filter-block1">{{ count((array)$result) }} Groups Added</span><br/>
 			</div>
-            <a href="{{route('groups.create')}}">Add New Groups</a>
+            <a href="{{route('my-groups.create')}}">Add New Groups</a>
 			<div class="row">
 			  <!-- repeat div from here START -->
 			@if(count((array)$result) > 0)
@@ -47,7 +48,7 @@
 						 @endif
 					   </div>
 						<button class="btn btn-primary invite-member" onclick="inviteMembers('{{$group->id}}')"><i class="fa fa-send"></i>Invite</button>
-						<button class="btn btn-link invite-member"><a href="{{route('group.events',$group->id)}}">Add Event</a></button>
+						<button class="btn btn-link invite-member"><a href="{{route('my-groups.events',$group->id)}}">Add Event</a></button>
 						
 						@if($group->status==1)
                             <button class="btn btn-success" data-target="#status_comment{{$key}}" data-toggle="collapse">Approved</button>

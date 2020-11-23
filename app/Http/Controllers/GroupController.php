@@ -86,7 +86,7 @@ class GroupController extends Controller
             'city' => isset($user->profile->city) ? $user->profile->city : ''
         ];
         Group::Create($data);
-        $response = array('status'=>true, 'msg' => 'Group  has been successfully created');
+        $response = array('status'=>true, 'msg' => 'Group has been added successfully');
         return response()->json($response);
     }
 
