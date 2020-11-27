@@ -28,10 +28,12 @@ class SupplierRequest extends FormRequest
             'supplier_image' => 'required|mimes:png,jpeg,jpg|max:2048',
             'supplier_address' => 'required',
             'supplier_rating' => 'required',
-            'spare_part_name.*' => 'required',
-            'spare_part_number.*' => 'required',
-            'spare_part_image' => 'required|max:255',
-            'spare_part_image.*' => 'required|mimes:png,jpeg,jpg|max:2048',
+            //'spare_part_name.*' => 'required',
+            //'spare_part_name' => 'required',
+            //'spare_part_number.*' => 'required',
+            //'spare_part_number' => 'required',
+            //'spare_part_image' => 'required|mimes:png,jpeg,jpg|max:2048',
+            //'spare_part_image.*' => 'required|mimes:png,jpeg,jpg|max:2048',
         ];
     }
 }

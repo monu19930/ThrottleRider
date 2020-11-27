@@ -28,7 +28,7 @@ class BikeController extends Controller
                 'added_on' => formatDate($bike->created_at, 'd M Y'),
                 'total_km' => $bike->total_km,
                 'total_rides' => $bike->total_rides,
-                //'rider' => $user->profile,
+                'rating' => $this->getBikeRating($bike),
                 'rider_name' => $user->name,
                 'rider_rating' => isset($user->profile->rating) ? $user->profile->rating : 0,
                 'rider_image' => !empty($user->profile->image)?$user->profile->image:'rider.jpg',
@@ -146,7 +146,7 @@ class BikeController extends Controller
         
         if ($validator->fails()) {
             $response = [
-                'error' => $validator->errors()->all(), 
+                'error' => $validator->errors(), 
                 'status' =>false
             ];
             return response()->json($response);
@@ -271,11 +271,41 @@ class BikeController extends Controller
                 $result['image'] = json_encode($bike->image);
             }
             Bike::where('id',$request->id)->update($result);
+            $id = $request->id;
         } else {
             $result['image'] = json_encode($bike->image);
-            Bike::create($result);
+            $id = Bike::create($result);
         }
-        return $response = ['msg'=>'Bike Added Successfully', 'status'=>true];
+
+        $url = route('bike.confirmation',$id);
+
+        return $response = ['msg'=>'Bike Added Successfully', 'status'=>true, 'url' => $url];
+    }
+
+    public function confirm($id){
+        $bike = Bike::find($id);
+        $user = $bike->user;
+        $bikes = [
+            'id' => $bike->id,
+            'image' => $this->filterBikeImage($bike->image),
+            'name' => $bike->name,
+            'created_at' => formatDate($bike->created_at, 'd M, Y'),
+            'total_km' => $bike->total_km,
+            'total_rides' => $bike->total_rides,
+            'rider_name' => $user->name,
+            'rating' => $this->getBikeRating($bike),
+            'rider_rating' => isset($user->profile->rating) ? $user->profile->rating : 0,
+            'rider_image' => !empty($user->profile->image)?$user->profile->image:'rider.jpg',
+            'info' => $bike->info,
+        ];
+        $bikes = (object)$bikes;
+        return view('front.bike.confirm', compact('bikes'));
+    }
+
+    protected function getBikeRating($bike) {
+
+        $rating = ($bike->comfortness+$bike->reliability+$bike->visual_appeal+$bike->performance+$bike->service_experience)/5;
+        return $rating;
     }
 
 }

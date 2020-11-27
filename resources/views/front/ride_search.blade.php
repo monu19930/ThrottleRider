@@ -270,7 +270,7 @@
                <div class="col-md-8" id="filtered_ride_data">
                           <div class="cust-left-block pt-5">
                             <h2 class="page-heading">
-                              Rides between {{$result['location']}} and {{$result['search_location']}}
+                              Rides from {{$result['location']}} to {{$result['search_location']}}
                             </h2>
                             <div class="d-flex align-items-center filter-details mb-4">
                               <span class="filter-block1">{{$total}} Results </strong></span>
@@ -279,11 +279,11 @@
                                 <a href="#" class="sortby-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   <label>Sort by</label>
                                   Ratings <i class="fa fa-angle-down drop-arrow"></i></a>
-                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                  <!-- <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item" href="#">Action</a>
                                     <a class="dropdown-item" href="#">Another action</a>
                                     <a class="dropdown-item" href="#">Something else here</a>
-                                  </div>
+                                  </div> -->
                                 </span>
                             </div>
                             <div class="row">
@@ -295,14 +295,14 @@
                             <div class="col-12 mb-3">
                               <div class="rides-block d-none d-md-flex">
                                 <div class="rider-img-block mr-md-3 ml-3 ml-md-0 order-2 order-md-1">
-                                  <img src="{{ asset('public/rider/images/rider.jpg')}}" class="img-fluid">
+                                  <img src="{{ asset('public/images/rides/')}}/{{$ride['ride_image']['image']}}" class="img-fluid">
                                 </div>
                                 <div class="rider-details-block w-100 order-1 order-md-2">
                                     <div class="location-heading-block ">
                                       <div>
-                                        <h4 class="location-title">{{$ride['start_location']}}, {{$ride['end_location']}}</h4>
+                                        <h4 class="location-title">Ride To {{$ride['end_location']}} Via {{$ride['via_location']}}</h4>
                                         <div class="d-flex align-items-center location-block">
-                                          <span class="location">{{$ride['start_location']}}, {{$ride['end_location']}}</span>
+                                          <span class="location">from {{$ride['start_location']}}</span>
                                           <span class="time left-seperater">in month of <span>{{$ride['start_date']}}</span></span></span>
                                         </div>
                                       </div>
@@ -311,7 +311,7 @@
                                     <div class="location-details d-flex align-items-center">
                                       <span class="rating"><i class="fa fa-star"></i>{{$ride['ride_rating']}} <small>Rating</small></span>
                                       <span class="other-details"><i class="fa fa-map-o"></i>{{$ride['total_km']}} km <small>from {{$ride['start_location']}}</small></span>
-                                      <span class="other-details"><i class="fa fa-calendar-o"></i>{{$ride['number_of_day']}} <small>Days trip</small></span>
+                                      <span class="other-details"><i class="fa fa-calendar-o"></i>{{$ride['number_of_day']+1}} <small>Days trip</small></span>
                                       <span class="other-details"><i class="fa fa-road"></i>{{$ride['road_type']}} <small>Road Type</small></span>
                                     </div>
                                     <div class="userdetails d-flex align-items-center">
@@ -408,7 +408,7 @@
                                     <div class="location-details d-flex align-items-center">
                                       <span class="rating"><i class="fa fa-star"></i>{{$ride['ride_rating']}} <small>Rating</small></span>
                                       <span class="other-details"><i class="fa fa-map-o"></i>150 km <small>from {{$ride['start_location']}}</small></span>
-                                      <span class="other-details"><i class="fa fa-calendar-o"></i>12 <small>Days trip</small></span>
+                                      <span class="other-details"><i class="fa fa-calendar-o"></i>{{$ride['number_of_day']+1}} <small>Days trip</small></span>
                                       <span class="other-details"><i class="fa fa-road"></i>Highway <small>Road Type</small></span>
                                     </div>
                                     <div class="userdetails d-flex align-items-center">

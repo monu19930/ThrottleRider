@@ -65,7 +65,7 @@ class SupplierController extends Controller
         unset($supplierData['spare_part_number']);
         unset($supplierData['spare_part_images']);
         Supplier::create($supplierData);
-        $response = array('status'=>true, 'msg' => 'Supplier has been successfully created');
+        $response = array('status'=>true, 'msg' => 'Supplier has been added successfully');
         return response()->json($response);
     }
 

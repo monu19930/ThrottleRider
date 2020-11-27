@@ -100,17 +100,31 @@ class GroupController extends Controller
 
         if ($validator->fails()) {
             $response = [
-                'error' => $validator->errors()->all(), 
+                'error' => $validator->errors(), 
                 'status' =>false
             ];
          } else {
              $data = $request->all();
+             //dd($data);
+             $data['images'] = isset($request->images)?$this->filterImages($data['images']):'';
              $data['rider_id'] = user()->id;
              $data['added_on'] = formatDate($request->added_on);
+             //dd($data);
              GroupPastExperience::create($data);
              $response = ['msg' => 'Past Experience Added Successfully','status' =>true];
          }
 
          return response()->json($response);
+    }
+
+    protected function filterImages($images){
+        $result = [];
+        foreach($images as $key => $image) {
+            $new_name = rand() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images/group/past_experience/'), $new_name);
+
+            $result[$key] = $new_name;
+        }
+        return json_encode($result);
     }
 }

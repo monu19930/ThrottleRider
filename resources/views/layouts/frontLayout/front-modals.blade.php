@@ -20,8 +20,10 @@
 							<img src="{{ asset('public/rider/images/icons-social-google.svg')}}"> Google
 						</button>
 					</div>
-					<div class="alert alert-danger response-msg" style="display:none">
-					<ul></ul>
+					
+					<div class="alert alert-success alert-dismissible print-error-msg mt-2" style="display:none">
+						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+						<span></span>
 					</div>
 					<label class="login-change-txt">or Login using email/ Mobile number</label>
 					<div class="login-input">
@@ -32,7 +34,7 @@
 					  <input type="password" class="form-control" autocomplete="off" name="password" placeholder="Password">
 					</div>
 				  
-					<button type="button" class="btn btn-danger w-100" onclick="signinRider();">LOGIN</button>
+					<button type="button" class="btn btn-danger w-100" id="signinRiderBtn" onclick="signinRider();">LOGIN</button>
 					<p class="mt-3 login-bottom-txt">Forgot Password? <a href="#" class="text-danger">Reset Password</a></p>
 				  <p class=" mt-3 login-bottom-txt">New on Throttle Rides? <a href="#" class="text-danger" data-toggle="modal" data-target="#signupmodal" data-dismiss="modal">Create Your Account</a></p>
 				  </div>
@@ -71,8 +73,9 @@
 					<form id="signupForm" method="post">
 					<input type="hidden" name="csrf-token" content="{{ csrf_token() }}">
 					<h2 class="login-heading">CREATE A NEW ACCOUNT<small>Let's ride the world!</small></h2>
-					<div class="alert alert-danger print-error-msg" style="display:none">
-					<ul></ul>
+					<div class="alert alert-success alert-dismissible print-error-msg mt-2" style="display:none">
+						<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+						<span></span>
 					</div>
 					<div class="login-input">
 						<div class="form-group">
@@ -284,9 +287,10 @@
 				  <div class="login-block">
 					<form id="pastExperienceForm" method="post">
 						<h4 class="login-heading">Add Past Experience<small>Past Experience</small></h4>
-						<input type="hidden" name="group_id" id="past_experience_id">
-						<div class="alert alert-danger print-error-msg" style="display:none">
-							<ul></ul>
+						<input type="hidden" name="group_id" id="past_experience_id">						
+						<div class="alert alert-success alert-dismissible print-error-msg" style="display:none">
+							<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+							<span></span>
 						</div>
 						<div class="login-input">
 							<div class="form-group">
@@ -296,10 +300,13 @@
 								<input type="text" autocomplete="off" name="added_on" id="start_date" class="form-control" placeholder="Date">
 							</div>
 							<div class="form-group">
+								<input type="file" class="form-control" name="images[]" accept="image/*" multiple>
+							</div>
+							<div class="form-group">
 								<textarea class="md-textarea form-control" name="description"  rows="3" placeholder="Description"></textarea>
 							</div>
 							<div class="form-group">						
-								<button type="button" class="btn btn-danger w-100" onclick="savePastExperience();">SUBMIT</button>
+								<button type="button" id="past_experience" class="btn btn-danger w-100" onclick="savePastExperience();">SUBMIT</button>
 							</div>					
 						</div>
 					</form>
@@ -373,6 +380,48 @@
 						</div>												
 						</div>
 					</form>
+				  </div>
+				</div>				
+			  </div>
+			</div>			 
+		  </div>
+		</div>
+	  </div>
+
+
+	<!---Add Past Experience--->
+	<div class="modal fade" id="createTipModal" data-backdrop="static" data-keyboard="false" tabindex="-2" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+		  <div class="modal-content rounded-0" style="width:60%">			 
+			<div class="modal-body p-0">
+			  <button type="button" class="close login-close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			  <div class="row no-gutters">
+				<div class="col-md-12">
+				  <div class="login-block">
+				  <form id="tipForm" method="post"  enctype="multipart/form-data">                    
+					  <h4 class="login-heading">Add New Tip<small>Tip Details</small></h4>
+					  <div class="alert alert-success alert-dismissible print-error-msg" style="display:none">
+							<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+							<span></span>
+						</div>
+                      <div class="login-input">
+                          <div class="form-group">
+                              <input type="text" class="form-control" name="tip_title" placeholder="Tip Title">
+                          </div>
+                          <div class="form-group">
+                            <input type="file" class="form-control-file uplode_file dropzone" name="file_name">
+                          </div>                          
+                          <div class="form-group">
+                              <textarea class="md-textarea form-control" name="tip_description" rows="3" placeholder="Tip Description"></textarea>
+                          </div>
+                          <div class="form-group">
+                            <button type="button" id="submitTip" class="btn btn-danger w-50" onclick="saveTip();">Submit</button>
+                          </div>
+                      </div>                                
+                  </form>
+					
 				  </div>
 				</div>				
 			  </div>

@@ -57,17 +57,18 @@ if (!function_exists('getCurrentLocation')) {
    
     function getCurrentLocation()
     {
-        $ip = request()->ip();
-        $result = Location::get($ip);
-        if($result) {
-            $city_name =  $result->cityName;
-        }
-        else {
-            $ip = '180.149.226.195';
-            $result = Location::get($ip);
-            $city_name =  $result->cityName;
-        }
-        return $city_name;
+        // $ip = request()->ip();
+        // $result = Location::get($ip);
+        // if($result) {
+        //     $city_name =  $result->cityName;
+        // }
+        // else {
+        //     $ip = '180.149.226.195';
+        //     $result = Location::get($ip);
+        //     $city_name =  $result->cityName;
+        // }
+        //return $city_name;
+        return 'New Delhi';
     }
     
 }

@@ -58,7 +58,7 @@
 
                                 <div class="d-flex align-items-center w-100 mt-4">
                                     <div class="mr-2 pr-1"><img src="{{ asset('public/rider/images/icons-startlocation.svg')}}" class="img-fluid"></div>
-                                    <div class="mb-0 w-100 left-seprater-dotted">
+                                    <div class="input-field mb-0 w-100 left-seprater-dotted">
                                         <input type="text" class="input-block" autocomplete="off" name="start_location" id="start_location" placeholder=" ">
                                         <label for="search-bike" class="input-lbl">Start location</label>
                                     </div>
@@ -153,172 +153,217 @@
                     </div>
                 </div>
 
-
                 <div class="cust-left-block pt-5" id="tab2" style="display:none;">
-                    <div class="col-12 mb-3">
-                        <div class="row">
-                            <div class="col-8 mb-3">
-                                <button type="button" class="btn btn-outline-success" id="first_day">Day 1</button>
-                                <button type="button" class="btn btn-success" name="add" id="add">+ Add Days</button>
-                                <form id="addRideForm2" method="post" enctype="multipart/form-data">
-                                    <div class="alert alert-danger print-error-msg" style="display:none">
-                                        <ul></ul>
-                                    </div>
-                                    <div class="d-flex align-items-center w-100">
-                                        <div class="mr-2 pr-1"><img src="{{ asset('public/rider/images/icons-km-riden.svg')}}" class="img-fluid"></div>
-                                        <div class="input-field mt-4 w-100">
-                                            <input type="text" class="input-block" autocomplete="off" name="start_location_0" id="start_location_0" readonly placeholder=" ">
-                                            <label for="search-bike" class="input-lbl">Start Location</label>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center w-100">
-                                        <div class="mr-2 pr-1"><img src="{{ asset('public/rider/images/icons-km-riden.svg')}}" class="img-fluid"></div>
-                                        <div class="input-field mt-4 w-100">
-                                            <input type="text" class="input-block" autocomplete="off" name="end_location_0" id="end_location_0" placeholder=" ">
-                                            <label for="search-bike" class="input-lbl">Destination for this day</label>
-                                        </div>
-                                    </div>
+                    <div class="days-nav">
+                        <ul class="nav nav-tabs mb-4 cust-tab" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation" id="first_day" content="2">
+                                <a class="moreDays nav-link active" id="day1-tab" data-toggle="tab" href="#day1" role="tab" aria-controls="Day1" aria-selected="true"><span>Day 1</span></a>
+                            </li>                           
+                            <div id="more_days" class="nav nav-tabs mb-4 cust-tab"></div>
+                            <li>
+                                <a href="javascript:void(0)" class="text-red font-weight-normal nav-link" name="add" id="add"><i class="fa fa-plus"></i>&nbsp; Add Day 2</a>
+                            </li>
+                            <li class="ml-auto mr-2"><a href="#"><img src="{{asset('public/rider/images/icons-circles-menu.svg')}}"></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="tab-content" id="daysContent">
+                        <form class="tab-content" id="addRideForm2" method="post" enctype="multipart/form-data">
+                            <div class="tab-pane fade active show" id="day1" aria-labelledby="login-tab" role="tabpanel">
+                                <h5 class="add-bike-heading">
+                                    <!-- <span class="right-seperater">Day 1</span>Bangalore to Marvanthe -->
+
+                                </h5>
 
 
+                                <div class="row">
+                                    <div class="col-7">
+                                        <div class="d-flex align-items-center w-100">
+                                            <div class="mr-2 pr-1"><img src="{{asset('public/rider/images/icons-startlocation.svg')}}" class="img-fluid img-icon"></div>
 
-                                    <h5 class="add-bike-heading">Road Amenities
-                                        <small>Help others to fill available amenities on your way.</small>
-                                    </h5>
+                                            <div class="input-field mb-0 w-100 left-seprater-dotted">
+                                                <input type="text" name="start_location_0" id="start_location_0" class="input-block" readonly placeholder=" ">
+                                                <label for="search-bike" class="input-lbl">Start location</label>
+                                            </div>
 
-                                    <div class="d-flex align-items-center w-100">
-                                        <div class="mr-2 pr-1"><img src="{{ asset('public/rider/images/icons-km-riden.svg')}}" class="img-fluid"></div>
-                                        <div class="input-field mt-4 w-100">
-                                            <label class="radio">Was there any petrol pump available ?</label>
-                                            <input type="radio" autocomplete="off" name="is_petrol_pump_0" value="0" checked onChange="showHideField(this.value,0,'petrol_pump')"> No
-                                            <input type="radio" autocomplete="off" name="is_petrol_pump_0" value="1" onChange="showHideField(this.value,0,'petrol_pump')"> Yes
                                         </div>
-                                    </div>
-                                    <div class="align-items-center w-100 petrol_pump_0" style="display:none">
-                                        <div class="mr-2 pr-1"></div>
-                                        <div class="input-field mt-4 w-100">
-                                            <input type="text" class="input-block" autocomplete="off" name="petrol_pump_comment_0" placeholder=" ">
-                                            <label for="search-bike" class="input-lbl">Add Your Comment</label>
-                                        </div>
-                                    </div>
 
-                                    <div class="d-flex align-items-center w-100">
-                                        <div class="mr-2 pr-1"><img src="{{ asset('public/rider/images/icons-km-riden.svg')}}" class="img-fluid"></div>
-                                        <div class="input-field mt-4 w-100">
-                                            <label class="radio">Was there any Restaurant/cafe ?</label>
-                                            <input type="radio" autocomplete="off" name="is_restaurant_0" value="0" checked onChange="showHideField(this.value,0,'restaurant_comment')"> No
-                                            <input type="radio" autocomplete="off" name="is_restaurant_0" value="1" onChange="showHideField(this.value,0,'restaurant_comment')"> Yes
+                                        <div class="d-flex align-items-center mt-4 w-100">
+                                            <div class="mr-2 pr-1"><img src="{{asset('public/rider/images/icons-destination.svg')}}" class="img-fluid img-icon"></div>
+
+                                            <div class="input-field  mb-0 w-100">
+                                                <input type="text" name="end_location_0" class="input-block" placeholder=" ">
+                                                <label for="search-bike" class="input-lbl">Destination for this day</label>
+                                            </div>
+
                                         </div>
-                                    </div>
-                                    <div class="align-items-center w-100 restaurant_comment_0" style="display:none">
-                                        <div class="mr-2 pr-1"></div>
-                                        <div class="input-field mt-4 w-100">
-                                            <input type="text" class="input-block" autocomplete="off" name="is_restaurant_comment_0" placeholder=" ">
-                                            <label for="search-bike" class="input-lbl">Add Your Comment</label>
+                                        <h4 class="page-sub-heading mt-4 mb-2">Road Amenities
+                                            <small>Help others to fill available amenities on your way.</small>
+                                        </h4>
+                                        <div class="tip d-flex mt-3">
+                                            <span class="tip-head">Tip</span>
+                                            <span class="tip-txt">Tap on <img src="{{asset('public/rider/images/icons-clickable-comment.svg')}}" style="width:20px;" class="mx-1" /> to comment about particular section.<br>i.e. Road caution, One Petrol pump on this way e.t.c.</span>
                                         </div>
-                                    </div>
+                                        <div class="d-flex align-items-center mt-4 w-100">
+                                            <div class="mr-2 pr-1"><img src="{{asset('public/rider/images/icons-petrol.svg')}}" class="img-fluid img-icon"></div>
+
+                                            <div class="txt-14">
+                                                Was there any Petrol pump?
+                                            </div>
+                                            <div class="can-toggle ml-auto">
+                                                <input id="a" type="checkbox" name="is_petrol_pump_0">
+                                                <label for="a" class="mb-0">
+                                                    <div class="can-toggle__switch" data-checked="Yes" data-unchecked="No"></div>
+                                                </label>
+                                            </div>
+                                            <div class="add-via-btn"> <a href="javascript:void(0)" id="btnAdd" onclick="addCommentField('petrol_pump_comment_0')"><img src="{{asset('public/rider/images/icons-clickable-comment.svg')}}"></a></div>
+                                        </div>
+                                        <div id="petrol_pump_comment_0"></div>
+                                        <div class="d-flex align-items-center mt-4 w-100">
+                                            <div class="mr-2 pr-1"><img src="{{asset('public/rider/images/icons-restaurant.svg')}}" class="img-fluid img-icon"></div>
+
+                                            <div class="txt-14">
+                                                Was there any Restaurant/ Cafe?
+                                            </div>
+                                            <div class="can-toggle ml-auto">
+                                                <input id="b" type="checkbox" name="is_restaurant_0" checked>
+                                                <label for="b" class="mb-0">
+                                                    <div class="can-toggle__switch" data-checked="Yes" data-unchecked="No"></div>
+                                                </label>
+                                            </div>
+                                            <div class="add-via-btn"> <a href="javascript:void(0)" onclick="addCommentField('restaurant_comment_0')"><img src="{{asset('public/rider/images/icons-clickable-comment.svg')}}"></a></div>
+                                        </div>
+                                        <div id="restaurant_comment_0"></div>
+                                        <div class="d-flex align-items-center mt-4 w-100">
+                                            <div class="mr-2 pr-1"><img src="{{asset('public/rider/images/icons-hotel.svg')}}" class="img-fluid img-icon"></div>
+
+                                            <div class="txt-14">
+                                                Was there any Hotel?
+                                            </div>
+                                            <div class="can-toggle ml-auto">
+                                                <input id="c" type="checkbox" name="is_hotel_0" checked onchange="valueChanged(this)">
+                                                <label for="c" class="mb-0">
+                                                    <div class="can-toggle__switch" data-checked="Yes" data-unchecked="No"></div>
+                                                </label>
+
+                                            </div>
+                                            <div class="add-via-btn"> <a href="javascript:void(0)" onclick="addCommentField('hotel_comment_0')" ><img src="{{asset('public/rider/images/icons-clickable-comment.svg')}}"></a></div>
+                                        </div>
+                                        <div id="hotel_comment_0"></div>
+                                        <div id="checkbox-content" class="open-txt-box is_hotel_0">
+                                            <textarea class="text-format" name="hotel_name_0" placeholder="Hotel name and location" style="height:52px;"></textarea>
+                                        </div>
+                                        <div class="d-flex align-items-center mt-4 w-100 is_hotel_0">
+                                            <div class="mr-4 pr-3"></div>
+
+                                            <div class="txt-14 pl-1">
+                                                Parking was available at Hotel?
+                                            </div>
+                                            <div class="can-toggle ml-auto">
+                                                <input id="d" type="checkbox" name="is_parking_0">
+                                                <label for="d" class="mb-0">
+                                                    <div class="can-toggle__switch" data-checked="Yes" data-unchecked="No"></div>
+                                                </label>
+                                            </div>
+                                            <!-- <div class="add-via-btn"> <a href="javascript:void(0)" onclick="addCommentField('parking_comment_0')"><img src="{{asset('public/rider/images/icons-clickable-comment.svg')}}"></a></div> -->
+                                        </div>
+                                        <!-- <div id="parking_comment_0"></div> -->
+                                        <div class="d-flex align-items-center mt-4 w-100 is_hotel_0">
+                                            <div class="mr-4 pr-3"> </div>
+
+                                            <div class="txt-14 pl-1">
+                                                Wi-Fi was available at Hotel?
+                                            </div>
+                                            <div class="can-toggle ml-auto">
+                                                <input id="e" type="checkbox" name="is_wifi_0" checked>
+                                                <label for="e" class="mb-0">
+                                                    <div class="can-toggle__switch" data-checked="Yes" data-unchecked="No"></div>
+                                                </label>
+                                            </div>
+                                            <!-- <div class="add-via-btn"> <a href="javascript:void(0)" onclick="addCommentField('wifi_comment_0')"><img src="{{asset('public/rider/images/icons-clickable-comment.svg')}}"></a></div> -->
+                                        </div>
+                                        <!-- <div id="wifi_comment_0"></div> -->
+                                        <div class="d-flex align-items-center w-100 mt-4">
+                                            <div class="mr-2 pr-1"><img src="{{ asset('public/rider/images/icons-road.svg')}}" class="img-fluid img-icon"></div>
 
 
-                                    <div class="d-flex align-items-center w-100">
-                                        <div class="mr-2 pr-1"><img src="{{ asset('public/rider/images/icons-km-riden.svg')}}" class="img-fluid"></div>
-                                        <div class="input-field mt-4 w-100">
-                                            <label class="radio">Was there any hotel available ?</label>
-                                            <input type="radio" autocomplete="off" name="is_hotel_0" value="0" checked onChange="showHideField(this.value,0,'is_hotel')"> No
-                                            <input type="radio" autocomplete="off" name="is_hotel_0" value="1" onChange="showHideField(this.value,0,'is_hotel')"> Yes
+                                            <div class="input-field mb-0 w-100">
+                                                <select class="floating-select" name="road_type_0" onclick="this.setAttribute('value', this.value);" value="">
+                                                    @foreach($road_types as $road_type)
+                                                    <option value="{{$road_type->id}}">{{$road_type->road_type}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="add-via-btn"> <a href="javascript:void(0)" onclick="addCommentField('road_type_comment_0')"><img src="{{asset('public/rider/images/icons-clickable-comment.svg')}}"></a></div>
                                         </div>
-                                    </div>
+                                        <div id="road_type_comment_0"></div>
+                                        <div class="d-flex align-items-center mt-4 w-100">
+                                            <div class="mr-4 pr-3"> </div>
 
-                                    <div class="align-items-center w-100 is_hotel_0" style="display:none">
-                                        <div class="mr-2 pr-1"></div>
-                                        <div class="input-field mt-4 w-100">
-                                            <input type="text" class="input-block" autocomplete="off" name="hotel_name_0" placeholder=" ">
-                                            <label for="search-bike" class="input-lbl">Hotel name and location</label>
-                                        </div>
-                                    </div>
-                                    <div class="align-items-center w-100 is_hotel_0" style="display:none">
-                                        <div class="mr-2 pr-1"></div>
-                                        <div class="input-field mt-4 w-100">
-                                            <label class="radio">Parking was available at hotel ?</label>
-                                            <input type="radio" autocomplete="off" name="is_parking_0" value="0"> No
-                                            <input type="radio" autocomplete="off" name="is_parking_0" value="1" checked> Yes
-                                        </div>
-                                    </div>
-                                    <div class="align-items-center w-100 is_hotel_0" style="display:none">
-                                        <div class="mr-2 pr-1"></div>
-                                        <div class="input-field mt-4 w-100">
-                                            <label class="radio">Wifi was available at hotel room ?</label>
-                                            <input type="radio" autocomplete="off" name="is_wifi_0" value="0"> No
-                                            <input type="radio" autocomplete="off" name="is_wifi_0" value="1" checked> Yes
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex align-items-center w-100">
-                                        <div class="mr-2 pr-1"><img src="{{ asset('public/rider/images/icons-km-riden.svg')}}" class="img-fluid"></div>
-                                        <div class="input-field mt-4 w-100">
-                                            <select class="custom-select" name="road_type_0" placeholder="Road Type">
-                                                @foreach($road_types as $road_type)
-                                                <option value="{{$road_type->id}}">{{$road_type->road_type}}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="row align-items-center mt-3">
-                                        <div class="col-4">
-                                            <span class="rating-txt">Road Quality</span>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="star-rating-block">
+                                            <div class="txt-14 pl-1">
+                                                Road Quality
+                                            </div>
+                                            <div class="star-rating-block ml-auto">
                                                 <input type="radio" name="road_quality_0" value="5"><span class="star"> </span>
                                                 <input type="radio" name="road_quality_0" value="4"><span class="star"> </span>
                                                 <input type="radio" name="road_quality_0" value="3"><span class="star"> </span>
                                                 <input type="radio" name="road_quality_0" value="2"><span class="star"> </span>
                                                 <input type="radio" name="road_quality_0" value="1" checked><span class="star"> </span>
                                             </div>
-                                        </div>
-                                    </div>
 
-                                    <div class="row align-items-center mt-3">
-                                        <div class="col-4">
-                                            <span class="rating-txt">Road Scenic</span>
                                         </div>
-                                        <div class="col-4">
-                                            <div class="star-rating-block">
+                                        <div class="d-flex align-items-center mt-4 w-100">
+                                            <div class="mr-4 pr-3"> </div>
+
+                                            <div class="txt-14 pl-1">
+                                                Road Scenic
+                                            </div>
+                                            <div class="star-rating-block ml-auto">
                                                 <input type="radio" name="road_scenic_0" value="5"><span class="star"> </span>
                                                 <input type="radio" name="road_scenic_0" value="4"><span class="star"> </span>
                                                 <input type="radio" name="road_scenic_0" value="3"><span class="star"> </span>
                                                 <input type="radio" name="road_scenic_0" value="2"><span class="star"> </span>
                                                 <input type="radio" name="road_scenic_0" value="1" checked><span class="star"> </span>
                                             </div>
+
+                                        </div>
+
+                                    </div>
+                                    <div class="col-4 ml-auto">
+                                        <div class="card">
+                                            <div class="map-location rounded-top"><img src="{{ asset('public/rider/images/map1.png')}}" class="img-fluid" /></div>
+                                            <div class="card-body">
+                                                <!-- <h4 class="page-sub-heading  mb-0">2176 km <small class="sml-txt">From Bengaluru to Delhi via Goa</small></h4> -->
+                                            </div>
                                         </div>
                                     </div>
+                                </div>
+                                <h4 class="page-sub-heading mt-4 mb-2">Add Images
+                                    <small>Got any shots on this way? Post here</small>
+                                </h4>
+                                <div class="drag-drop">
+                                    <input type="file" name="ride_images_0[]" accept="image/*" id="drag-drop" multiple />
+                                    <div id="uploads"></div>
+                                    <div class="dropzone flex-row justify-content-start p-4" style="height:87px;" id="dropzone">
+                                        <div class="drop-icon mr-3"><i class="fa fa-file-image-o"></i></div>
+                                        <div class="drop-box-format">Drag and drop <span class="text-gray">or</span> <span class="text-danger">Select from Gallery</span></div>
 
-
-                                    <h5 class="add-bike-heading mt-4">Add Images
-                                        <small>Got any shots on this way? Post here</small>
-                                    </h5>
-                                    <div class="form-group mt-2">
-                                        <input type="file" class="form-control" name="ride_images_0[]" multiple>
                                     </div>
-
-                                    <div class="d-flex align-items-center w-100">
-                                        <div class="mr-2 pr-1"></div>
-                                        <div class="input-field mt-4 w-100">
-                                            <textarea class="text-format" name="day_description_0" rows="3" placeholder="Day description. i.e, How was your experience on this day"></textarea>
-                                        </div>
-                                    </div>
-
-                                    <div id="dynamic_field"></div>
-
-                                    <hr class="full-h-line my-4">
-                                    <div class="text-right pb-3">
-                                        <button type="button" id="backRideStep1" class="post-btn  px-5">
-                                            BACK</button> <button type="button" id="rideStep2" class="post-btn  px-5">CONTINUE
-                                        </button>
-                                    </div>
-
-                                </form>
+                                </div>
+                                <textarea class="text-format mt-5" name="day_description_0" placeholder="Day description. i.e. How was your experience on this day? (Optional)"></textarea>
                             </div>
-                        </div>
+                            <div id="dynamic_field" class="tab-content"></div>
+                        </form>
+                    </div>
+
+
+                    <hr class="full-h-line my-4">
+                    <div class="text-right pb-3 d-flex align-items-center">
+                        <button type="button" class="red-outline-btn px-5 mr-3">SAVE FOR LATER</button>
+                        <!-- <button type="button" class="red-outline-btn ml-auto px-5 mr-3">BACK</button>
+                        <button type="button" class="post-btn lg px-5 ">PROCEED TO DAY 2</button> -->
+                        <button type="button" id="backRideStep1" class="red-outline-btn ml-auto px-5 mr-3">BACK</button> 
+                        <button type="button" id="rideStep2" class="post-btn lg px-5">CONTINUE</button>
                     </div>
                 </div>
                 <div class="cust-left-block pt-5" id="review_ride"></div>

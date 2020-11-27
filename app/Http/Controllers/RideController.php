@@ -24,32 +24,34 @@ class RideController extends Controller
     }
 
     protected function getRidesList($user) {
-        //$loggedInRiderId = user()->id;
-        //$user = User::find($loggedInRiderId);
         $rides = $user->rides->sortByDesc('created_at');
         $result = [];
-        foreach($rides as $key => $ride) {
-            $rideDays = $this->formateRideDays($ride->ride_days);
-            $status_comment = $ride->approvalComments;
-            $result[$key] = [
-                'i' => 1,
-                'id' => $ride->id,
-                'rider_name' => $user->name,
-                'rider_id' => $user->id,
-                'rider_image' => isset($user->profile->image) ? $user->profile->image : '',
-                'start_location' => $ride->start_location,
-                'via_location' => $this->formateViaLocation($ride->via_location),
-                'end_location' => $ride->end_location,
-                'start_date' => formatDate($ride->start_date, 'M Y'),
-                'total_km' => $ride->total_km,
-                'no_of_people' => $ride->no_of_people,
-                'description' => $ride->short_description,
-                'rider_rating' => isset($user->profile->rating) ? $user->profile->rating: 0,
-                'ride_rating' => 4,
-                'is_approved' => $ride->is_approved,
-                'status_comment' => $status_comment,
-                'ride_image' => !empty($rideDays[0]['image']) ? $rideDays[0]['image'] : 'not_found.png',
-            ];
+        if($rides->count() > 0) {
+            foreach($rides as $key => $ride) {
+                $rideDays = $this->formateRideDays($ride->ride_days);            
+                $status_comment = $ride->approvalComments;
+                $result[$key] = [
+                    'i' => 1,
+                    'id' => $ride->id,
+                    'rider_name' => $user->name,
+                    'rider_id' => $user->id,
+                    'rider_image' => isset($user->profile->image) ? $user->profile->image : '',
+                    'start_location' => $ride->start_location,
+                    'via_location' => $this->formateViaLocation($ride->via_location),
+                    'end_location' => $ride->end_location,
+                    'start_date' => formatDate($ride->start_date, 'M Y'),
+                    'total_km' => $ride->total_km,
+                    'no_of_people' => $ride->no_of_people,
+                    'no_of_days' => dateDifference($ride->start_date, $ride->end_date),
+                    'description' => $ride->short_description,
+                    'rider_rating' => isset($user->profile->rating) ? $user->profile->rating: 0,
+                    'ride_rating' => $rideDays['ride_rating'],
+                    'road_type' => $rideDays['ride_days'][0]['road_type'],
+                    'is_approved' => $ride->is_approved,
+                    'status_comment' => $status_comment,
+                    'ride_image' => !empty($rideDays['ride_days'][0]['image']) ? $rideDays['ride_days'][0]['image'] : 'not_found.png',
+                ];
+            }
         }
         return $result;
     }
@@ -58,6 +60,8 @@ class RideController extends Controller
         $id = $request->id;
         $bike = Ride::find($id);
         $bike->delete();
+
+        RideDay::where('ride_id', $id)->delete();
         $response = ['status' => true, 'msg'=>'Ride has been deleted successfully'];
         return response()->json($response);
     }
@@ -70,13 +74,20 @@ class RideController extends Controller
     protected function formateRideDays($days) {
         $ride_days = json_decode($days,true);
         $result = [];
+        $rating = 0;$i=0;
         foreach($ride_days as $key => $ride_day) {
-            $result[$key] = [
+            $roadType = RoadType::find($ride_day['road_type']);
+            $result['ride_days'][$key] = [
                 'start_locations' => $ride_day['start_location'],
-                'road_type' => ($ride_day['road_type']==1) ? 'Highway' : '',
+                'road_type' => $roadType->road_type,
                 'image' => !empty($ride_day['ride_images']) ? $ride_day['ride_images'][0] : ''
             ];
+
+            $rating+= $ride_day['road_quality']+$ride_day['road_scenic'];
+            $i++;
         }
+        $rating = $rating/(2*$i);
+        $result['ride_rating'] = strlen(preg_replace("/.*\./", "", $rating)) == 2 ? round($rating) : $rating;
         return $result;
     }
 
@@ -97,7 +108,7 @@ class RideController extends Controller
 
         if ($validator->fails()) {
             $response = [
-                'error' => $validator->errors()->all(), 
+                'error' => $validator->errors(), 
                 'status' =>false
             ];
          }
@@ -132,9 +143,6 @@ class RideController extends Controller
         $ride = $request->session()->get('ride');
         $ride->rideDay = $filterData;
         $request->session()->put('ride', $ride);
-
-        //dd($ride);
-
         $html = view('front.ride.ride-review', compact('ride'))->render();
         return $html;
     }
@@ -168,7 +176,8 @@ class RideController extends Controller
             ]); 
             
         $this->storeRideDays($ride->rideDay,$rideDetails->id, $ride->start_date);
-        return $response = ['msg'=>'Ride Added Successfully', 'status'=>true];       
+        $url = route('my-rides.confirmation',$rideDetails->id);
+        return $response = ['msg'=>'Ride Added Successfully', 'status'=>true, 'url' => $url];       
     }
 
     protected function storeRideDays($rideDays, $ride_id, $start_date){
@@ -197,14 +206,85 @@ class RideController extends Controller
                 foreach($value as $key_child => $image) {
                     $new_name = rand() . '.' . $image->getClientOriginalExtension();
                     $image->move(public_path('images/rides'), $new_name);
-                    $img_result[$key_child] = $new_name;
+                    //$img_result[$key_child] = $new_name;
+                    $img_result[$key_child] = [
+                        'image' => $new_name,
+                        'is_published' => 0
+                    ];
                 }
                 $result[$index][$keyNew] = $img_result;
-            } else {
+            } else if($keyNew == 'is_hotel' || $keyNew == 'is_restaurant' || $keyNew == 'is_petrol_pump' || $keyNew == 'is_wifi' || $keyNew == 'is_parking'){
+                $result[$index][$keyNew] = ($value=='on') ? 1 : 0;
+            } else{
                 $result[$index][$keyNew] = $value;
             }
+            $result[$index]['total_km'] = 0;
         }
         return $result;
+    }
+
+    public function publishImages(Request $request){
+        $data = $request->all();
+        $img_result = [];
+        $keyId = '';
+        foreach($data as $key => $images){  
+            $list = explode('_',$key);
+            $keyId = $list[1];
+            if($list[0] == 'images') {        
+                foreach($images as $key_child => $image) {
+                    $img_result[$image] = 1;
+                }
+            }
+        }
+
+        $ride = $request->session()->get('ride');
+        $rideDays = $ride->rideDay;
+        $rideDays = $this->publishRideImages($img_result, $rideDays, $keyId);
+        $ride->rideDay = $rideDays;
+        $request->session()->put('ride', $ride);
+        
+        $response = array('status' => true, 'msg' => 'Selected images has been published');
+        return response()->json($response);
+    }
+
+    protected function publishRideImages($img_result, $rideDays, $keyId) {
+        
+        $rideImages = $rideDays[$keyId]['ride_images'];
+        $imageList = [];
+        foreach($rideImages as $key => $value) {
+            if(array_key_exists($value['image'], $img_result)) {
+                $value['is_published'] = $img_result[$value['image']];
+            }
+            $imageList[$key] = $value;
+        }
+        $rideImages = $imageList;
+        $rideDays[$keyId]['ride_images'] = $rideImages;
+        return $rideDays;        
+    }
+
+    public function confirm($id){
+        $ride = Ride::find($id);
+        $user = $ride->user;
+        $rideDays = $this->formateRideDays($ride->ride_days);
+        $rides = [
+            'rider_name' => $user->name,
+            'rider_id' => $user->id,
+            'rider_image' => isset($user->profile->image) ? $user->profile->image : '',
+            'start_location' => $ride->start_location,
+            'via_location' => $this->formateViaLocation($ride->via_location),
+            'end_location' => $ride->end_location,
+            'start_date' => formatDate($ride->start_date, 'M Y'),
+            'total_km' => $ride->total_km,
+            'no_of_people' => $ride->no_of_people,
+            'no_of_days' => dateDifference($ride->start_date, $ride->end_date),
+            'description' => $ride->short_description,
+            'rider_rating' => isset($user->profile->rating) ? $user->profile->rating: 0,
+            'ride_rating' => $rideDays['ride_rating'],
+            'road_type' => $rideDays['ride_days'][0]['road_type'],
+            'ride_image' => !empty($rideDays['ride_days'][0]['image']) ? $rideDays['ride_days'][0]['image'] : 'not_found.png',
+        ];
+        $rides = (object)$rides;
+        return view('front.ride.confirm', compact('rides'));
     }
     
 }

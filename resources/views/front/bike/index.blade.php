@@ -1,18 +1,19 @@
 @extends('layouts.frontLayout.front-layout')
 @section('title', 'Bikes')
 @section('content')
-<section class="main-bg">
+<section class="left-main-bg">
 	<div class="container ">
 	  <div class="row">
+	  	<div class="col-md-4 d-none d-md-block">
+		  @include('layouts.frontLayout.profile-sidebar')
+		</div>
 		<div class="col-md-8">
-		  <div class="cust-left-block">
-			<h2 class="page-heading">
-			  My Bikes
-			</h2>
-			<div class="d-flex align-items-center filter-details mb-4">
-			  <span class="filter-block1">{{ count((array)$bikes) }} Bikes Added</span><br/>
-			</div>
-			<span><a href="{{route('add-bike')}}">Add New Bike</a></span>
+		  <div class="cust-left-block">			
+		  		<div class="d-flex align-items-center mt-4 mb-2">
+				  	<h2 class="page-heading">MY BIKES <small>{{ count((array)$bikes) }} Bikes added</small></h2>
+					<span class="ml-auto filter-block3 mob-filter"><a href="{{route('add-bike')}}" class="btn btn-danger mb-2">ADD NEW BIKE</a></span>
+				</div>
+				<div class="d-flex align-items-center filter-details mb-4"></div>
 			
 			<div class="row">
 			  <!-- repeat div from here START -->
@@ -37,7 +38,7 @@
 						</div>
 					</div>
 					<div class="location-details d-flex align-items-center">
-						<span class="rating"><i class="fa fa-star"></i>4.5 <small>Rating</small></span>
+						<span class="rating"><i class="fa fa-star"></i>{{ $bike['rating']}} <small>Rating</small></span>
 						<span class="other-details"><i class="fa fa-map-o"></i>{{ $bike['total_km']}} km <small>Bikes Driven</small></span>
 						<span class="other-details"><i class="fa fa-calendar-o"></i>{{ $bike['total_rides']}} <small>Rides</small></span>
 					</div>
@@ -99,7 +100,7 @@
 					<div class="location-heading-block ">
 						<div>
 						<div class="location-details  p-0">
-						<span class="rating d-flex align-items-center"><i class="fa fa-star"></i>4.5 <small class="ml-2">Rating</small></span>
+						<span class="rating d-flex align-items-center"><i class="fa fa-star"></i>{{ $bike['rating']}} <small class="ml-2">Rating</small></span>
 						</div>
 						<h4 class="location-title my-2">{{ $bike['bike_name']}}</h4>
 						<div class="d-flex align-items-center location-block mb-2">
@@ -143,10 +144,7 @@
 			@endif		   
 			</div>		   
 		  </div>
-		</div>
-		<div class="col-md-4 d-none d-md-block">
-		  @include('layouts.frontLayout.profile-sidebar')
-		</div>
+		</div>		
 	  </div>
 	</div>
   </section>

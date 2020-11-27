@@ -373,7 +373,7 @@
 	<i class="fa fa-window-close mt-2 text-danger review-close-icon" aria-hidden="true" onclick="cancelReviewBikeDescChange()"></i>
 	<form id="addReviewBikeDescForm1" action="post" style="width:100%;">
 		<h4 class="page-sub-heading mt-4 mb-2">Other (Optional)</h4>
-		<textarea class="text-format rview_description" name="info" id="description" placeholder="Anything else you want to share about this bike? Write it down here"></textarea>
+		<textarea class="text-format rview_description" name="info" id="description" placeholder="Anything else you want to share about this bike? Write it down here">{{$result['bike_details']['info']}}</textarea>
 
 		<div class="text-right pb-3">
 			<button type="button" onclick="submitReviewBikeDescriptionStep()" class="btn btn-outline-success btn-sm px-5"> SAVE</button>
@@ -384,7 +384,7 @@
 <hr class="full-h-line my-4">
 <div class="text-right pb-3">
 	<button class="red-outline-btn px-5 mr-3" onClick="bikeDetailsStep()">BACK</button>
-	<button class="post-btn lg px-5" onClick="submitBike('<?= isset($result['bike_id']) ? $result['bike_id'] : '' ?>')">SUBMIT</button>
+	<button class="post-btn lg px-5" id="submit_review_bike" onClick="submitBike('<?= isset($result['bike_id']) ? $result['bike_id'] : '' ?>')">SUBMIT</button>
 </div>
 
 

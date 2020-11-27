@@ -1,16 +1,20 @@
 @extends('layouts.frontLayout.front-layout')
 @section('title', 'Suppliers')
 @section('content')
-<section class="main-bg">
+<section class="left-main-bg">
 	<div class="container ">
 		<div class="row">
+			<div class="col-md-4 d-none d-md-block">
+				@include('layouts.frontLayout.profile-sidebar')
+			</div>
 			<div class="col-md-8">
 				<div class="cust-left-block">
-					<h2 class="page-heading">Suppliers List</h2>
-					<div class="d-flex align-items-center filter-details mb-4">
-						<span class="filter-block1">{{ count($suppliers) }} Suppliers Added</span><br/>
+					<div class="d-flex align-items-center mt-4 mb-2">
+						<h2 class="page-heading">SUPPLIERS <small>{{ count($suppliers) }} Suppliers added</small></h2>
+						<span class="ml-auto filter-block3 mob-filter"><a href="{{route('suppliers.create')}}" class="btn btn-danger mb-2">ADD NEW SUPPLIER</a></span>
 					</div>
-					<span><a href="{{route('suppliers.create')}}">Add New Supplier</a></span>
+					<div class="d-flex align-items-center filter-details mb-4"></div>
+
 					<div class="row">
 					@if(count($suppliers) > 0)
 						@foreach($suppliers as $key => $supplier)
@@ -114,10 +118,7 @@
 					@endif		   
 				</div>		   
 			</div>
-		</div>
-		<div class="col-md-4 d-none d-md-block">
-			@include('layouts.frontLayout.profile-sidebar')
-		</div>
+		</div>		
 	</div>
 </section>
 @stop

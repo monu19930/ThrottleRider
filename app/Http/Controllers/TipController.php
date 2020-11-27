@@ -47,7 +47,7 @@ class TipController extends Controller
             $image->move(public_path('videos/tips/'), $new_name);
         } 
         elseif(empty($request->tip_description)) {
-            $response = ['status' => false, 'error' => ['Select either media file or Enter Tip Description']];
+            $response = ['status' => false, 'error' => ['tip_description'=>'Select either media file or Enter Tip Description']];
             return response()->json($response);
         }
         $tipData['rider_id'] = user()->id;

@@ -37,11 +37,6 @@ class RiderController extends Controller
 
         //send verification email
         Mail::to($request->email)->send(new VerificationEmail($user));
-       
-        //login after successfully account created
-        // if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
-        //     //do nothing
-        // }
         return response()->json($response);
     }
 
@@ -53,18 +48,23 @@ class RiderController extends Controller
         
         
         if ($validator->fails()) {
-            $response = ['error' => $validator->errors()->all(), 'status' =>false];
+            $response = ['error' => $validator->errors(), 'status' =>false];
          }
          else {
             $user = User::where('email',$request->email)->first();
-            if($user->email_verified == 1){
-                if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-                    $response = ['msg' => 'Logged In Successfully !', 'status' => true];
+            if(!empty($user)) {
+                if($user->email_verified == 1){
+                    if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                        $response = ['msg' => 'Logged In Successfully !', 'status' => true];
+                    } else {
+                        $response = ['error' => ['password' => 'Either email or password is incorrect'], 'status' => false];
+                    }
                 } else {
-                    $response = ['error' => ['Either email or password is incorrect'], 'status' => false];
+                    $response = ['error' => ['email' => 'Verify your email address'], 'status' => false];
                 }
-            } else {
-                $response = ['error' => ['Verify your email address'], 'status' => false];
+            }
+            else{
+                $response = ['error' => ['email' => 'Please enter valid email address'], 'status' => false];
             }
         }
         return response()->json($response);
@@ -342,6 +342,49 @@ class RiderController extends Controller
             }
             $response = ['status'=>true, 'msg'=>'Contact has been shared'];
         }
+        return response()->json($response);
+    }
+
+
+    public function updateDescription(Request $request){
+        $loggedInUser = user();
+    
+        $description = $request->description;
+        $profile = RiderProfile::where('rider_id', $loggedInUser->id)->first();
+        $profile->description = $description;
+        $profile->save();
+
+        $response = array('msg' => 'Profile Description updated Successfully', 'status' => true);
+        return response()->json($response);
+    }
+
+    public function updateDetail(Request $request){
+       
+        $loggedInUser = user();
+        $validator = Validator::make($request->all(), [
+            'total_rides' => 'required',
+            'riding_year' => 'required',
+        ]);
+        
+        if ($validator->fails()) {
+            $response = array('error' => $validator->errors(), 'status' =>false);
+         }
+         else {
+            $profile = RiderProfile::where('rider_id', $loggedInUser->id)->first();
+
+            if(isset($request->image)) {
+                $image = $request->file('image');
+                $new_name = rand() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('images/rider_images/'), $new_name);
+
+                $profile->image = $new_name;
+            }
+            $profile->riding_year = $request->riding_year;
+            $profile->total_rides = $request->total_rides;
+            $profile->save();
+            $response = array('msg' => 'Profile Updated Successfully', 'status' => true);
+        }
+
         return response()->json($response);
     }
 }

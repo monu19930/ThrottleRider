@@ -1,16 +1,21 @@
 @extends('layouts.frontLayout.front-layout')
 @section('title', 'My Groups')
 @section('content')
-<section class="main-bg">
+<section class="left-main-bg">
 	<div class="container ">
 	  <div class="row">
+	 	<div class="col-md-4 d-none d-md-block">
+			@include('layouts.frontLayout.profile-sidebar')
+		</div>
 		<div class="col-md-8">
 		  <div class="cust-left-block">
-			<h2 class="page-heading">My Groups</h2>
-			<div class="d-flex align-items-center filter-details mb-4">
-			  <span class="filter-block1">{{ count((array)$result) }} Groups Added</span><br/>
-			</div>
-            <a href="{{route('my-groups.create')}}">Add New Groups</a>
+
+		  		<div class="d-flex align-items-center mt-4 mb-2">
+				  	<h2 class="page-heading">MY GROUPS <small>{{ count((array)$result) }} Groups added</small></h2>
+					<span class="ml-auto filter-block3 mob-filter"><a href="{{route('my-groups.create')}}" class="btn btn-danger mb-2">ADD NEW GROUP</a></span>
+				</div>
+				<div class="d-flex align-items-center filter-details mb-4"></div>
+			
 			<div class="row">
 			  <!-- repeat div from here START -->
 			@if(count((array)$result) > 0)
@@ -139,10 +144,7 @@
 			@endif		   
 			</div>		   
 		  </div>
-		</div>
-		<div class="col-md-4 d-none d-md-block">
-		@include('layouts.frontLayout.profile-sidebar')
-		</div>
+		</div>		
 	  </div>
 	</div>
   </section>

@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class GroupPastExperience extends Model
 {
-    protected $fillable = ['title', 'added_on', 'description', 'group_id', 'rider_id'];
+    protected $fillable = ['title', 'added_on', 'description', 'images', 'group_id', 'rider_id'];
 }

@@ -20,8 +20,9 @@
                     </div>
                     <label class="login-change-txt">or Login using email/ Mobile number</label>
                     <form action="" class="" id="loginForm">
-                        <div class="alert alert-danger response-msg" style="display:none">
-                        <ul></ul>
+                        <div class="alert alert-success alert-dismissible print-error-msg mt-2" style="display:none">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <span></span>
                         </div>
                         <div class="login-input">
                             <div class="form-group">
@@ -45,8 +46,9 @@
                     </div>
                     <label class="login-change-txt">or Sign up using email</label>
                     <form id="signupForm" method="post">
-                        <div class="alert alert-danger print-error-msg" style="display:none">
-                            <ul></ul>
+                        <div class="alert alert-success alert-dismissible print-error-msg mt-2" style="display:none">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <span></span>
                         </div>
                         <div class="login-input">
                             <div class="form-group">

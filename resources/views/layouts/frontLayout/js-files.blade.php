@@ -13,12 +13,15 @@
 <script src="{{ asset('public/js/bike.js')}}"></script>
 @endif
 
+@if(Route::currentRouteName()=='my-rides.create')
+<script src="{{ asset('public/js/bike.js')}}"></script>
+@endif
+
 @yield('javascript')
 <script type="text/javascript">
-    function registerRider () {  
+    function registerRider () { 
         $(function() {
-            $('#signup').html('Please Wait...');
-            $("#signup"). attr("disabled", true);
+            $('#signup').html('Please Wait...').attr("disabled", true);
             $.ajaxSetup({
                 headers: {'X-CSRF-TOKEN': $('input[name="csrf-token"]').attr('content')}
             });
@@ -26,36 +29,21 @@
                 url: "{{route('rider-register')}}",
                 type: "POST",
                 data: $('#signupForm').serialize(),
-                success: function( response ) {
-                    
+                success: function( response ) {                    
                     if(response.status==true) {
-                        $('#signup').html('CREATE A NEW ACCOUNT');
-                        $("#signup"). attr("disabled", false);                        
-
-                        $(".print-error-msg").find("ul").html('');
-                        $(".print-error-msg").css('display','block');
-                        $(".print-error-msg").find("ul").append('<li>'+response.msg+'</li>');
-                        $(".print-error-msg").addClass('alert-success').removeClass('alert-danger');
-
-                        setTimeout(function () {
-                            if ($(".alert").is(":visible")){
-                                $(".alert").fadeOut("fast");
-                            }
-                            document.getElementById("signupForm").reset();
-                            location.replace("{{ route('my-profile') }}");
-                        }, 5000);
+                        var redirect = "{{ route('my-profile') }}";
+                        successMessage(response.msg, 'signup', 'CREATE A NEW ACCOUNT', 'signupForm', redirect , 'form-group');
                     }
                 },
                 error: function(response) {
-                    $('#signup').html('CREATE A NEW ACCOUNT');
-                    $("#signup"). attr("disabled", false);
-                    showErrorMessage(response.responseJSON.errors);
+                    errorMessage(response.responseJSON.errors, 'signup', 'CREATE A NEW ACCOUNT', 'form-group');
                 }
             });
         });
     }
 
     function signinRider() {
+        $('#signinRiderBtn').text('Please wait...').attr('disabled', false);
         $(function() {
             $.ajaxSetup({
                 headers: {'X-CSRF-TOKEN': $('input[name="csrf-token"]').attr('content')}
@@ -64,23 +52,13 @@
             url: "{{route('rider-login')}}",
             type: "POST",
             data: $('#loginForm').serialize(),
-            success: function( response ) {
-                $(".response-msg").find("ul").html('');
-                $(".response-msg").css('display','block');
+            success: function( response ) {                
                 if(response.status==true) {
-                    $(".response-msg").find("ul").append('<li>'+response.msg+'</li>');
-                    $(".response-msg").removeClass('alert-danger').addClass('alert-success');
-                    location.replace("{{ route('my-profile') }}");
+                    var redirect = "{{ route('my-profile') }}";
+                    successMessage(response.msg, 'signinRiderBtn', 'LOGIN', 'loginForm', redirect , 'form-group');
                 }
                 else {
-                    $.each( response.error, function( key, value ) {
-                        $(".response-msg").find("ul").append('<li>'+value+'</li>');
-                    });
-                    setTimeout(function () {
-                        if ($(".alert").is(":visible")){
-                            $(".alert").fadeOut("fast");
-                        }
-                    }, 3000);
+                    errorMessage(response.error, 'signinRiderBtn', 'LOGIN', 'form-group');
                 }
             }
             });
@@ -118,12 +96,11 @@
 
         //
         $("#invite_group_member_email").email_multiple({
-                data: '',
-                color:"#343a40",
-                textColor:"#000000"
-
-                // reset: true
-            });
+            data: '',
+            color:"#343a40",
+            textColor:"#000000"
+            // reset: true
+        });
 
         
         $("#bike_list").autocomplete({ 
@@ -157,6 +134,8 @@
 
         //submit bike form step 1
         $('#submitBikeStep1').on('click', function(){
+            var referer = this;
+            $(this).text('Please Wait .....').attr('disabled', true);
             $.ajaxSetup({
                 headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
             });
@@ -167,7 +146,8 @@
                 success: function( response ) {
                     $('#bike_tab2').show();
                     $('#bike_tab1').hide();
-                   
+                    $('.input-field span.text-danger').remove();
+                    $(referer).text('CONTINUE').attr('disabled', false);
                     $('#progressStep1').removeClass('active-list').addClass('selected-list');
                     $('#progressStep2').addClass('active-list');
 
@@ -176,7 +156,8 @@
                              
                 },
                 error: function(response) {
-                    showErrorMessage(response.responseJSON.errors);
+                    //showErrorMessage(response.responseJSON.errors);                    
+                    errorMessage(response.responseJSON.errors, 'submitBikeStep1', 'CONTINUE')
                 } 
             });
         });
@@ -184,6 +165,8 @@
 
         //Submit Bike Form Step 2
         $('#submitBikeStep2').on('click', function(){
+            $(this).text('Please wait....').attr('disabled', true);
+            var referer = this;
             $.ajaxSetup({
                 headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
             });
@@ -196,12 +179,14 @@
                 cache:false,
                 success: function( response ) {
                     if(response.status==false) {                        
-                        showErrorMessage(response.error);
+                        //showErrorMessage(response.error);
+                        errorMessage(response.error, 'submitBikeStep2', 'CONTINUE');
                     }
                     else {
                         $('#bike_tab2').hide();
                         $('#bike_tab1').hide();
-                        $('#review_bike').show();                        
+                        $('#review_bike').show();
+                        $(referer).text('CONTINUE').attr('disabled', false);                    
                         $('#review_bike').html(response);
 
                         $('#progressStep1').removeClass('selected-list').addClass('selected-list');
@@ -218,6 +203,7 @@
  
         //submit ride form step 1
         $('#rideStep1').on('click', function(){
+            $(this).text('Please Wait...').attr("disabled", true);
             $.ajaxSetup({
                 headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
             });
@@ -227,6 +213,7 @@
                 data: $('#addRideForm1').serialize(),
                 success: function( response ) {
                     if(response.status == true) {
+                        $('#rideStep1').text('CONTINUE').attr("disabled", false);
                         $('#tab2').show();
                         $('#tab1').hide();
 
@@ -242,13 +229,23 @@
                         $('#start_location_0').val(response.start_location);
                         $('#first_day').attr('content', response.days);
                     } else {                        
-                        showErrorMessage(response.error);
+                        //showErrorMessage(response.error);
+                        errorMessage(response.error,'rideStep1', 'CONTINUE');
 
                     }
                 }
             });
         });
 
+        //post ride
+        $('.post-ride').on('click', function(){
+            var is_user = "{{Auth::user()}}";
+            if(!is_user) {
+                $('#loginmodal').modal('show');
+            } else{
+                location.replace("{{route('my-rides.create')}}");
+            }
+        })
 
         //Submit Ride Form Step 2
         $('#rideStep2').on('click', function(){
@@ -330,7 +327,7 @@
             var form_id = 'groupForm';
             var url = "{{route('my-groups.store')}}"; 
             var redirectUrl = "{{route('my-groups.index')}}"; 
-            submitForm(form_id, url, redirectUrl)
+            submitForm(form_id, url, redirectUrl, 'submitGroup', 'SUBMIT');
         });
 
         //social login
@@ -383,8 +380,28 @@
 
         //Ride Submit Step
         $('.group_past_experience').on('click',function(){
+            $('.form-group span.text-danger').remove();
             $('#past_experience_id').val($(this).attr('content'));
             $('#pastExperienceModal').modal('show');
+        });
+
+
+        //show hide rideDays tabs
+
+        $('.moreDays').on('click', function(){
+            var newId = $(this).attr('href');
+            newId = newId.replace('#','');
+
+            if(newId == 'day1') {
+                $('#dynamic_field .tab-pane').removeClass('show active');
+                $('#'+newId).addClass('show active');
+            }
+            else {        
+                $('#dynamic_field #'+newId).addClass('show active');
+            }
+
+            $('.moreDays').removeClass('active').attr('area-selected','fasle');
+            $(this).addClass('active').attr('area-selected','true');
         });
 
         //Start Added Code For Add More Ride Day
@@ -392,27 +409,55 @@
         $('#add').click(function(){
             var max = $('#first_day').attr('content');
             var end_loc = $('input[name=end_location_'+i+']').val();
+            var start_location = $('input[name=start_location_'+i+']').val();
+            
+            var tab = 2+parseInt(i);
+            var error = false;
 
+            $('.input-field span.text-danger').remove();
             if(end_loc == ''){
-                swal('Failed', 'Please enter end location of Day '+(i+parseInt(1)), 'error');
-                return false;
+                //swal('Failed', 'Please enter end location of Day '+(i+parseInt(1)), 'error');
+                //return false;
+                var key = "end_location_"+i;
+                $(document).find('[name='+key+']').after('<span class="text-strong text-danger">End location field is required</span>');
+                error = true;
             }
-            if(i < max) {
-                i++;                
-                if(i == parseInt(max)) {
-                    $(this).hide();
-                }
-                $.ajaxSetup({
-                    headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
-                });
-                $.ajax({
-                    url: "{{route('my-rides.add-day')}}",
-                    type: "POST",
-                    data: {val: i, end_location: end_loc},
-                    success: function( response ) {                        
-                        $('#dynamic_field').append(response);
+
+            if(start_location == ''){              
+                var key = "start_location_"+i;
+                $(document).find('[name='+key+']').after('<span class="text-strong text-danger">Start location field is required</span>');
+                error = true;
+            }
+
+            var nextDay = tab+parseInt(1);
+
+            if(error == false) {
+
+                if(i < max) {
+                    i++;                
+                    if(i == parseInt(max)) {
+                        $(this).hide();
                     }
-                });                
+                    $.ajaxSetup({
+                        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+                    });
+                    $.ajax({
+                        url: "{{route('my-rides.add-day')}}",
+                        type: "POST",
+                        data: {val: i, end_location: end_loc},
+                        success: function( response ) {
+                            $('#myTab li a').removeClass('active')
+                            $('#more_days').append('<li class="nav-item" role="presentation">'+
+                            '<a class="moreDays nav-link active" onclick="showHideActiveTab()" id="day2-tab" data-toggle="tab" href="#day'+tab+'" role="tab" aria-controls="Day2" aria-selected="true"><span>Day '+tab+'</span></a>'
+                        +'</li>');
+
+                            $('#daysContent .tab-pane').removeClass('active show');
+                            $('#dynamic_field').append(response);
+
+                            $('#add').html('<i class="fa fa-plus"></i>&nbsp; Add Day'+nextDay);
+                        }
+                    });                
+                }
             }
         });
 
@@ -454,15 +499,17 @@
             e.preventDefault(); 
             if(k < max_spare_parts){
                 k++;
-                $('#spare_parts_div').append('<div class="form-group">'+
-                '<input type="text" autocomplete="off" class="form-control" name="spare_part_name[]" placeholder="Name">'+
-                '<input type="text" autocomplete="off" class="form-control" name="spare_part_number[]" placeholder="Serial Number">'+
-                '<input type="file" class="form-control" name="spare_part_image[]"><i class="fa fa-minus-circle review-details remove_field"></i>'+
-                '</div>');
+                $('#spare_parts_div').append('<div class="col-12"><div class="d-flex align-items-center w-100 mt-4"><div class="input-field  mb-0 w-100 left-seprater-dotted">'+
+                    '<input type="text" name="spare_part_name[]" class="input-block" placeholder=" "><label for="search-bike" class="input-lbl">Name</label></div>'+
+                    '<div class="input-field  mb-0 w-100 left-seprater-dotted"><input type="text" name="spare_part_number[]" class="input-block" placeholder=" "><label for="search-bike" class="input-lbl">Serial Number</label></div>'+
+                    '<div class="input-field  mb-0 w-100 left-seprater-dotted"><input type="file" name="spare_part_image[]" class="input-block" placeholder=" "></div>'+
+                    "<div class='add-via-btn remove_field'><a href='javascript:void(0)'><img src='{{ asset('public/rider/images/icons-clickable-less.svg')}}'></a></div></div>"+
+                    '</div>'
+                );
             } 
         }); 
         $('#spare_parts_div').on("click",".remove_field", function(e){ 
-            e.preventDefault(); $(this).parent('div').remove(); 
+            e.preventDefault(); $(this).parent('div').parent('div').remove(); 
             k--; 
         })
 
@@ -599,19 +646,11 @@
 
         //Add Supplier
         $('#submitSupplier').on('click', function(){
-            var form_id = 'supplierForm';
+            //var form_id = 'supplierForm';
             var url = "{{route('suppliers.store')}}"; 
             var redirectUrl = "{{route('suppliers.index')}}"; 
-            submitForm(form_id, url, redirectUrl)
-        });
-
-        //Add Tips
-        $('#submitTip').on('click', function(){
-            var form_id = 'tipForm';
-            var url = "{{route('tips.store')}}"; 
-            var redirectUrl = "{{route('tips.index')}}"; 
-            submitForm(form_id, url, redirectUrl)
-        });
+            submitForm('supplierForm', url, redirectUrl, 'submitSupplier', 'SUBMIT', 'input-field');
+        });       
 
 
         //Show feedbackPoll Modal
@@ -678,6 +717,15 @@
                 }); 
             },
         });
+
+        $("#btnAdd").on("click", function () {
+            console.log('checkkk');
+       
+        });
+
+    $("body").on("click", ".remove", function () {
+        $(this).closest("div").parent("div").remove();
+    });
 
         $('#submit-search2').on('click', function(){
             var search_keyword = $('#search-input2').val();
@@ -815,7 +863,8 @@
         
     });
 
-    function submitForm(form_id, url, redirect_url) {
+    function submitForm(form_id, url, redirect_url, btnId, btnText, fieldClass='form-group') {
+        $('#'+btnId).text('Please wait...').attr('disabled', true);
         $.ajaxSetup({
                 headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
         });
@@ -828,18 +877,22 @@
             cache:false,
             success: function( response ) {
                 if(response.status == true) {
-                    $(".print-error-msg").find("ul").html('');
+                    $('.'+fieldClass+' span.text-danger').remove();
+                    $('#'+btnId).text(btnText).attr('disabled', false);
+                   
                     document.getElementById(form_id).reset();
                     swal('Success', response.msg, 'success');
+                    
                     setTimeout(function () {
                         location.replace(redirect_url);
                     }, 3000)
                 } else {
-                    showErrorMessage(response.error);
+                    //showErrorMessage(response.error);
+                    errorMessage(response.error, btnId, btnText, fieldClass);
                 }
             }, error: function(response) {
-                
-                showErrorMessage(response.responseJSON.errors);
+                //showErrorMessage(response.responseJSON.errors);
+                errorMessage(response.responseJSON.errors, btnId, btnText, fieldClass);
             }
         });
     }
@@ -998,7 +1051,7 @@
                     }
                 });
             }
-        });         
+        }); 
     }
 
 
@@ -1065,10 +1118,7 @@
                 contentType: false,
                 success: function( response ) {
                     if(response.status==true) {
-                        swal('Success', response.msg, 'success');
-                        setTimeout(function () {                            
-                            location.replace("{{ route('my-rides') }}");
-                        }, 3000);                        
+                        location.replace(response.url);
                     }
                     else {
                         swal('Failed', response.msg, 'error');
@@ -1123,10 +1173,7 @@
                 data: {id:id},
                 success: function( response ) {
                     if(response.status==true) {
-                        swal('Success', response.msg, 'success');
-                        setTimeout(function () {                            
-                            location.replace("{{ route('bikes') }}");
-                        }, 3000)
+                        location.replace(response.url);                        
                     }
                     else {
                         swal('Failed', response.msg, 'error');
@@ -1173,6 +1220,30 @@
             $('#bikeProgress2').text('2');
             $('#bikeProgress3').text('3');
         });
+    }
+
+    function valueChanged(refer)
+    {
+        // if($('input[name="'+fieldId+'"').is(":checked"))   
+        //     $("#checkbox-content").show();
+        // else
+        //     $("#checkbox-content").hide();
+
+
+        //$('input[name="'+fieldId+'"]').click(function() {
+            console.log(refer);
+            var cls = $(refer).attr('name');
+            console.log(cls);
+            if($(refer).prop("checked") == true) {
+                //alert("Checkbox is checked.");   
+                             
+                $("."+cls).attr('style', '');
+            }
+            else if($(refer).prop("checked") == false) {
+                //alert("Checkbox is unchecked.");
+                $("."+cls).attr('style', 'display:none !important');;
+            }
+        //});
     }
 
     function showHideField(val,field_key,content) {
@@ -1245,19 +1316,68 @@
         });
     }
 
+    function saveTip(){
+        $.ajaxSetup({
+                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+        });
+        $.ajax({
+            url: "{{route('tips.store')}}",
+            type: "POST",
+            data: $('#tipForm').serialize(),
+            success: function( response ) {
+                if(response.status == true) {
+                    document.getElementById('tipForm').reset();
+                    $('.form-group span.text-danger').remove();
+                    $("#submitTip").text('SUBMIT').attr("disabled", false);
+                    $(".print-error-msg").css('display','block');
+                    $(".print-error-msg").find("span").text(response.msg); 
+                    setTimeout(function () {
+                        if ($(".alert").is(":visible")){
+                            $(".alert").fadeOut("fast");
+                        }
+                        location.reload();
+                    }, 3000);
+                } else {
+                    $('.form-group span.text-danger').remove();
+                    $.each( response.error, function( key, value ) {
+                        $(document).find('[name='+key+']').after('<span class="text-strong text-danger">' +value+ '</span>');
+                    });
+                    $("#past_experience").text('SUBMIT').attr("disabled", false);
+                }
+            }
+        });
+    }
+
     function savePastExperience() {
+        $("#past_experience").text('Please Wait...').attr("disabled", true);
         $.ajaxSetup({
                 headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
         });
         $.ajax({
             url: "{{route('my-groups.experience.store')}}",
             type: "POST",
-            data: $('#pastExperienceForm').serialize(),
+            data: new FormData($('#pastExperienceForm')[0]),
+            processData: false,
+            contentType: false,
+            cache:false,
             success: function( response ) {
-                if(response.status == true) {                   
-                    showSuccessMessage(response.msg,'pastExperienceForm','pastExperienceModal')
+                if(response.status == true) {
+                    document.getElementById('pastExperienceForm').reset();
+                    $('.form-group span.text-danger').remove();
+                    $("#past_experience").text('SUBMIT').attr("disabled", false);
+                    $(".print-error-msg").css('display','block');
+                    $(".print-error-msg").find("span").text(response.msg); 
+                    setTimeout(function () {
+                        if ($(".alert").is(":visible")){
+                            $(".alert").fadeOut("fast");
+                        }
+                    }, 3000);
                 } else {
-                    showErrorMessage(response.error, 'modal');
+                    $('.form-group span.text-danger').remove();
+                    $.each( response.error, function( key, value ) {
+                        $(document).find('[name='+key+']').after('<span class="text-strong text-danger">' +value+ '</span>');
+                    });
+                    $("#past_experience").text('SUBMIT').attr("disabled", false);
                 }
             }
         });
@@ -1358,6 +1478,30 @@
             error: function(response) {
                 showErrorMessage(response.responseJSON.errors);
             } 
+        });
+    }
+
+    function publishRideImages(formId) {
+        $('#submitPublishRideImages'+formId).text('Please wait...').attr('disabled', true);
+        $.ajaxSetup({
+                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+        });
+        $.ajax({
+            url: "{{route('my-rides.publish-images')}}",
+            type: "POST",
+            data: $('#rideImagesPublishForm'+formId).serialize(),
+            success: function( response ) {
+                $(".print-error-msg").css('display','block');
+                $(".print-error-msg").find("span").text(response.msg);
+                document.getElementById('rideImagesPublishForm'+formId).reset();
+                $('#submitPublishRideImages'+formId).text('Publish').attr('disabled', false);
+                setTimeout(function () {
+                    if ($(".alert").is(":visible")){
+                        $(".alert").fadeOut("fast");
+                    }
+                    $('#publishRideImagesModal'+formId).modal('hide');
+                }, 3000);
+            }
         });
     }
 
@@ -1509,4 +1653,106 @@
         }
     }
 
+    function errorMessage(error, btn_id, btnText, fieldClass='input-field'){
+        window.scrollTo(0, 0); 
+        $('.'+fieldClass+' span.text-danger').remove();
+        $.each(error, function( key, value ) {
+            $(document).find('[name='+key+']').after('<span class="text-strong text-danger">' +value+ '</span>');
+        });
+        $("#"+btn_id).text(btnText).attr("disabled", false);
+    }
+
+    function successMessage(message, btnId, btnText, formId, redirectUrl, fieldClass='form-group'){
+        $('.'+fieldClass+' span.text-danger').remove();
+        $(".print-error-msg").css('display','block');
+        $(".print-error-msg").find("span").text(message);
+        document.getElementById(formId).reset();
+        $('#'+btnId).text(btnText).attr('disabled', false);
+        setTimeout(function () {
+            if ($(".alert").is(":visible")){
+                $(".alert").fadeOut("fast");
+            }
+            location.replace(redirectUrl);
+        }, 3000);
+    }
+
+    function updateRiderDescription(){
+        $('#update_rider_desc').text('Please wait...').attr('disabled', true);
+        $.ajaxSetup({
+                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+        });
+        $.ajax({
+            url: "{{route('my-profile.update-description')}}",
+            type: "POST",
+            data: $('#updateRiderDesc').serialize(),
+            success: function( response ) {
+                $(".print-error-msg").css('display','block');
+                $(".print-error-msg").find("span").text(response.msg);                
+                $('#update_rider_desc').text('Update').attr('disabled', false);
+                setTimeout(function () {
+                    if ($(".alert").is(":visible")){
+                        $(".alert").fadeOut("fast");
+                    }
+                    $('#riderDescriptionModal').modal('hide');
+                    location.reload();
+                }, 3000);
+            }
+        });
+    }
+
+    function updateRiderDetails(){
+        $('#update_rider_details').text('Please wait...').attr('disabled', true);
+        $.ajaxSetup({
+                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+        });
+        $.ajax({
+            url: "{{route('my-profile.update-detail')}}",
+            type: "POST",
+            data: new FormData($('#updateRiderDetail')[0]),
+            processData: false,
+            contentType: false,
+            cache:false,
+            success: function( response ) {
+                if(response.status==true) {
+                    $(".print-error-msg").css('display','block');
+                    $(".print-error-msg").find("span").text(response.msg);                
+                    $('#update_rider_desc').text('Update').attr('disabled', false);
+                    setTimeout(function () {
+                        if ($(".alert").is(":visible")){
+                            $(".alert").fadeOut("fast");
+                        }
+                        $('#riderDetailsModal').modal('hide');
+                        location.reload();
+                    }, 3000);
+                }
+                else{
+                    errorMessage(response.error, 'update_rider_details', 'Update', 'form-group');
+                }
+            }
+        });
+    }
+
+    function showHideActiveTab(){
+        $('#day1-tab').removeClass('active');
+        $('#day1').removeClass('show active');
+        $('#more_days li a').removeClass('active');
+    }
+
+    function addCommentField(fieldName){
+        var length = $('#'+fieldName+' div.d-flex').length;
+        if(length < 1) {
+            var div = '<div class="d-flex align-items-center w-100 mt-4"><div class="mr-2 pr-1">'+
+                        "<img src='{{ asset('public/rider/images/icons-via.svg')}}' class='img-fluid img-icon'></div>"+
+                        '<div class="input-field  mb-0 w-100"><input type="text" name="'+fieldName+'" class="input-block" placeholder=" " >'+
+                        '<label for="search-bike" class="input-lbl">Add Comment</label></div><div class="add-via-btn" ><a href="javascript:void(0)" onclick="removeCommentField('+fieldName+')" class="remove">'+
+                        "<img src='{{ asset('public/rider/images/icons-clickable-less.svg')}}'></a></div></div>"+
+                    '</div>';
+
+            $("#"+fieldName).append(div);
+        }
+    }
+
+    function removeCommentField(fieldName){
+        $('#'+fieldName+' div.d-flex').remove();
+    }
 </script>

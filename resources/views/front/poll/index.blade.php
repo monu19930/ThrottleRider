@@ -1,21 +1,20 @@
 @extends('layouts.frontLayout.front-layout')
 @section('title', 'Polls')
 @section('content')
-<section class="main-bg">
+<section class="left-main-bg">
 	<div class="container ">
 	  <div class="row">
+	  	<div class="col-md-4 d-none d-md-block">
+        	@include('layouts.frontLayout.profile-sidebar')
+		</div>
 		<div class="col-md-8">
 		  <div class="cust-left-block">
-			<h2 class="page-heading">
-			  Polls List
-			</h2>
-			<div class="d-flex align-items-center filter-details mb-4">
-			  <span class="filter-block1">{{ count((array)$polls) }} Poll Added</span><br/>
-			</div>
-            <span>
-				<!-- <button class="btn btn-success" data-toggle="modal" data-target="#pollModal">Add New Poll</button> -->
-				<a href="{{route('polls.create')}}" class="href">Add New Poll</a>
-            </span>
+		  		<div class="d-flex align-items-center mt-4 mb-2">
+				  	<h2 class="page-heading">POLLS <small>{{ count((array)$polls) }} Polls added</small></h2>
+					<span class="ml-auto filter-block3 mob-filter"><a href="{{route('polls.create')}}" class="btn btn-danger mb-2">ADD NEW POLL</a></span>
+				</div>
+				<div class="d-flex align-items-center filter-details mb-4"></div>
+				
 			<div class="row">
 			@if(count((array)$polls) > 0)
 				@foreach($polls as $key => $poll)
@@ -97,10 +96,7 @@
 			@endif		   
 			</div>		   
 		  </div>
-		</div>
-		<div class="col-md-4 d-none d-md-block">
-        @include('layouts.frontLayout.profile-sidebar')
-		</div>
+		</div>		
 	  </div>
 	</div>
   </section>

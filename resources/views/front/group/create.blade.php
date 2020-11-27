@@ -30,7 +30,7 @@
                           <div class="form-group">
                             <label>City</label>
                             <select class="custom-select" name="city" >
-                                <option value="">Select your city </option>
+                                <option value="">Select city </option>
                                 @foreach($cities as $key => $city)
                                   <option value="{{$key}}">{{$city}}</option>										
                                 @endforeach

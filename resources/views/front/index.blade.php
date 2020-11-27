@@ -6,7 +6,7 @@
 	<div class="container">
 	  <div class="row">
 		<div class="col-md-8">
-		  <div class="cust-left-block">
+		  <div class="cust-left-block pt-4">
 			<h2 class="page-heading">
 			  Latest Rides
 			</h2>
@@ -22,7 +22,7 @@
 			<div class="col-12 mb-3">
 			  <div class="rides-block d-none d-md-flex">
 				<div class="rider-img-block mr-md-3 ml-3 ml-md-0 order-2 order-md-1">
-				  <img src="{{ asset('public/images/rides/')}}/{{$ride['ride_image']}}" class="img-fluid" style="width:200px;height:150px;">
+				  <img src="{{ asset('public/images/rides/')}}/{{$ride['ride_image']['image']}}" class="img-fluid" style="width:200px;height:150px;">
 				</div>
 				<div class="rider-details-block w-100 order-1 order-md-2">
 				   <div class="location-heading-block ">
@@ -38,11 +38,11 @@
 				   <div class="location-details d-flex align-items-center">
 					 <span class="rating"><i class="fa fa-star"></i>{{$ride['ride_rating']}} <small>Rating</small></span>
 					 <span class="other-details"><i class="fa fa-map-o"></i>{{$ride['total_km']}} km <small>from {{$location}}</small></span>
-					 <span class="other-details"><i class="fa fa-calendar-o"></i>12 <small>Days trip</small></span>
+					 <span class="other-details"><i class="fa fa-calendar-o"></i>{{$ride['number_of_day']+1}} <small>Days trip</small></span>
 					 <span class="other-details"><i class="fa fa-road"></i>Highway <small>Road Type</small></span>
 				   </div>
 				   <div class="userdetails d-flex align-items-center">
-					 <span class="userimg mr-2"><img src="{{ asset('public/images/rider_images/')}}/{{$ride['rider_image']}}" style="width:60px;height:50px;" class="img-fluid" /></span>
+					 <span class="userimg mr-2"><img src="{{ asset('public/images/rider_images/')}}/{{$ride['rider_image']}}" class="img-fluid" /></span>
 					 <span class="username">
 					   <span class="d-block">{{$ride['rider_name']}}</span>
 					   <span class="badge badge-warning"><i class="fa fa-star"></i> {{$ride['rider_rating']}}</span>
@@ -55,7 +55,7 @@
 			   <div class="d-flex"> 
 			   <div class="rider-details-block w-100 ">
 				  <div class="location-heading-block ">
-					<div>
+					<div class="w-100">
 					 <div class="location-details  p-0">
 					   <span class="rating d-flex align-items-center"><i class="fa fa-star"></i>{{$ride['ride_rating']}} <small class="ml-2">Rating</small></span>
 					 </div>
@@ -75,7 +75,7 @@
 				  </div>
 			   </div>
 			   <div class="rider-img-block ml-3 ">
-			   <img src="{{ asset('public/images/rides/')}}/{{$ride['ride_image']}}" class="img-fluid" >
+			   <img src="{{ asset('public/images/rides/')}}/" class="img-fluid" >
 			   </div>
 			  </div>
 			   <div class="d-flex align-items-center mt-1">
@@ -108,7 +108,7 @@
 			@if(count($explore_rides) > 0)
 				@foreach($explore_rides as $key => $explore_ride)			
 				<div class="slide">
-					<img src="{{ asset('public/images/rides/')}}/{{getRideImage($explore_ride)}} ">
+					<img src="{{ asset('public/images/rides/')}}/{{$explore_ride[1]['image']}} ">
 					<div class="img-content">
 						<span class="no-rides">{{count($explore_ride)}}</span>
 						<span class="ride-loc">Rides from</span>
@@ -139,30 +139,34 @@
 					<div class="card" >
 					<img src="{{ asset('public/images/rider/cover_images/')}}/{{$rider['cover_image']}}" class="card-img-top" alt="">
 					<div class="card-body position-relative">
-						<img src="{{ asset('public/images/rider_images/')}}/{{$rider['rider_image']}}" class="user-pic" widtj="60" height="60"/>
+						<img src="{{ asset('public/images/rider_images/')}}/{{$rider['rider_image']}}" class="user-pic"/>
 						<div class="username mb-2">
 						<span class="badge badge-warning d-md-none"><i class="fa fa-star"></i> {{$rider['rating']}}</span> 
 						</div>
 						
 						<h3 class="user-name">{{$rider['rider_name']}}<small>{{$rider['rider_email']}}</small></h3>
-						<blockquote class="blockquote-block d-none d-md-block">“{{$rider['description']}}”</blockquote>
+						<blockquote class="blockquote-block d-none d-md-block">“{{substr($rider['description'], 0, 65)}}”</blockquote>
 						<div class="location-details d-flex align-items-center">
 						<span class="rating pl-0 d-none d-md-inline-block">{{$rider['rating']}} <small>Rating</small></span>
 						<span class="other-details pl-0">{{$rider['total_rides']}} <small>Rides</small></span>
 						<span class="other-details pl-0">{{$rider['total_km']}} km <small>Driven</small></span>						
 						</div>
 
-						@if($rider['is_rider_owner'] == false)
+						
 							@if($rider['current_rider_follow_status'] == false)
-								<button class="follow-btn w-100 mt-2 follow-rider" content="{{$rider['id']}}">
-									<i class="fa fa-plus mr-2"></i>Follow
+								<button class="follow-btn w-100 mt-2 follow-rider" content="{{$rider['id']}}"
+								@if($rider['is_rider_owner'] == true)
+									disabled
+								@endif
+								>
+								<i class="fa fa-plus mr-2"></i>Follow
 								</button>
 							@else
-								<button class="join-btn flex-grow-1 mt-2 mr-1" >
-									Followed
+								<button class="follow-btn w-100 mt-2 un-follow-rider">
+								<i class="fa fa-minus mr-2"></i> UnFollow
 								</button>
 							@endif
-						@endif
+						
 					</div>
 					</div>
 					</div>
@@ -186,18 +190,18 @@
 				 <div class="card" >
 				   <img src="{{ asset('public/images/group_images/')}}/{{$group['group_image']}}" class="card-img-top" alt="">
 				   <div class="card-body position-relative">
-					 <img src="{{ asset('public/images/rider_images/')}}/{{$group['rider_image']}}" class="user-pic" widtj="60" height="60"/>
+					 <img src="{{ asset('public/images/rider_images/')}}/{{$group['rider_image']}}" class="user-pic"/>
 					 <div class="username mb-2  d-md-none">
 					   <span class="badge badge-warning"><i class="fa fa-star"></i> 4.5</span> 
 					 </div>
-					 <h3 class="user-name">{{$group['group_name']}}<small>{{$group['group_desc']}}</small></h3>
+					 <h3 class="user-name">{{$group['group_name']}}<small class="sml-txt">{{$group['city']}}</small></h3>
 					 <div class="location-details py-4 d-flex align-items-center">
 					   <span class="rating pl-0 d-none d-md-block">{{$group['group_rating']}} <small>Rating</small></span>
 					   <span class="other-details pl-0">{{$group['total_rides']}} <small>Rides</small></span>
 					   <span class="other-details pl-0">{{$group['total_km']}} km <small>Driven</small></span>
 					   <div class="d-flex followers-block align-items-center">
 						@foreach($group['group_member_list'] as $group_member_list)
-						 	<span class="follow-users"><img src="{{ asset('public/images/rider_images/')}}/{{!empty($group_member_list) ? $group_member_list:'rider.jpg'}}" class="profile-pic" /></span>
+						 	<span class="follow-users"><img src="{{ asset('public/images/rider_images/')}}/{{!empty($group_member_list) ? $group_member_list:'rider.jpg'}}" /></span>
 						 @endforeach
 						 
 						 @if($group['total_group_members'] > 0)
@@ -206,10 +210,14 @@
 					   </div>
 					 </div>
 
-					 @if($group['is_group_owner'] == false)					 
+					 				 
 					 <div class="d-flex">
 						@if($group['current_rider_join_status'] == false)
-							<button class="join-btn flex-grow-1 mt-2 mr-1 rider-group-join" id="group-join-{{$group['group_owner_id']}}" content="{{$group['group_owner_id']}}">
+							<button class="join-btn flex-grow-1 mt-2 mr-1 rider-group-join" id="group-join-{{$group['group_owner_id']}}" content="{{$group['group_owner_id']}}"
+							@if($group['is_group_owner'] == true)	
+							disabled
+							@endif
+							>
 								<i class="fa fa-send mr-2"></i>Join
 							</button>
 						@else
@@ -217,9 +225,13 @@
 								<i class="fa fa-send mr-2"></i>Joined
 							</button>
 						@endif
-						<button class="follow-btn flex-grow-1  mt-2 ml-1"><i class="fa fa-plus mr-2"></i>FOLLOW</button>
+						<button class="follow-btn flex-grow-1  mt-2 ml-1"
+						@if($group['is_group_owner'] == true)	
+						disabled
+						@endif
+						><i class="fa fa-plus mr-2"></i>FOLLOW</button>
 				   </div>
-				   @endif
+				  
 
 				   </div>
 				 </div>
@@ -291,7 +303,7 @@ our influencer</span>
 			 <div class="col-12 mb-3">			 
 			   <div class="rides-block d-none d-md-flex">
 				 <div class="rider-img-block mr-md-3 ml-3 ml-md-0 order-2 order-md-1">
-				 <img src="{{ asset('public/images/groups/events/')}}/{{$event['ride_image']}}" class="img-fluid" style="width:200px;height:150px;">
+				 <img src="{{ asset('public/images/groups/events/')}}/{{$event['ride_image']}}" class="img-fluid">
 				 </div>
 				 <div class="rider-details-block w-100 order-1 order-md-2">
 					<div class="location-heading-block ">
@@ -311,7 +323,7 @@ our influencer</span>
 					  <span class="other-details"><i class="fa fa-road"></i>Highway <small>Road Type</small></span>
 					</div>
 					<div class="userdetails d-flex align-items-center">
-					  <span class="userimg mr-2"><img src="{{ asset('public/images/rider_images/')}}/{{$event['rider_image']}}" style="width:60px;height:50px;" class="img-fluid" /></span>
+					  <span class="userimg mr-2"><img src="{{ asset('public/images/rider_images/')}}/{{$event['rider_image']}}" class="img-fluid" /></span>
 					  <span class="username">
 						<span class="d-block">{{$event['rider_name']}}</span>
 						<span class="badge badge-warning"><i class="fa fa-star"></i> {{$event['rider_rating']}}</span>
@@ -347,12 +359,12 @@ our influencer</span>
 				   
 				</div>
 				<div class="rider-img-block ml-3 ">
-				<img src="{{ asset('public/images/groups/events/')}}/{{$event['ride_image']}}" class="img-fluid" style="width:200px;height:150px;">
+				<img src="{{ asset('public/images/groups/events/')}}/{{$event['ride_image']}}" class="img-fluid">
 				</div>
 			   </div>
 				<div class="d-flex align-items-center mt-1">
 				  <div class="userdetails d-flex align-items-center">
-				  <span class="userimg mr-2"><img src="{{ asset('public/images/rider_images/')}}/{{$event['rider_image']}}" style="width:60px;height:50px;" class="img-fluid" /></span>
+				  <span class="userimg mr-2"><img src="{{ asset('public/images/rider_images/')}}/{{$event['rider_image']}}" class="img-fluid" /></span>
 				  <span class="username">
 					<span class="d-block">{{$event['rider_name']}}</span>
 					<span class="badge badge-warning"><i class="fa fa-star"></i> {{$event['rider_rating']}}</span>
@@ -392,7 +404,7 @@ our influencer</span>
 			 <div class="col-12 mb-3">
 			   <div class="rides-block d-none d-md-flex">
 				 <div class="rider-img-block mr-md-3 ml-3 ml-md-0 order-2 order-md-1">
-				 <img src="{{ asset('public/images/groups/events/')}}/{{$event['ride_image']}}" class="img-fluid" style="width:200px;height:150px;">
+				 <img src="{{ asset('public/images/groups/events/')}}/{{$event['ride_image']}}" class="img-fluid">
 				 </div>
 				 <div class="rider-details-block w-100 order-1 order-md-2">
 					<div class="location-heading-block ">
@@ -412,7 +424,7 @@ our influencer</span>
 					  <span class="other-details"><i class="fa fa-road"></i>Highway <small>Road Type</small></span>
 					</div>
 					<div class="userdetails d-flex align-items-center">
-					  <span class="userimg mr-2"><img src="{{ asset('public/images/rider_images/')}}/{{$event['rider_image']}}" style="width:60px;height:50px;" class="img-fluid" /></span>
+					  <span class="userimg mr-2"><img src="{{ asset('public/images/rider_images/')}}/{{$event['rider_image']}}" class="img-fluid" /></span>
 					  <span class="username">
 						<span class="d-block">{{$event['rider_name']}}</span>
 						<span class="badge badge-warning"><i class="fa fa-star"></i> {{$event['rider_rating']}}</span>
@@ -447,12 +459,12 @@ our influencer</span>
 				   
 				</div>
 				<div class="rider-img-block ml-3 ">
-				<img src="{{ asset('public/images/groups/events/')}}/{{$event['ride_image']}}" class="img-fluid" style="width:200px;height:150px;">
+				<img src="{{ asset('public/images/groups/events/')}}/{{$event['ride_image']}}" class="img-fluid" >
 				</div>
 			   </div>
 				<div class="d-flex align-items-center mt-1">
 				  <div class="userdetails d-flex align-items-center">
-				  <span class="userimg mr-2"><img src="{{ asset('public/images/rider_images/')}}/{{$event['rider_image']}}" style="width:60px;height:50px;" class="img-fluid" /></span>
+				  <span class="userimg mr-2"><img src="{{ asset('public/images/rider_images/')}}/{{$event['rider_image']}}" class="img-fluid" /></span>
 				  <span class="username">
 					<span class="d-block">{{$event['rider_name']}}</span>
 					<span class="badge badge-warning"><i class="fa fa-star"></i> {{$event['rider_rating']}}</span>
@@ -471,21 +483,24 @@ our influencer</span>
 		  </div>
 		</div>
 		<div class="col-md-4 d-none d-md-block">
-		  <div class="right-block">
-			<button class="post-btn w-100 mb-3">POST A RIDE<small>LOGIN REQUIRED</small></button>
+		  <div class="right-block pt-4">
+			<button class="post-btn w-100 mb-3 post-ride">POST A RIDE
+				@guest
+				<small>LOGIN REQUIRED</small>
+				@endguest				
+			</button>
 			<div class="card mt-2 mb-3 border-0"  >
 			 <ul class="list-group list-group-flush cust-notify">
 			   <li class="list-group-item"><h4 class="notify-heading">Notifications</h4></li>
+			   @foreach($events as $key => $event)
+			   @if($key < 3)
 			   <li class="list-group-item">
-				 <div class="notify-title">Title of notification</div>
-				 <p class="notify-txt">The kit consists of more than a hundred ready-to-use elements that you… <a href="">more</a></p>
+				 <div class="notify-title">Ride To {{$event['end_location']}} Via {{$event['via_location']}}</div>
+				 <p class="notify-txt">{{substr($event['description'], 0, 50)}}... <a href="">more</a></p>
 				 <span class="right-arrow"><i class="fa fa-angle-right"></i></span>
 			   </li>
-			   <li class="list-group-item">
-				 <div class="notify-title">Title of notification</div>
-				 <p class="notify-txt">The kit consists of more than a hundred ready-to-use elements that you… <a href="">more</a></p>
-				 <span class="right-arrow"><i class="fa fa-angle-right"></i></span>
-			   </li>
+			   @endif
+			   @endforeach			   
 			 </ul>
 		   </div>
 		   <div class="card mt-4 mb-3 border-0"  >

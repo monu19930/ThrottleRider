@@ -1,19 +1,19 @@
 @extends('layouts.frontLayout.front-layout')
 @section('title', 'My Rides')
 @section('content')
-<section class="main-bg">
+<section class="left-main-bg">
 	<div class="container ">
 	  <div class="row">
+	  	<div class="col-md-4 d-none d-md-block">
+		@include('layouts.frontLayout.profile-sidebar')
+		</div>
 		<div class="col-md-8">
-		  <div class="cust-left-block">
-			<h2 class="page-heading">
-			  My Rides
-			</h2>
-			<div class="d-flex align-items-center filter-details mb-4">
-			  <span class="filter-block1">{{ count($rides) }} Rides Added</span><br/>
-			</div>
-			
-                <a href="{{route('my-rides.create')}}">Add New Ride</a>
+		  <div class="cust-left-block">				
+				<div class="d-flex align-items-center mt-4 mb-2">
+				  	<h2 class="page-heading">MY RIDES <small>{{ count($rides) }} Rides added</small></h2>
+					<span class="ml-auto filter-block3 mob-filter"><a href="{{route('my-rides.create')}}" class="btn btn-danger mb-2">ADD NEW RIDE</a></span>
+				</div>
+				<div class="d-flex align-items-center filter-details mb-4"></div>
 			
 			<div class="row">
 			  <!-- repeat div from here START -->
@@ -22,7 +22,7 @@
 				<div class="col-12 mb-3 ride-refferer-{{$ride['id']}}">
 				<div class="rides-block d-none d-md-flex">
 					<div class="rider-img-block mr-md-3 ml-3 ml-md-0 order-2 order-md-1">
-					<img src="{{ asset('public/images/rides/')}}/{{ $ride['ride_image'] }}" style="width: 200px; height: 150px;" class="img-fluid">
+					<img src="{{ asset('public/images/rides/')}}/{{ isset($ride['ride_image']['image']) ? $ride['ride_image']['image'] : 'not_found.png' }}" style="width: 200px; height: 150px;" class="img-fluid">
 					</div>
 					<div class="rider-details-block w-100 order-1 order-md-2">
 					<div class="location-heading-block ">
@@ -39,10 +39,10 @@
 						</div>
 					</div>
 					<div class="location-details d-flex align-items-center">
-						<span class="rating"><i class="fa fa-star"></i>4.5 <small>Rating</small></span>
+						<span class="rating"><i class="fa fa-star"></i>{{$ride['ride_rating']}} <small>Rating</small></span>
 						<span class="other-details"><i class="fa fa-map-o"></i>{{$ride['total_km']}} km <small>from {{ $ride['start_location']}}</small></span>
-						<span class="other-details"><i class="fa fa-calendar-o"></i>12 <small>Days trip</small></span>
-						<span class="other-details"><i class="fa fa-road"></i>Highway <small>Road Type</small></span>
+						<span class="other-details"><i class="fa fa-calendar-o"></i>{{$ride['no_of_days']+1}} <small>Days trip</small></span>
+						<span class="other-details"><i class="fa fa-road"></i>{{$ride['road_type']}} <small>Road Type</small></span>
 					</div>
 					<div class="userdetails d-flex align-items-center">
 						
@@ -111,10 +111,9 @@
 						
 					</div>
 					
-					
 				</div>
 				<div class="rider-img-block ml-3 ">
-				<img src="{{ asset('public/images/rides/')}}/{{ $ride['ride_image'] }}" class="img-fluid">
+				<img src="{{ asset('public/images/rides/')}}/{{ isset($ride['ride_image']['image']) ? $ride['ride_image']['image'] : 'not_found.png' }}" class="img-fluid">
 				</div>
 				</div>
 				<div class="d-flex align-items-center mt-1">
@@ -139,9 +138,7 @@
 			</div>		   
 		  </div>
 		</div>
-		<div class="col-md-4 d-none d-md-block">
-		@include('layouts.frontLayout.profile-sidebar')
-		</div>
+		
 	  </div>
 	</div>
   </section>

@@ -34,8 +34,12 @@ Route::group(['middleware'=>['auth']],function(){
     Route::get('/my-profile/edit', 'RiderController@create')->name('my-profile.edit');
     Route::post('/my-profile/update', 'RiderController@update')->name('edit-profile');
 
+    Route::post('/my-profile/update-description', 'RiderController@updateDescription')->name('my-profile.update-description');
+    Route::post('/my-profile/update-detail', 'RiderController@updateDetail')->name('my-profile.update-detail');
+
     Route::get('bikes', 'BikeController@index')->name('bikes');
     Route::get('bikes/add', 'BikeController@create')->name('add-bike');
+    Route::get('bikes/confirmation/{id}', 'BikeController@confirm')->name('bike.confirmation');
 
     Route::get('my-rides', 'RideController@index')->name('my-rides');
     Route::get('my-rides/create', 'RideController@create')->name('my-rides.create');
@@ -44,6 +48,10 @@ Route::group(['middleware'=>['auth']],function(){
     Route::post('my-rides/register2', 'RideController@addRideStep2')->name('my-rides.register2');
     Route::post('my-rides/store', 'RideController@store')->name('my-rides.store');
     Route::post('my-rides/destroy', 'RideController@destroy')->name('my-rides.destroy');
+
+    Route::get('my-rides/confirmation/{id}', 'RideController@confirm')->name('my-rides.confirmation');
+
+    Route::post('my-rides/publish-images', 'RideController@publishImages')->name('my-rides.publish-images');
 
     Route::post('search', 'HomeController@search')->name('search-result');
 

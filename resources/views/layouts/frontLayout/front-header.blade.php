@@ -147,7 +147,7 @@
               <div class="col-12">
                 <div class="banner-sml-txt">Let's ride the world.</div>
                   <div class="banner-big-txt">
-                    Show me the Rider, Bikers and Groups from 
+                    Show me the Rides, Bikers and Groups from 
                     <div class="dropdown d-inline-block bnr-select">
                       <label class="location-lbl">Your Location</label>
                         <button class="bnr-dropdown" type="button" id="dropdownMenuButton" content="{{getCurrentLocation()}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

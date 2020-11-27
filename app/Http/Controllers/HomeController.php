@@ -124,6 +124,7 @@ class HomeController extends Controller
                 'end_location' => $ride->end_location,
                 'start_date' => formatDate($ride->start_date, 'M Y'),
                 'total_km' => $ride->total_km,
+                'number_of_day' => dateDifference($ride->start_date,$ride->end_date),
                 'description' => $ride->short_description,
                 'rider_rating' => isset($profile->rating) ? $profile->rating: 0,
                 'ride_rating' => 4,
@@ -195,6 +196,7 @@ class HomeController extends Controller
                'rider_email' => $user->email,
                'rider_image' => $user->profile->image,
                'group_name' => $group->group_name,
+               'city' => $group->city,
                'group_image' => $group->group_image,
                'group_rating' => $group->group_rating,
                'group_desc' => $group->group_desc,
@@ -314,31 +316,59 @@ class HomeController extends Controller
 
     protected function getRidesToDayList($start_location, $end_location) {
         $result = [];
-        $rideDays = RideDay::where('start_location', 'LIKE', '%'.$start_location.'%')->where('end_location', 'LIKE', '%'.$end_location.'%')
-                ->OrderBy('created_at', 'desc')->get();
-        foreach($rideDays as $key => $rideDay) {
-            $ride = $rideDay->ride;
-            $user = $ride->user;
-            $profile = $user->profile;
+    
+        // $rideDays = RideDay::where('start_location', 'LIKE', '%'.$start_location.'%')->where('end_location', 'LIKE', '%'.$end_location.'%')
+        //         ->OrderBy('created_at', 'desc')->get();
+                
+        // foreach($rideDays as $key => $rideDay) {
+        //     $ride = $rideDay->ride;
+        //     $user = $ride->user;
+        //     $profile = $user->profile;
             
-            $result[$key] = [
-                'rider_name' => $user->name,
-                'rider_id' => $user->id,
-                'rider_image' => isset($profile->image) ? $profile->image : '',
-                'start_location' => $rideDay->start_location,
-                //'via_location' => $this->formateViaLocation($ride->via_location),
-                'via_location' => '',
-                'end_location' => $rideDay->end_location,
-                'total_km' => $rideDay->total_km,
-                'start_date' => formatDate($ride->start_date, 'M Y'),
-                'number_of_day' => $rideDay->number_of_day,
-                'description' => $rideDay->day_description,
-                'rider_rating' => isset($profile->rating) ? $profile->rating: 0,
-                'ride_rating' => $rideDay->ride_rating,
-                'road_type' => $rideDay->roadType->road_type,
-                'ride_image' => !empty($rideDays['ride_image']) ? $this->filterRideImage($rideDays['ride_image']) : '',
-            ];
-        }
+        //     $result[$key] = [
+        //         'rider_name' => $user->name,
+        //         'rider_id' => $user->id,
+        //         'rider_image' => isset($profile->image) ? $profile->image : '',
+        //         'start_location' => $rideDay->start_location,
+        //         //'via_location' => $this->formateViaLocation($ride->via_location),
+        //         'via_location' => '',
+        //         'end_location' => $rideDay->end_location,
+        //         'total_km' => $rideDay->total_km,
+        //         'start_date' => formatDate($ride->start_date, 'M Y'),
+        //         'number_of_day' => $rideDay->number_of_day,
+        //         'description' => $rideDay->day_description,
+        //         'rider_rating' => isset($profile->rating) ? $profile->rating: 0,
+        //         'ride_rating' => $rideDay->ride_rating,
+        //         'road_type' => $rideDay->roadType->road_type,
+        //         'ride_image' => !empty($rideDays['ride_image']) ? $this->filterRideImage($rideDays['ride_image']) : '',
+        //     ];
+        // }
+
+        $rides = Ride::where('start_location', 'LIKE', '%'.$start_location.'%')->where('end_location', 'LIKE', '%'.$end_location.'%')
+                 ->OrderBy('created_at', 'desc')->get();
+
+        foreach($rides as $key => $ride) {
+                $user = $ride->user;
+                $profile = $user->profile;   
+                $rideDays = $this->formateRideDays($ride->ride_days);             
+                $result[$key] = [
+                    'rider_name' => $user->name,
+                    'rider_id' => $user->id,
+                    'rider_image' => isset($profile->image) ? $profile->image : '',
+                    'start_location' => $ride->start_location,
+                    'via_location' => $this->formateViaLocation($ride->via_location),
+                    'end_location' => $ride->end_location,
+                    'total_km' => $ride->total_km,
+                    'start_date' => formatDate($ride->start_date, 'M Y'),
+                    'number_of_day' => dateDifference($ride->start_date, $ride->end_date),
+                    'description' => $ride->description,
+                    'rider_rating' => isset($profile->rating) ? $profile->rating: 0,
+                    'ride_rating' => 4,
+                    'road_type' => 'Highay',
+                    'ride_image' => !empty($rideDays[0]['image']) ? $rideDays[0]['image'] : '',
+                ];
+            }
+        //dd($result);
         return $result;
     }
 
@@ -352,10 +382,12 @@ class HomeController extends Controller
         return $images[0];
     }
 
-    public function searchToLocationData(Request $request) {
+    public function searchToLocationData(Request $request) { 
+        //dd($request->all());
         $start_location = getCurrentLocation();
         $search_type = $request->search_type;
         $array = explode(" ", $search_type);
+
         $result = [
             'type' => $request->search_type,
             'key' => $array[0],
@@ -364,10 +396,11 @@ class HomeController extends Controller
         ];
 
         $html = '';
-
-        if($array[0]=='Rides') {     
+       //dd($array);
+        if($array[0]=='Rides') {
             $road_types = RoadType::get()->toArray();  
             //$rides = $this->getRidesToList($start_location, $array[2]);
+            
             $rides = $this->getRidesToDayList($start_location, $array[2]);
             $total = count($rides);
             $html = view('front/ride_search',compact('rides','result', 'total', 'road_types'))->render();
@@ -419,9 +452,11 @@ class HomeController extends Controller
     public function rides(){ 
         $result = [];
         $rides = Ride::where('is_approved', 1)->OrderBy('created_at', 'desc')->get();
+        $road_types = RoadType::get()->toArray();  
         foreach($rides as $key => $ride) {
             $user = $ride->user;
             $rideDays = $this->formateRideDays($ride->ride_days);  
+            //dd($rideDays)
             $result[$key] = [
                 'id' => $ride->id,
                 'rider_name' => $user->name,
@@ -435,19 +470,21 @@ class HomeController extends Controller
                 'description' => $ride->short_description,
                 'rider_rating' => isset($user->profile->rating) ? $user->profile->rating: 0,
                 'ride_rating' => 4,
-                'ride_image' => !empty($rideDays[0]['image']) ? $rideDays[0]['image'] : 'not_found.png',
+                'no_of_days' => 2,
+                'ride_image' => !empty($rideDays[0]['image']['image']) ? $rideDays[0]['image']['image'] : 'not_found.png',
                 'slug' => $ride->slug
                 
             ];
         }
-        return view('front.rides',compact('result'));
+        return view('front.rides',compact('result', 'road_types'));
     }
 
     public function rideDetail($slug){
         $ride = Ride::where('slug', $slug)->first();
-        //dd($ride);
         $user = $ride->user;
         $rideDays = $ride->rideDays;
+        $followedRiders = $user->followedRiders->pluck('followed_by')->toArray();
+        $rating = $this->rideRating($rideDays);
         $result['ride'] = [
             'id' => $ride->id,
             'rider_name' => $user->name,
@@ -461,13 +498,34 @@ class HomeController extends Controller
             'no_of_people' => $ride->no_of_people,
             'description' => $ride->short_description,
             'rider_rating' => isset($user->profile->rating) ? $user->profile->rating: 0,
-            'ride_rating' => 4,
+            'ride_rating' => strlen(preg_replace("/.*\./", "", $rating['rating'])) == 2 ? round($rating['rating']) : $rating['rating'],
+            'road_quality' => $rating['road_quality'],
+            'road_scenic' => $rating['road_scenic'],
             'ride_image' => !empty($rideDays[0]['image']) ? $rideDays[0]['image'] : 'not_found.png',
             'rideDays' => $rideDays,
             'related_rides' => $this->getRelatedRides($user->profile->city),
-            'rideImagesList' => $this->getRideDaysImages($rideDays)
+            'rideImagesList' => $this->getRideDaysImages($rideDays),
+            'current_rider_follow_status' => $this->getCurrentRiderJoinStatus($followedRiders),
+            'is_rider_owner' => isOwner($user->id)
         ];
         return view('front.ride-details', $result);
+    }
+
+    protected function rideRating($rideDays){
+        $rating = [];
+        $i=0;
+        foreach($rideDays as $key => $rideDay) {            
+            $rating['road_quality'][$key] = $rideDay->road_quality;
+            $rating['road_scenic'][$key] = $rideDay->road_scenic;
+            $rating['rating'][$key] = $rideDay->road_quality+$rideDay->road_scenic;
+            $i++;
+        }
+        $result = [
+            'road_quality' => array_sum($rating['road_quality'])/$i,
+            'road_scenic' => array_sum($rating['road_scenic'])/$i,
+            'rating' => array_sum($rating['rating'])/(2*$i),
+        ];
+        return $result;
     }
 
     protected function getRideDaysImages($rideDays) {
@@ -477,10 +535,12 @@ class HomeController extends Controller
             $ride_images = $rideDay->ride_images;
             $imageList = json_decode($ride_images,true);
             foreach($imageList as $image) {
-                $images[$i] = $image;
+                //$images[$i] = $image;
+                $images[$i] = $image['image'];
                 $i++;
             }
         }
+        //dd($images);
         return $images;
     }
 
@@ -569,49 +629,102 @@ class HomeController extends Controller
     }
 
     public function RideSearchFilter(Request $request){
+        
         $rides = [];
-        $rideDays = RideDay::where('ride_days.start_location', 'LIKE', '%'.$request->start_location.'%')                    
-                    ->where('ride_days.end_location', 'LIKE', '%'.$request->end_location.'%');
+        // $rideDays = RideDay::where('ride_days.start_location', 'LIKE', '%'.$request->start_location.'%')                    
+        //             ->where('ride_days.end_location', 'LIKE', '%'.$request->end_location.'%');
 
-        if($request->month != 'Any month') {
+                   
+
+        // if($request->month != '') {
+        //     $month = formatDate($request->month, 'm');
+        //     $rideDays = $rideDays->whereMonth('created_at', $month);
+        // }
+                    
+        // if(!empty($request->ride_rating)) {
+        //     $rideDays = $rideDays->where('ride_days.ride_rating', $request->ride_rating);
+        // }
+
+        // if(!empty($request->road_quality)) {
+        //     $rideDays = $rideDays->where('ride_days.road_quality', $request->road_quality);
+        // }
+
+        // if(!empty($request->road_scenic)) {
+        //     $rideDays = $rideDays->where('ride_days.road_scenic', $request->road_scenic);
+        // }
+        // $rideDays = $rideDays->get();
+
+
+
+        // foreach($rideDays as $key => $rideDay) {
+        //     $ride = $rideDay->ride;
+        //     $user = $ride->user;
+        //     $rideDays = $this->formateRideDays($ride->ride_days);  
+        //     $rides[$key] = [
+        //         'id' => $ride->id,
+        //         'rider_name' => $user->name,
+        //         'rider_id' => $user->id,
+        //         'rider_image' => isset($user->profile->image) ? $user->profile->image : '',
+        //         'start_location' => $ride->start_location,
+        //         'via_location' => $this->formateViaLocation($ride->via_location),
+        //         'end_location' => $ride->end_location,
+        //         'start_date' => formatDate($ride->start_date, 'M Y'),
+        //         'total_km' => $ride->total_km,
+        //         'description' => $ride->short_description,
+        //         'rider_rating' => isset($user->profile->rating) ? $user->profile->rating: 0,
+        //         'ride_rating' => 4,
+        //         'number_of_day' => 2,
+        //         'road_type' => $rideDay->roadType->road_type,
+        //         'ride_image' => !empty($rideDays[0]['image']['image']) ? $rideDays[0]['image']['image'] : 'not_found.png',
+        //         'slug' => $ride->slug
+        //     ];
+        // }
+
+        $rides = Ride::where('start_location', 'LIKE', '%'.$request->start_location.'%')                    
+                    ->where('end_location', 'LIKE', '%'.$request->end_location.'%')->where('is_approved', 1);
+                   
+        
+        if($request->month != '') {
             $month = formatDate($request->month, 'm');
-            $rideDays = $rideDays->whereMonth('created_at', $month);
+            $rides = $rides->whereMonth('created_at', $month);
         }
                     
         if(!empty($request->ride_rating)) {
-            $rideDays = $rideDays->where('ride_days.ride_rating', $request->ride_rating);
+            //$rideDays = $rides->where('ride_rating', $request->ride_rating);
         }
 
         if(!empty($request->road_quality)) {
-            $rideDays = $rideDays->where('ride_days.road_quality', $request->road_quality);
+            //$rideDays = $rideDays->where('ride_days.road_quality', $request->road_quality);
         }
 
         if(!empty($request->road_scenic)) {
-            $rideDays = $rideDays->where('ride_days.road_scenic', $request->road_scenic);
+            //$rideDays = $rideDays->where('ride_days.road_scenic', $request->road_scenic);
         }
-        $rideDays = $rideDays->get();
+        $rideDays = $rides->get();
+
 
 
         foreach($rideDays as $key => $rideDay) {
             $ride = $rideDay->ride;
             $user = $ride->user;
-            $profile = $user->profile;
-            
+            $rideDays = $this->formateRideDays($ride->ride_days);  
             $rides[$key] = [
+                'id' => $ride->id,
                 'rider_name' => $user->name,
                 'rider_id' => $user->id,
-                'rider_image' => isset($profile->image) ? $profile->image : '',
-                'start_location' => $rideDay->start_location,
-                'via_location' => '',
-                'end_location' => $rideDay->end_location,
-                'total_km' => $rideDay->total_km,
+                'rider_image' => isset($user->profile->image) ? $user->profile->image : '',
+                'start_location' => $ride->start_location,
+                'via_location' => $this->formateViaLocation($ride->via_location),
+                'end_location' => $ride->end_location,
                 'start_date' => formatDate($ride->start_date, 'M Y'),
-                'number_of_day' => $rideDay->number_of_day,
-                'description' => $rideDay->day_description,
-                'rider_rating' => isset($profile->rating) ? $profile->rating: 0,
-                'ride_rating' => $rideDay->ride_rating,
+                'total_km' => $ride->total_km,
+                'description' => $ride->short_description,
+                'rider_rating' => isset($user->profile->rating) ? $user->profile->rating: 0,
+                'ride_rating' => 4,
+                'number_of_day' => 2,
                 'road_type' => $rideDay->roadType->road_type,
-                'ride_image' => !empty($rideDays['ride_image']) ? $this->filterRideImage($rideDays['ride_image']) : '',
+                'ride_image' => !empty($rideDays[0]['image']['image']) ? $rideDays[0]['image']['image'] : 'not_found.png',
+                'slug' => $ride->slug
             ];
         }
 
@@ -619,9 +732,8 @@ class HomeController extends Controller
             'search_location' => $request->end_location,
             'location' => $request->start_location,
         ];
-
         $total = count($rides);
-        $html = view('front/ride_search_filter',compact('rides','result', 'total'))->render();
+        $html = view('front.ride_search_filter',compact('rides','result', 'total'))->render();
         return $html;
 
     }

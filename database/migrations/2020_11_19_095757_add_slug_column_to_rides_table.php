@@ -15,7 +15,7 @@ class AddSlugColumnToRidesTable extends Migration
     public function up()
     {
         Schema::table('rides', function (Blueprint $table) {
-            $table->string('slug',255)->after('end_location');
+            //$table->string('slug',255)->after('end_location');
         });
     }
 
@@ -27,7 +27,7 @@ class AddSlugColumnToRidesTable extends Migration
     public function down()
     {
         Schema::table('rides', function (Blueprint $table) {
-            $table->dropColumn(['slug']);
+            //$table->dropColumn(['slug']);
         });
     }
 }
