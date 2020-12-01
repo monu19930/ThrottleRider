@@ -57,18 +57,17 @@ if (!function_exists('getCurrentLocation')) {
    
     function getCurrentLocation()
     {
-        // $ip = request()->ip();
-        // $result = Location::get($ip);
-        // if($result) {
-        //     $city_name =  $result->cityName;
-        // }
-        // else {
-        //     $ip = '180.149.226.195';
-        //     $result = Location::get($ip);
-        //     $city_name =  $result->cityName;
-        // }
-        //return $city_name;
-        return 'New Delhi';
+        $ip = request()->ip();
+        $result = Location::get($ip);
+        if($result) {
+            $city_name =  $result->cityName;
+        }
+        else {
+            $ip = '180.149.226.195';
+            $result = Location::get($ip);
+            $city_name =  $result->cityName;
+        }
+        return $city_name;
     }
     
 }
@@ -123,6 +122,33 @@ if (!function_exists('isOwner')) {
             $owner = true;
         }
         return $owner;
+    }
+    
+}
+
+
+if (!function_exists('currentLocation')) {
+   
+    function currentLocation()
+    {   
+        $location = config('app.default_location');
+        return $location;
+    }
+    
+}
+
+
+if (!function_exists('getImageUrl')) {
+   
+    function getImageUrl()
+    {   
+        if(in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1', '::1'))) {
+            $url = 'http://localhost/gull-html-laravel';
+        }
+        else{
+            $url = 'https://smartevents.in/throttle-rides';
+        }
+        return $url;
     }
     
 }

@@ -28,12 +28,11 @@
             </span>
           </div>
           <div class="ml-auto">
-            @if($ride['is_rider_owner'] == false)
+            
             @if($ride['current_rider_follow_status'] == false)
-            <button class="follow-btn w-100 follow-rider" tabindex="0" content="{{$ride['rider_id']}}"><i class="fa fa-plus mr-2"></i>FOLLOW</button>
+            <button class="follow-btn w-100 follow-rider" tabindex="0" content="{{$ride['rider_id']}}" @if($ride['is_rider_owner'] == true) disabled @endif><i class="fa fa-plus mr-2"></i>FOLLOW</button>
             @else
             <button class="follow-btn w-100" tabindex="0"><i class="fa fa-minus mr-2"></i>FOLLOWED</button>
-            @endif
             @endif
           </div>
         </div>
@@ -90,16 +89,20 @@
             </div>
           </div>
           <div class="card-body">
-            <blockquote class="blockquote-block pr-5 mt-0">“Dream to ride a bike to Ladakh someday. Owns KTM and 5 other bikes.”</blockquote>
+            <blockquote class="blockquote-block pr-5 mt-0">“{{substr($ride['description'], 0, 65)}}..”</blockquote>
             <div class="row align-items-center mt-3">
               <div class="col-md-8">
-                @if($ride['is_rider_owner'] == false)
+                
                 @if($ride['current_rider_follow_status'] == false)
-                <button class="follow-btn w-100 mt-2 follow-rider" tabindex="0" content="{{$ride['rider_id']}}"><i class="fa fa-plus mr-2"></i>FOLLOW</button>
+                <button class="follow-btn w-100 mt-2 follow-rider-{{$ride['rider_id']}}" onclick="followRider('<?=$ride['rider_id']?>')" tabindex="0" @if($ride['is_rider_owner'] == true) disabled @endif>
+                  <i class="fa fa-plus mr-2"></i>FOLLOW
+                </button>
                 @else
-                <button class="follow-btn w-100 mt-2" tabindex="0"><i class="fa fa-minus mr-2"></i>FOLLOWED</button>
+                <button class="follow-btn w-100 mt-2 un-follow-rider-{{$ride['rider_id']}}" tabindex="0" onclick="unFollowRider('<?= $ride['rider_id'] ?>')">
+									<i class="fa fa-minus mr-2"></i> UnFollow
+								</button>
                 @endif
-                @endif
+
               </div>
               <div class="col-md-4 text-center"><a href="#"><img src="{{ asset('public/rider/images/icons-black-menu.svg')}}"></a></div>
             </div>
@@ -241,7 +244,7 @@
                   @endphp
                   <div class="col-3 text-right">
                     <img src="{{ asset('public/images/rides/')}}/{{isset($ride_images[0]['image']) ? $ride_images[0]['image'] : 'not_found.png'}}" class="img-fluid timeline-img"><small class="no-of-imgs">
-                      @if(count($ride_images) > 1)
+                      @if(isset($ride_images) && count($ride_images) > 1)
                       {{count($ride_images)}}+ Photos
                       @endif
                     </small>
@@ -358,7 +361,7 @@
             <div class="col-12 mb-3">
               <div class="rides-block d-none d-md-flex">
                 <div class="rider-img-block mr-md-3 ml-3 ml-md-0 order-2 order-md-1">
-                  <img src="{{ asset('public/images/rides/')}}/{{$rides['ride_image']['image']}}" class="img-fluid">
+                  <img src="{{ asset('public/images/rides/')}}/{{isset($rides['ride_image']['image']) ? $rides['ride_image']['image'] : 'not_found.png'}}" class="img-fluid">
                 </div>
                 <div class="rider-details-block w-100 order-1 order-md-2">
                   <div class="location-heading-block ">
@@ -413,7 +416,7 @@
 
                   </div>
                   <div class="rider-img-block ml-3 ">
-                    <img src="{{ asset('public/images/rides/')}}/{{$rides['ride_image']['image']}}" class="img-fluid">
+                    <img src="{{ asset('public/images/rides/')}}/{{isset($rides['ride_image']['image']) ? $rides['ride_image']['image'] : 'not_found.png'}}" class="img-fluid">
                   </div>
                 </div>
                 <div class="d-flex align-items-center mt-1">

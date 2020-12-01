@@ -55,7 +55,7 @@
                                 <div class="d-flex flex-wrap">
                                     @foreach($brands as $key => $brand)
                                     <a class="logo-block {{($key < 8) ? '': 'bike_brands collapse'}}" style="cursor:pointer;" onclick="showBikeModelList('{{$brand->id}}')">
-                                        <span class="d-block"><img src="http://localhost/gull-html-laravel/public/images/bike_brands/{{$brand->logo}}" style="width: 60px;height: 54px;" /></span>
+                                        <span class="d-block"><img src="{{getImageUrl()}}/public/images/bike_brands/{{$brand->logo}}" style="width: 60px;height: 54px;" /></span>
                                         <span class="d-block mt-2">{{$brand->brand_name}}</span>
                                     </a>
                                     @endforeach
@@ -105,7 +105,7 @@
                                     @endforeach
                                 </div>
                             @endif
-                            <input type="file" name="image[]" id="drag-drop" multiple />
+                            <input type="file" name="image[]" id="drag-drop" accept="image/*" multiple />
                             <div id="uploads"></div>
                             <div class="dropzone" id="dropzone">
                                 <div class="drop-icon"><i class="fa fa-file-image-o"></i></div>
@@ -122,7 +122,7 @@
                                     <div class="mr-2 pr-1"><img src="{{ asset('public/rider/images/icons-km-riden.svg')}}" class="img-fluid"></div>
 
                                     <div class="input-field mt-4 w-100">
-                                        <input type="text" autocomplete="off" name="total_km" id="total_km" value="{{isset($total_km) ? $total_km : ''}}" class="input-block" placeholder=" ">
+                                        <input type="text" autocomplete="off" name="total_km" id="total_km" value="{{isset($total_km) ? $total_km : ''}}" class="input-block number-data" placeholder=" ">
                                         <label for="search-bike" class="input-lbl">KMs driven</label>
                                     </div>
 
@@ -131,7 +131,7 @@
                                     <div class="mr-2 pr-1"><img src="{{ asset('public/rider/images/icons-destination.svg')}}" class="img-fluid"></div>
 
                                     <div class="input-field  mb-0 w-100">
-                                        <input type="text" autocomplete="off" name="total_rides" id="total_rides" value="{{isset($total_rides)?$total_rides:''}}" class="input-block" placeholder=" ">
+                                        <input type="text" autocomplete="off" name="total_rides" id="total_rides" value="{{isset($total_rides)?$total_rides:''}}" class="input-block number-data" placeholder=" ">
                                         <label for="search-bike" class="input-lbl">Rides you’ve completed with this bike?</label>
                                     </div>
 
@@ -162,6 +162,8 @@
                                     /><span class="star"> </span>
                                     <input type="radio" name="comfortness" value="2" 
                                     @if(isset($comfortness) && $comfortness==2)
+                                        checked
+                                    @elseif(!isset($comfortness))
                                         checked
                                     @endif
                                     /><span class="star"> </span>
@@ -202,6 +204,8 @@
                                     <input type="radio" name="visual_appeal" value="1" 
                                     @if(isset($visual_appeal) && $visual_appeal==1)
                                         checked
+                                    @elseif(!isset($visual_appeal))
+                                        checked
                                     @endif
                                     /><span class="star"> </span>
                                 </div>
@@ -231,6 +235,8 @@
                                     <input type="radio" name="reliability" value="2" 
                                     @if(isset($reliability) && $reliability==2)
                                         checked
+                                    @elseif(!isset($reliability))
+                                        checked
                                     @endif
                                     /><span class="star"> </span>
                                     <input type="radio" name="reliability" value="1" 
@@ -259,6 +265,8 @@
                                     /><span class="star"> </span>
                                     <input type="radio" name="performance" value="3" 
                                     @if(isset($performance) && $performance==3)
+                                        checked
+                                    @elseif(!isset($performance))
                                         checked
                                     @endif
                                     /><span class="star"> </span>
@@ -303,6 +311,8 @@
                                     /><span class="star"> </span>
                                     <input type="radio" name="service_experience" value="1" 
                                     @if(isset($service_experience) && $service_experience==1)
+                                        checked
+                                    @elseif(!isset($service_experience))
                                         checked
                                     @endif
                                     /><span class="star"> </span>

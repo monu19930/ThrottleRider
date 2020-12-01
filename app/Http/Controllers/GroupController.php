@@ -6,9 +6,12 @@ use App\Http\Requests\GroupRequest;
 use Illuminate\Http\Request;
 use App\User;
 use App\Models\Group;
+use App\Models\GroupFollow;
+use App\Models\GroupJoin;
 use App\Models\GroupPastExperience;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Image;
 class GroupController extends Controller
 {
     public function index() {
@@ -75,7 +78,10 @@ class GroupController extends Controller
         if(isset($request->profile)) {
             $image = $request->profile;
             $new_name = rand() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/group_images/'), $new_name);
+            //$image->move(public_path('images/group_images/'), $new_name);
+            $destinationPath = public_path('images/group_images/');
+            $new_img = Image::make($image->getRealPath())->resize(490, 230);
+            $new_img->save($destinationPath . $new_name, 80);   
         }
         $data = [
             'create_rider_id'=> $user->id,
@@ -105,11 +111,9 @@ class GroupController extends Controller
             ];
          } else {
              $data = $request->all();
-             //dd($data);
              $data['images'] = isset($request->images)?$this->filterImages($data['images']):'';
              $data['rider_id'] = user()->id;
              $data['added_on'] = formatDate($request->added_on);
-             //dd($data);
              GroupPastExperience::create($data);
              $response = ['msg' => 'Past Experience Added Successfully','status' =>true];
          }
@@ -127,4 +131,36 @@ class GroupController extends Controller
         }
         return json_encode($result);
     }
+
+    public function followGroup(Request $request){
+        $groupArray = [
+            'group_id' => $request->group_id,
+            'followed_by' => user()->id
+        ];
+        GroupFollow::create($groupArray);
+        $response = ['status' => true];
+        return response()->json($response);
+     }
+
+     public function unFollowGroup(Request $request){
+        GroupFollow::where('followed_by',user()->id)->where('group_id', $request->group_id)->delete();
+        $response = ['status' => true];
+        return response()->json($response);
+     }
+
+     public function joinGroup(Request $request){
+        $groupArray = [
+            'group_id' => $request->group_id,
+            'rider_id' => user()->id
+        ];
+        GroupJoin::create($groupArray);
+        $response = ['status' => true];
+        return response()->json($response);
+     }
+
+     public function leaveGroup(Request $request){
+        GroupJoin::where('rider_id',user()->id)->where('group_id', $request->group_id)->delete();
+        $response = ['status' => true];
+        return response()->json($response);
+     }
 }

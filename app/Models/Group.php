@@ -19,6 +19,10 @@ class Group extends Model
           return $this->hasMany('App\Models\GroupJoin');
      }
 
+     public function groupFollowedRider() {
+          return $this->hasMany('App\Models\GroupFollow');
+     }
+
      public function pastExperience() {
           return $this->hasMany('App\Models\GroupPastExperience');
      }

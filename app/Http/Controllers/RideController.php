@@ -45,7 +45,8 @@ class RideController extends Controller
                     'no_of_days' => dateDifference($ride->start_date, $ride->end_date),
                     'description' => $ride->short_description,
                     'rider_rating' => isset($user->profile->rating) ? $user->profile->rating: 0,
-                    'ride_rating' => $rideDays['ride_rating'],
+                    //'ride_rating' => $rideDays['ride_rating'],
+                    'ride_rating' => $ride->rating,
                     'road_type' => $rideDays['ride_days'][0]['road_type'],
                     'is_approved' => $ride->is_approved,
                     'status_comment' => $status_comment,
@@ -97,6 +98,7 @@ class RideController extends Controller
     }
 
     public function addRideStep1(Request $request) {
+        $request->session()->forget('ride');
         $rider_id = Auth::user()->id;
         $validator = Validator::make($request->all(), [
             'start_location' => 'required',
@@ -115,7 +117,7 @@ class RideController extends Controller
          else {
             $data = $request->all();
             unset( $data['csrf'] );
-            $data['slug'] = $this->createSlug($data);            
+            $data['slug'] = $this->createSlug($data);          
             if(empty($request->session()->get('ride'))){
                 $ride = new Ride();
                 $ride->fill($data);
@@ -142,6 +144,7 @@ class RideController extends Controller
         $filterData = $this->filterData($data);
         $ride = $request->session()->get('ride');
         $ride->rideDay = $filterData;
+        $ride->rating = $this->calculateRideRating($ride->rideDay); 
         $request->session()->put('ride', $ride);
         $html = view('front.ride.ride-review', compact('ride'))->render();
         return $html;
@@ -153,6 +156,16 @@ class RideController extends Controller
         return $html;
     }
 
+    protected function calculateRideRating($rideDays){
+        $result = [];
+        foreach($rideDays as $key => $rideDay) {            
+            $result[$key] = $rideDay['road_quality']+$rideDay['road_scenic'];
+        }
+        $rating = array_sum($result)/(2*count($rideDays));
+        $rating = strlen(preg_replace("/.*\./", "", $rating)) == 2 ? round($rating) : $rating;
+        return $rating;
+    }
+
     public function store(Request $request)
     {
         $user = user();
@@ -160,7 +173,7 @@ class RideController extends Controller
         $ride->via_location = json_encode($ride->via_location);
         $ride->rider_id = $user->id;        
         $ride->ride_days = json_encode($ride->rideDay);
-
+        //dd($ride);
         $rideDetails = Ride::create([
                 'rider_id' => $user->id,
                 'start_location' => $ride->start_location,
@@ -170,8 +183,12 @@ class RideController extends Controller
                 'end_date' => formatDate($ride->end_date),
                 'no_of_people' => $ride->no_of_people,
                 'short_description' => $ride->short_description,
+                'rating' => $ride->rating,
                 'ride_days' => $ride->ride_days,
+                'total_km' => 400,
                 'luggage' => $ride->luggage,
+                'added_by' => isset($ride->added_by) ? $ride->added_by : 'rider',
+                'group_id' => isset($ride->group_id) ? $ride->group_id : 0,
                 'slug' => $ride->slug
             ]); 
             
@@ -185,6 +202,7 @@ class RideController extends Controller
             $rideDays[$key]['ride_id'] = $ride_id;
             $rideDays[$key]['ride_rating'] = ($rideDay['road_quality']+$rideDay['road_scenic'])/2;
             $rideDays[$key]['number_of_day'] = $key+1;
+            $rideDays[$key]['total_km'] = 150;
             $rideDays[$key]['start_date'] = addNumberOfDate($start_date,$key+1);
             if(!empty($rideDay['ride_images'])) {
                 $rideDays[$key]['ride_images'] = json_encode($rideDay['ride_images']);
@@ -218,9 +236,13 @@ class RideController extends Controller
             } else{
                 $result[$index][$keyNew] = $value;
             }
-            $result[$index]['total_km'] = 0;
+            $result[$index]['total_km'] = $this->calculateTotalKM();
         }
         return $result;
+    }
+
+    protected function calculateTotalKM() {
+        return 0;
     }
 
     public function publishImages(Request $request){

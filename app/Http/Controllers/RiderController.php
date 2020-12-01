@@ -17,8 +17,11 @@ use App\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RiderProfile;
+use App\Models\RoadType;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+
+use Image;
 
 class RiderController extends Controller
 {
@@ -85,7 +88,6 @@ class RiderController extends Controller
             'description' => isset($profile->description) ? $profile->description : '',
             'image' => isset($profile->image) ? $profile->image : 'rider.jpg',
             'cover_image' => isset($profile->cover_image) ? $profile->cover_image : 'cover.png',
-            //'rider' => $user->profile,
             'cityName' => isset($user->profile->city) ? $user->profile->city : '',
             'added_on' => formatDate($loggedInUser->created_at, 'd M Y'),
             'is_social' => !empty($user->provider) ? true : false,
@@ -102,7 +104,7 @@ class RiderController extends Controller
         $rides = Ride::where('rider_id',$id)->where('is_approved', 1)->limit(2)->OrderBy('created_at', 'desc')->get();
         foreach($rides as $key => $ride) {
             $user = $ride->user;
-            $profile = $user->profile;
+            $profile = $user->profile;            
             $rideDays = $this->formateRideDays($ride->ride_days);
             $result[$key] = [
                 'rider_name' => $user->name,
@@ -115,8 +117,8 @@ class RiderController extends Controller
                 'total_km' => $ride->total_km,
                 'description' => $ride->short_description,
                 'rider_rating' => isset($profile->rating) ? $profile->rating: 0,
-                'ride_rating' => 4,
-                'ride_image' => !empty($rideDays[0]['image']) ? $rideDays[0]['image'] : 'not_found.png',
+                'ride_rating' => $ride->rating,
+                'ride_image' => $rideDays[0],
             ];
         }
         return $result;
@@ -126,10 +128,11 @@ class RiderController extends Controller
         $ride_days = json_decode($days,true);
         $result = [];
         foreach($ride_days as $key => $ride_day) {
+            $roadType = RoadType::find($ride_day['road_type']);
             $result[$key] = [
                 'start_locations' => $ride_day['start_location'],
-                'road_type' => ($ride_day['road_type']==1) ? 'Highway' : '',
-                'image' => !empty($ride_day['ride_images']) ? $ride_day['ride_images'][0] : ''
+                'road_type' => $roadType->road_type,
+                'image' => isset($ride_day['ride_images'])  ? $ride_day['ride_images'][0]['image'] : 'not_found.png'
             ];
         }
         return $result;
@@ -186,11 +189,15 @@ class RiderController extends Controller
 
             if(isset($request->cover_image)) {
                 $cover_image = $request->file('cover_image');
-                $new_name2 = rand() . '.' . $cover_image->getClientOriginalExtension();
-                $cover_image->move(public_path('images/rider/cover_images/'), $new_name2);
+                $profile_name = rand() . '.' . $cover_image->getClientOriginalExtension();
+                //$cover_image->move(public_path('images/rider/cover_images/'), $profile_name);
+                $destinationPath = public_path('images/rider/cover_images/');
+                $new_img = Image::make($cover_image->getRealPath())->resize(490, 230);
+                $new_img->save($destinationPath . $profile_name, 80);   
+                //$cover_image->move($destinationPath, $profile_name);
 
                 $rider = RiderProfile::find($rider->id);
-                $rider->cover_image = $new_name2;
+                $rider->cover_image = $profile_name;
                 $rider->save();
             }
 
@@ -287,18 +294,6 @@ class RiderController extends Controller
         ];
     }
 
-
-    
-    public function joinGroup(Request $request){
-        $groupArray = [
-            'group_id' => $request->group_id,
-            'rider_id' => user()->id
-        ];
-        GroupJoin::create($groupArray);
-        $response = ['status' => true];
-        return response()->json($response);
-     }
-
      public function followRider(Request $request){
         $groupArray = [
             'rider_id' => $request->rider_id,
@@ -308,6 +303,13 @@ class RiderController extends Controller
         $response = ['status' => true];
         return response()->json($response);
      }
+
+     public function unFollowRider(Request $request){
+        RiderFollow::where('followed_by',user()->id)->where('rider_id', $request->rider_id)->delete();
+        $response = ['status' => true];
+        return response()->json($response);
+     }
+     
 
     public function groupMemberList(Request $request) {
         $group = Group::find($request->group_id);
@@ -385,6 +387,27 @@ class RiderController extends Controller
             $response = array('msg' => 'Profile Updated Successfully', 'status' => true);
         }
 
+        return response()->json($response);
+    }
+
+
+    public function updateCoverImage(Request $request){
+       
+        $loggedInUser = user();
+        
+        $profile = RiderProfile::where('rider_id', $loggedInUser->id)->first();
+
+        if(isset($request->cover_image)) {
+            $cover_image = $request->file('cover_image');
+            $cover_image_name = rand() . '.' . $cover_image->getClientOriginalExtension();
+            $destinationPath = public_path('images/rider/cover_images/');
+            $new_img = Image::make($cover_image->getRealPath())->resize(490, 230);
+            $new_img->save($destinationPath . $cover_image_name, 80);  
+
+            $profile->cover_image = $cover_image_name;
+        }
+        $profile->save();
+        $response = array('msg' => 'Profile Cover Image Updated Successfully', 'status' => true);
         return response()->json($response);
     }
 }

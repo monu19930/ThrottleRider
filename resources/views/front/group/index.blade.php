@@ -31,15 +31,21 @@
 					<div class="rider-details-block w-100 order-1 order-md-2">
 					<div class="location-heading-block ">
 						<div>
-						<h4 class="location-title">{{$group->group_name}} </h4>
-						<div class="d-flex align-items-center location-block">
-							<span class="time">Added on <span>{{$group->added_on}}</span></span></span>
+							<h4 class="location-title">{{$group->group_name}} </h4>
+							<div class="d-flex align-items-center location-block">
+								<span class="time">Added on <span>{{$group->added_on}}</span></span></span>
+							</div>
 						</div>
-						</div>
-						<div class="bookmark ml-auto">
-							<a href="javascript:void(0)"><i class="fa fa-edit"></i></a>
-							<a href="javascript:void(0)"><i class="fa fa-remove"></i></a>
-						</div>
+
+						<div class="prof-ride-menu ml-auto dropdown">												
+							<a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<img src="{{ asset('public/rider/images/circles-menu.png')}}">
+							</a>												
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">													
+								<a class="dropdown-item" href="javascript:void(0)">Edit</a>													
+								<a class="dropdown-item" href="javascript:void(0)">Remove</a>
+							</div>											
+						</div>						
 					</div>
 					<div class="location-details d-flex align-items-center">
 						<span class="rating"><i class="fa fa-star"></i>{{ $group->group_rating}} <small>Rating</small></span>
@@ -52,9 +58,12 @@
 						 <span class="joined-grp">{{$group->total_group_members}} People<small>Joined the group</small></span>
 						 @endif
 					   </div>
+					   @if($group->status==1)
 						<button class="btn btn-primary invite-member" onclick="inviteMembers('{{$group->id}}')"><i class="fa fa-send"></i>Invite</button>
-						<button class="btn btn-link invite-member"><a href="{{route('my-groups.events',$group->id)}}">Add Event</a></button>
-						
+						<button class="btn btn-link invite-member"><a href="{{route('my-groups.events',$group->id)}}">Events</a></button>
+						@endif					
+
+
 						@if($group->status==1)
                             <button class="btn btn-success" data-target="#status_comment{{$key}}" data-toggle="collapse">Approved</button>
 						@elseif($group->status==0)
@@ -69,11 +78,13 @@
 					<div class="userdetails d-flex align-items-center">						
 						<span class="username">
 							<span class="d-block">{{$group->group_desc}}</span>
+							@if(!empty($group->status==1))
 							<span class="badge badge-warning">
 								<button class="btn btn-link group_past_experience" content="{{$group->id}}">
 									<i class="fa fa-plus-circle"></i>Past Experience
 								</button>
 							</span>
+							@endif
 						</span>
 						<span class="username">
 							<span class="badge badge-warning">								

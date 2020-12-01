@@ -33,14 +33,20 @@
 					<div class="rider-details-block w-100 order-1 order-md-2">
 					<div class="location-heading-block ">
 						<div>
-						<h4 class="location-title">{{ $tip['tip_title']}}</h4>
-						<div class="d-flex align-items-center location-block">
-							<span class="time">Added on <span>{{$tip['added_on']}}</span></span></span>
+							<h4 class="location-title">{{ $tip['tip_title']}}</h4>
+							<div class="d-flex align-items-center location-block">
+								<span class="time">Added on <span>{{$tip['added_on']}}</span></span></span>
+							</div>
 						</div>
-						</div>
-						<div class="bookmark ml-auto">
-							<a href="javascript:void(0)"><i class="fa fa-edit"></i></a>
-							<a href="javascript:void(0)" class="remove_record" id="tip_referer_{{$tip['id']}}" data-content="{{route('tips.destroy',$tip['id'])}}" ><i class="fa fa-remove"></i></a>
+
+						<div class="prof-ride-menu ml-auto dropdown">												
+							<a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<img src="{{ asset('public/rider/images/circles-menu.png')}}">
+							</a>												
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">													
+								<a class="dropdown-item" href="javascript:void(0)">Edit</a>													
+								<a class="dropdown-item remove_record" id="tip_referer_{{$tip['id']}}" data-content="{{route('tips.destroy',$tip['id'])}}" href="javascript:void(0)">Remove</a>
+							</div>											
 						</div>
 					</div>
 					<div class="location-details d-flex align-items-center"></div>

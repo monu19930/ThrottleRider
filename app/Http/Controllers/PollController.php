@@ -9,6 +9,7 @@ use App\Models\PollFeedback;
 use Illuminate\Http\Request;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 class PollController extends Controller
 {
@@ -25,22 +26,26 @@ class PollController extends Controller
         $result = [];
         foreach($polls as $key => $poll) {
             $status_comment = $poll->approvalComments->sortBydesc('created_at');
-            $result[$key] = [
+            $result['polls'][$key] = [
                 'id' => $poll->id,
                 'poll_name' => $poll->poll_name,
                 'added_on' => formatDate($poll->created_at, 'd M Y'),
                 'status' => $poll->is_approved,
                 'status_comment' => $status_comment,
-                'options' => $this->filterOptions($poll->options)
+                'questions' => $this->filterQuestions($poll->questions)
             ];
         }
-        $polls = (object)$result;$i=1;
-        return view('front.poll.index',compact('polls', 'i'));
+        return view('front.poll.index',$result);
     }
 
-    protected function filterOptions($options) {
-        $options = json_decode($options,true);
-        return $options;
+    protected function filterQuestions($questions) {
+        $questions = json_decode($questions,true);
+        $result = [];
+        foreach($questions as $key => $quest){
+            $result[$key]['question'] = $quest['question'];
+            $result[$key]['options'] = json_decode($quest['options'],true);
+        }
+        return $result;
     }
 
     /**
@@ -67,7 +72,7 @@ class PollController extends Controller
         $filterData = $this->filterPollsData($data);
         $response = array('status'=>false, 'error'=> ['Something goes wrong, try again']);        
         if(count($filterData) > 0) {
-            Poll::insert($filterData);
+            Poll::create($filterData);
             $response = array('status'=>true, 'msg' => 'Poll added successfully');
         }
         return response()->json($response);
@@ -77,20 +82,26 @@ class PollController extends Controller
         $rider_id = user()->id;
         $questions = $data['question'];
         $group_id = $data['group_id'];
-        $result = [];
-        unset($data['question']);unset($data['group_id']);
+        $poll_title = $data['poll_title'];
+        $quest = [];
+        unset($data['question']);unset($data['group_id']);unset($data['poll_title']);
         foreach($data as $key => $value) {
             
             $keyNew = rtrim(strrev(strstr(strrev($key), '_')), '_');
             $index = intval(ltrim(strrchr($key, '_'), '_'));
-            $result[$index]['poll_name'] = $questions[$index];
+            $quest[$index]['question'] = $questions[$index];
             if($keyNew == 'options') {
-                $result[$index][$keyNew] = json_encode($value);
+                $quest[$index][$keyNew] = json_encode($value);
             }
-            $result[$index]['group_id'] = $group_id;
-            $result[$index]['rider_id'] = $rider_id;
-            $result[$index]['created_at'] = Carbon::now();
         }
+        $quest = new Collection($quest);
+        $result = [
+            'questions' => $quest->toJson(),
+            'group_id' => $group_id,
+            'rider_id' => $rider_id,
+            'poll_name' => $poll_title,
+            'created_at' => Carbon::now(),
+        ];
         return $result;
     }
 

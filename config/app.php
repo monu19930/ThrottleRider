@@ -56,6 +56,7 @@ return [
 
     'asset_url' => env('ASSET_URL', null),
 
+    'default_location' => 'New Delhi',
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
@@ -178,6 +179,7 @@ return [
         Stevebauman\Location\LocationServiceProvider::class,
         Illuminate\Notifications\NotificationServiceProvider::class,
         \Chatify\ChatifyServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
     ],
 
     /*
@@ -232,6 +234,7 @@ return [
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Location' => Stevebauman\Location\Facades\Location::class,
         'Chatify' => Chatify\Facades\ChatifyMessenger::class,
+        'Image' => Intervention\Image\Facades\Image::class,
 
     ],
 

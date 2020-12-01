@@ -73,7 +73,7 @@
                                                 <span class="star-icon"><i class="fa fa-star"></i></span>
                                                 <span class="rate-num">1+</span>
                                             </a>
-                                            <a class="star-rating" href="javascript:void(0)" onclick="filterRide('ride_rating', 2)">
+                                            <a class="star-rating active-rating" href="javascript:void(0)" onclick="filterRide('ride_rating', 2)">
                                                 <span class="star-icon"><i class="fa fa-star"></i></span>
                                                 <span class="rate-num">2+</span>
                                             </a>
@@ -81,7 +81,7 @@
                                                 <span class="star-icon"><i class="fa fa-star"></i></span>
                                                 <span class="rate-num">3+</span>
                                             </a>
-                                            <a class="star-rating active-rating" href="javascript:void(0)" onclick="filterRide('ride_rating', 4)">
+                                            <a class="star-rating" href="javascript:void(0)" onclick="filterRide('ride_rating', 4)">
                                                 <span class="star-icon"><i class="fa fa-star"></i></span>
                                                 <span class="rate-num">4+</span>
                                             </a>
@@ -111,12 +111,12 @@
                                                     <span id="slider-range-value2"></span>Km
                                                 </div>
                                             </div>
-                                            <input type="hidden" name="min-value" value="">
-                                            <input type="hidden" name="max-value" value="">
-                                            <input type="hidden" name="road_quality" id="road_quality">
-                                            <input type="hidden" name="road_scenic" id="road_scenic">
-                                            <input type="hidden" name="ride_rating" id="ride_rating">
-                                            <input type="hidden" name="rider_rating" id="rider_rating">
+                                            <input type="hidden" name="min_value" id="min-value" value="">
+                                            <input type="hidden" name="max_value" id="max-value" value="">
+                                            <input type="hidden" name="road_quality" id="road_quality" value="2">
+                                            <input type="hidden" name="road_scenic" id="road_scenic" value="2">
+                                            <input type="hidden" name="ride_rating" id="ride_rating" value="2">
+                                            <input type="hidden" name="rider_rating" id="rider_rating" value="2">
                                             <div id="slider-range"></div>
                                         </div>
                                     </div>
@@ -134,7 +134,7 @@
 
                                             @foreach($road_types as $key2 => $road_type)
                                             <div class="custom-control custom-checkbox mb-2 mt-3">
-                                                <input class="custom-control-input" type="checkbox" value="{{$road_type['id']}}" name="road_type[]" id="{{$road_type['road_type']}}" onclick="getFilterData()">
+                                                <input class="custom-control-input" {{ $key2==1 ? 'checked':'' }} type="checkbox" value="{{$road_type['id']}}" name="road_type[]" id="{{$road_type['road_type']}}" onclick="getFilterData()">
                                                 <label class="custom-control-label" for="{{$road_type['road_type']}}">
                                                     {{$road_type['road_type']}}
                                                 </label>
@@ -158,7 +158,7 @@
                                                 <span class="star-icon"><i class="fa fa-star"></i></span>
                                                 <span class="rate-num">1+</span>
                                             </a>
-                                            <a class="star-rating" href="javascript:void(0)" onclick="filterRide('road_quality', 2)">
+                                            <a class="star-rating active-rating" href="javascript:void(0)" onclick="filterRide('road_quality', 2)">
                                                 <span class="star-icon"><i class="fa fa-star"></i></span>
                                                 <span class="rate-num">2+</span>
                                             </a>
@@ -166,7 +166,7 @@
                                                 <span class="star-icon"><i class="fa fa-star"></i></span>
                                                 <span class="rate-num">3+</span>
                                             </a>
-                                            <a class="star-rating active-rating" href="javascript:void(0)" onclick="filterRide('road_quality', 4)">
+                                            <a class="star-rating" href="javascript:void(0)" onclick="filterRide('road_quality', 4)">
                                                 <span class="star-icon"><i class="fa fa-star"></i></span>
                                                 <span class="rate-num">4+</span>
                                             </a>
@@ -192,7 +192,7 @@
                                                 <span class="star-icon"><i class="fa fa-star"></i></span>
                                                 <span class="rate-num">1+</span>
                                             </a>
-                                            <a class="star-rating" href="javascript:void(0)" onclick="filterRide('road_scenic', 2)">
+                                            <a class="star-rating active-rating" href="javascript:void(0)" onclick="filterRide('road_scenic', 2)">
                                                 <span class="star-icon"><i class="fa fa-star"></i></span>
                                                 <span class="rate-num">2+</span>
                                             </a>
@@ -200,7 +200,7 @@
                                                 <span class="star-icon"><i class="fa fa-star"></i></span>
                                                 <span class="rate-num">3+</span>
                                             </a>
-                                            <a class="star-rating active-rating" href="javascript:void(0)" onclick="filterRide('road_scenic', 4)">
+                                            <a class="star-rating" href="javascript:void(0)" onclick="filterRide('road_scenic', 4)">
                                                 <span class="star-icon"><i class="fa fa-star"></i></span>
                                                 <span class="rate-num">4+</span>
                                             </a>
@@ -225,7 +225,7 @@
                                                 <span class="star-icon"><i class="fa fa-star"></i></span>
                                                 <span class="rate-num">1+</span>
                                             </a>
-                                            <a class="star-rating" href="javascript:void(0)" onclick="filterRide('rider_rating', 2)">
+                                            <a class="star-rating active-rating" href="javascript:void(0)" onclick="filterRide('rider_rating', 2)">
                                                 <span class="star-icon"><i class="fa fa-star"></i></span>
                                                 <span class="rate-num">2+</span>
                                             </a>
@@ -233,7 +233,7 @@
                                                 <span class="star-icon"><i class="fa fa-star"></i></span>
                                                 <span class="rate-num">3+</span>
                                             </a>
-                                            <a class="star-rating active-rating" href="javascript:void(0)" onclick="filterRide('rider_rating', 4)">
+                                            <a class="star-rating" href="javascript:void(0)" onclick="filterRide('rider_rating', 4)">
                                                 <span class="star-icon"><i class="fa fa-star"></i></span>
                                                 <span class="rate-num">4+</span>
                                             </a>
@@ -254,13 +254,13 @@
                                     </div>
                                     <div id="collapseEight" class="collapse" aria-labelledby="headingEight" data-parent="#accordionExample">
                                         <div class="custom-control custom-checkbox mb-2 mt-3">
-                                            <input class="custom-control-input" type="checkbox" id="Biker" checked>
+                                            <input class="custom-control-input" type="checkbox" name="posted_by[]" value="rider" id="Biker" onclick="getFilterData()"  checked>
                                             <label class="custom-control-label" for="Biker">
                                                 Biker
                                             </label>
                                         </div>
                                         <div class="custom-control custom-checkbox">
-                                            <input class="custom-control-input" type="checkbox" id="Group">
+                                            <input class="custom-control-input" type="checkbox" name="posted_by[]" value="group" id="Group" onclick="getFilterData()" >
                                             <label class="custom-control-label" for="Group">
                                                 Group
                                             </label>
@@ -285,11 +285,11 @@
                             <a href="#" class="sortby-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <label>Sort by</label>
                                 Ratings <i class="fa fa-angle-down drop-arrow"></i></a>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <!-- <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item" href="#">Action</a>
                                 <a class="dropdown-item" href="#">Another action</a>
                                 <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
+                            </div> -->
                         </span>
                     </div>
                     <div class="row">
@@ -565,10 +565,10 @@
             prefix: ''
         });
         noUiSlider.create(rangeSlider, {
-            start: [1000, 2200],
+            start: [50, 5000],
             step: 1,
             range: {
-                'min': [100],
+                'min': [50],
                 'max': [10000]
             },
             format: moneyFormat,
@@ -579,10 +579,13 @@
         rangeSlider.noUiSlider.on('update', function(values, handle) {
             document.getElementById('slider-range-value1').innerHTML = values[0];
             document.getElementById('slider-range-value2').innerHTML = values[1];
-            document.getElementsByName('min-value').value = moneyFormat.from(
-                values[0]);
-            document.getElementsByName('max-value').value = moneyFormat.from(
-                values[1]);
+            document.getElementById('min-value').value = values[0];
+            document.getElementById('max-value').value = values[1];
+            // document.getElementsByName('min-value').value = moneyFormat.from(
+            //     values[0]);
+            // document.getElementsByName('max-value').value = moneyFormat.from(
+            //     values[1]);
+            getFilterData();
         });
     });
 

@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EventRequest;
 use App\Models\Event;
 use App\Models\Group;
+use App\Models\Ride;
+use App\Models\RoadType;
 use App\Notifications\EventNotify;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Validator;
 
 class EventController extends Controller
 {
@@ -18,38 +22,128 @@ class EventController extends Controller
         if($group) {
             $data = [
                 'group_id' => $id,
-                'group_name' => $group->group_name,
-                'rides' => $this->getEventsList($id)
+                'rider' => $user->profile,
+                'rides' => $this->getRidesList($user,$id)
             ];
-            return view('front/group/event/index',$data);
-        } else {
-            return redirect('groups');
+            return view('front.group.event.index',$data);
         }
+        else{
+            return redirect('my-groups');
+        }
+        // $user = user();
+        // $group = $user->groups->where('id', $id)->first();
+        // if($group) {
+        //     $data = [
+        //         'group_id' => $id,
+        //         'group_name' => $group->group_name,
+        //         'rides' => $this->getEventsList($id)
+        //     ];
+        //     return view('front/group/event/index',$data);
+        // } else {
+        //     return redirect('groups');
+        // }
         
     }
 
+    protected function getRidesList($user, $group_id) {
+        $rides = $user->rides->where('group_id', $group_id)->sortByDesc('created_at');
+        $result = [];
+        if($rides->count() > 0) {
+            foreach($rides as $key => $ride) {
+                $rideDays = $this->formateRideDays($ride->ride_days);            
+                $status_comment = $ride->approvalComments;
+                $result[$key] = [
+                    'i' => 1,
+                    'id' => $ride->id,
+                    'rider_name' => $user->name,
+                    'rider_id' => $user->id,
+                    'rider_image' => isset($user->profile->image) ? $user->profile->image : '',
+                    'start_location' => $ride->start_location,
+                    'via_location' => $this->formateViaLocation($ride->via_location),
+                    'end_location' => $ride->end_location,
+                    'start_date' => formatDate($ride->start_date, 'M Y'),
+                    'total_km' => $ride->total_km,
+                    'no_of_people' => $ride->no_of_people,
+                    'no_of_days' => dateDifference($ride->start_date, $ride->end_date),
+                    'description' => $ride->short_description,
+                    'rider_rating' => isset($user->profile->rating) ? $user->profile->rating: 0,
+                    //'ride_rating' => $rideDays['ride_rating'],
+                    'ride_rating' => $ride->rating,
+                    'road_type' => $rideDays['ride_days'][0]['road_type'],
+                    'is_approved' => $ride->is_approved,
+                    'status_comment' => $status_comment,
+                    'ride_image' => !empty($rideDays['ride_days'][0]['image']) ? $rideDays['ride_days'][0]['image'] : 'not_found.png',
+                ];
+            }
+        }
+        return $result;
+    }
+
+    protected function formateViaLocation($via_locations) {
+        $locations = json_decode($via_locations,true);
+        return implode(',', $locations);
+    }
+
+    protected function formateRideDays($days) {
+        $ride_days = json_decode($days,true);
+        $result = [];
+        $rating = 0;$i=0;
+        foreach($ride_days as $key => $ride_day) {
+            $roadType = RoadType::find($ride_day['road_type']);
+            $result['ride_days'][$key] = [
+                'start_locations' => $ride_day['start_location'],
+                'road_type' => $roadType->road_type,
+                'image' => !empty($ride_day['ride_images']) ? $ride_day['ride_images'][0] : ''
+            ];
+
+            $rating+= $ride_day['road_quality']+$ride_day['road_scenic'];
+            $i++;
+        }
+        $rating = $rating/(2*$i);
+        $result['ride_rating'] = strlen(preg_replace("/.*\./", "", $rating)) == 2 ? round($rating) : $rating;
+        return $result;
+    }
+
     public function create($id) {
+        $result['road_types'] = RoadType::all();
         $result['group_id'] = $id;
         return view('front/group/event/create', $result);
     }
 
-    public function eventAddStep1(EventRequest $request) {
+    public function eventAddStep1(Request $request) {
 
-        $data = $request->all();
-        $data['rider_id'] =  user()->id;
-        unset( $data['csrf'] );
-        if(empty($request->session()->get('event'))){
-            $event = new Event();
-            $event->fill($data);
-            $request->session()->put('event', $event);
-        }else{
-            $event = $request->session()->get('event');
-            $event->fill($data);
-            $request->session()->put('event', $event);
+        $rider_id = user()->id;
+        $validator = Validator::make($request->all(), [
+            'start_location' => 'required',
+            'end_location' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'no_of_people' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            $response = [
+                'error' => $validator->errors(), 
+                'status' =>false
+            ];
+         }
+         else {
+            $data = $request->all();
+            unset( $data['csrf'] );
+            $data['slug'] = $this->createSlug($data);  
+            $data['added_by'] = 'group';          
+            if(empty($request->session()->get('ride'))){
+                $ride = new Ride();
+                $ride->fill($data);
+                $request->session()->put('ride', $ride);
+            }else{
+                $ride = $request->session()->get('ride');
+                $ride->fill($data);
+                $request->session()->put('ride', $ride);
+            }
+            $different_days = dateDifference($request->start_date, $request->end_date);
+            $response = ['status' => true, 'days' => $different_days, 'start_location' => $request->start_location];
         }
-        $different_days = dateDifference($request->start_date, $request->end_date);
-        $response = ['status' => true, 'days' => $different_days, 'start_location' => $request->start_location];
-        
         return response()->json($response);
 
     }
@@ -153,22 +247,22 @@ class EventController extends Controller
         return $result;
     }
 
-    protected function formateViaLocation($via_locations) {
-        $locations = json_decode($via_locations,true);
-        return implode(',', $locations);
-    }
+    // protected function formateViaLocation($via_locations) {
+    //     $locations = json_decode($via_locations,true);
+    //     return implode(',', $locations);
+    // }
 
-    protected function formateRideDays($days) {
-        $ride_days = json_decode($days,true);
-        $result = [];
-        foreach($ride_days as $key => $ride_day) {
-            $result[$key] = [
-                'start_locations' => $ride_day['start_location'],
-                'road_type' => ($ride_day['road_type']==1) ? 'Highway' : '',
-                'image' => !empty($ride_day['ride_images']) ? $ride_day['ride_images'][0] : ''
-            ];
-        }
-        return $result;
-    }
+    // protected function formateRideDays($days) {
+    //     $ride_days = json_decode($days,true);
+    //     $result = [];
+    //     foreach($ride_days as $key => $ride_day) {
+    //         $result[$key] = [
+    //             'start_locations' => $ride_day['start_location'],
+    //             'road_type' => ($ride_day['road_type']==1) ? 'Highway' : '',
+    //             'image' => !empty($ride_day['ride_images']) ? $ride_day['ride_images'][0] : ''
+    //         ];
+    //     }
+    //     return $result;
+    // }
 
 }

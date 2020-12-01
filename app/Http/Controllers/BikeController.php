@@ -48,7 +48,7 @@ class BikeController extends Controller
     }
 
     public function create() {
-        $data['brands'] = BikeBrand::all();
+        $data['brands'] = $this->getBikeBrands();
         return view('front/bike/create',$data);
     }
 
@@ -69,13 +69,20 @@ class BikeController extends Controller
                 'service_experience' =>$details->service_experience,
                 'info' => trim($details->info),
                 'images' => json_decode($details->image,true),
-                'brands' =>BikeBrand::all()
+                'brands' => $this->getBikeBrands()
             ];
             return view('front/bike/create',$result);
         }
         else {
             return redirect('bikes');
         }
+    }
+
+    protected function getBikeBrands(){
+        $brands = BikeBrand::whereIn('id', function($query) {
+            $query->select('brand_id')->from('bike_models');
+        })->get();
+        return $brands;
     }
 
     public function search(Request $request) {
@@ -270,6 +277,7 @@ class BikeController extends Controller
             if(!empty($bike->image)) {
                 $result['image'] = json_encode($bike->image);
             }
+            $result['is_approved'] = 0;
             Bike::where('id',$request->id)->update($result);
             $id = $request->id;
         } else {

@@ -31,12 +31,16 @@
 													<span class="time">Added on <span>{{$supplier['created_at']}}</span></span></span>
 												</div>
 											</div>
-											<div class="bookmark ml-auto">
-												<a href="javascript:void(0)"><i class="fa fa-edit"></i></a>
-												<a class="remove_record" style="cursor:pointer;" id="supplier_referer_{{$supplier['id']}}" data-content="{{route('suppliers.destroy',$supplier['id'])}}">
-													<i class="fa fa-remove"></i>
-												</a>
-											</div>
+
+											<div class="prof-ride-menu ml-auto dropdown">												
+												<a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+													<img src="{{ asset('public/rider/images/circles-menu.png')}}">
+												</a>												
+												<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">													
+													<a class="dropdown-item" href="javascript:void(0)">Edit</a>													
+													<a class="dropdown-item remove_record" id="supplier_referer_{{$supplier['id']}}" data-content="{{route('suppliers.destroy',$supplier['id'])}}" href="javascript:void(0)">Remove</a>
+												</div>											
+											</div>											
 										</div>
 										<div class="location-details d-flex align-items-center">
 											<span class="rating">

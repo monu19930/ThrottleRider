@@ -8,12 +8,13 @@
 <script src="{{ asset('public/rider/js/jquery.multiselect.js')}}"></script>
 <script src="{{ asset('public/rider/js/jquery-ui.min.js')}}" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script> 
 <script src="{{ asset('public/rider/js/jquery.email.multiple.js')}}"></script>
+<script src="{{ asset('public/rider/js/jquery.slimscroll.min.js')}}"></script>
 
 @if(Route::currentRouteName()=='add-bike' || Route::currentRouteName()=='bikes.edit')
 <script src="{{ asset('public/js/bike.js')}}"></script>
 @endif
 
-@if(Route::currentRouteName()=='my-rides.create')
+@if(Route::currentRouteName()=='my-rides.create' || Route::currentRouteName()=='my-groups.events.create')
 <script src="{{ asset('public/js/bike.js')}}"></script>
 @endif
 
@@ -155,8 +156,7 @@
                     $('#bikeProgress2').text('2');
                              
                 },
-                error: function(response) {
-                    //showErrorMessage(response.responseJSON.errors);                    
+                error: function(response) {                   
                     errorMessage(response.responseJSON.errors, 'submitBikeStep1', 'CONTINUE')
                 } 
             });
@@ -178,8 +178,7 @@
                 contentType: false,
                 cache:false,
                 success: function( response ) {
-                    if(response.status==false) {                        
-                        //showErrorMessage(response.error);
+                    if(response.status==false) {
                         errorMessage(response.error, 'submitBikeStep2', 'CONTINUE');
                     }
                     else {
@@ -228,8 +227,9 @@
                         }
                         $('#start_location_0').val(response.start_location);
                         $('#first_day').attr('content', response.days);
-                    } else {                        
-                        //showErrorMessage(response.error);
+
+                        $('.next_day').text('PROCEED TO DAY '+response.days);
+                    } else {
                         errorMessage(response.error,'rideStep1', 'CONTINUE');
 
                     }
@@ -249,31 +249,38 @@
 
         //Submit Ride Form Step 2
         $('#rideStep2').on('click', function(){
-            $.ajaxSetup({
-                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
-            });
-            $.ajax({
-                url: "{{route('my-rides.register2')}}",
-                type: "POST",
-                data: new FormData($('#addRideForm2')[0]),
-                processData: false,
-                contentType: false,
-                cache:false,
-                success: function( response ) {
-                    $('#tab2').hide();
-                    $('#tab1').hide();                   
-                    $('#review_ride').show();                        
-                    $('#review_ride').html(response);
+            var max_day = $('#first_day').attr('content');
+            if($('input[name=end_location_'+max_day+']').val() == '') {                
+                scroll();
+                $(document).find('[name=end_location_'+max_day+']').after('<span class="text-strong text-danger">End location field is required</span>');
+            }
+            else{
+                $.ajaxSetup({
+                    headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+                });
+                $.ajax({
+                    url: "{{route('my-rides.register2')}}",
+                    type: "POST",
+                    data: new FormData($('#addRideForm2')[0]),
+                    processData: false,
+                    contentType: false,
+                    cache:false,
+                    success: function( response ) {
+                        $('#tab2').hide();
+                        $('#tab1').hide();                   
+                        $('#review_ride').show();                        
+                        $('#review_ride').html(response);
 
-                    $('#progressStep1').removeClass('selected-list').addClass('selected-list');
-                    $('#progressStep2').removeClass('active-list').addClass('selected-list');
-                    $('#progressStep3').addClass('active-list')
+                        $('#progressStep1').removeClass('selected-list').addClass('selected-list');
+                        $('#progressStep2').removeClass('active-list').addClass('selected-list');
+                        $('#progressStep3').addClass('active-list')
 
-                    $('#bikeProgress1').html('<i class="fa fa-check" aria-hidden="true"></i>');
-                    $('#bikeProgress2').html('<i class="fa fa-check" aria-hidden="true"></i>');
-                    $('#bikeProgress3').text('3');
-                }
-            });
+                        $('#bikeProgress1').html('<i class="fa fa-check" aria-hidden="true"></i>');
+                        $('#bikeProgress2').html('<i class="fa fa-check" aria-hidden="true"></i>');
+                        $('#bikeProgress3').text('3');
+                    }
+                });
+            }
         });
 
         //Event form step 1
@@ -341,10 +348,14 @@
 
 
         $(function() {
+            var dateToday = new Date(); 
             $("#start_date").datepicker({
                 dateFormat: 'yy-mm-dd',
+                maxDate: dateToday,
                 onSelect: function (selected) {
                     var dt = new Date(selected);
+                    //var dt = new Date();
+                    console.log(dt);
                     dt.setDate(dt.getDate() + 1);
                     $("#end_date").datepicker("option", "minDate", dt);
                 }
@@ -352,10 +363,34 @@
 
             $("#end_date").datepicker({
                 dateFormat: 'yy-mm-dd',
+                maxDate: dateToday,
                 onSelect: function (selected) {
                     var dt = new Date(selected);
                     dt.setDate(dt.getDate() - 1);
                     $("#start_date").datepicker("option", "maxDate", dt);
+                }
+            });
+
+
+            $("#estart_date").datepicker({
+                dateFormat: 'yy-mm-dd',
+                minDate: dateToday,
+                onSelect: function (selected) {
+                    var dt = new Date(selected);
+                    //var dt = new Date();
+                    console.log(dt);
+                    dt.setDate(dt.getDate() + 1);
+                    $("#eend_date").datepicker("option", "minDate", dt);
+                }
+            });
+
+            $("#eend_date").datepicker({
+                dateFormat: 'yy-mm-dd',
+                minDate: dateToday,
+                onSelect: function (selected) {
+                    var dt = new Date(selected);
+                    dt.setDate(dt.getDate() - 1);
+                    $("#estart_date").datepicker("option", "maxDate", dt);
                 }
             });
 
@@ -415,9 +450,7 @@
             var error = false;
 
             $('.input-field span.text-danger').remove();
-            if(end_loc == ''){
-                //swal('Failed', 'Please enter end location of Day '+(i+parseInt(1)), 'error');
-                //return false;
+            if(end_loc == ''){                
                 var key = "end_location_"+i;
                 $(document).find('[name='+key+']').after('<span class="text-strong text-danger">End location field is required</span>');
                 error = true;
@@ -436,7 +469,9 @@
                 if(i < max) {
                     i++;                
                     if(i == parseInt(max)) {
-                        $(this).hide();
+                        $(this).hide();                        
+                        $('.next-day').hide();
+                        $('#rideStep2').show();                      
                     }
                     $.ajaxSetup({
                         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
@@ -455,6 +490,8 @@
                             $('#dynamic_field').append(response);
 
                             $('#add').html('<i class="fa fa-plus"></i>&nbsp; Add Day'+nextDay);
+
+                            $('.next-day').attr('onclick', 'moveToNextDay('+i+')').text('PROCEED TO DAY '+nextDay);
                         }
                     });                
                 }
@@ -536,30 +573,44 @@
         $('.add_more_options').click(function(e){
             e.preventDefault();
             var queNum = $(this).attr('content');
-            var option = $('#more_options_list_1 .form-group .quest_'+queNum+'_option').length;
-            if(option < 3){
-                $('#more_options_list_'+queNum).append('<div class="form-group quest_'+queNum+'_opt_'+option+'">'+
-                    '<input type="text" autocomplete="off" class="form-control quest_'+queNum+'_option" name="options_0[]" class="form-control" placeholder="Option">'+
-                    '<i class="fa fa-minus" onclick="removeMoreOption('+queNum+','+option+')"></i></div>');
+            var option = $('#more_options_list_1 .quest_'+queNum+'_option').length;
+            if(option < 3){    
+
+                $('#more_options_list_'+queNum).append('<div class="col-11 pl-0 d-flex align-items-center w-100 mt-4 quest_'+queNum+'_opt_'+option+'">'+
+                    '<div class="input-field  mb-0 w-100  ">'+
+                        '<input type="text" autocomplete="off" name="options_0[]" id="search-bike" class="input-block quest_'+queNum+'_option" placeholder=" ">'+
+                        '<label for="search-bike" class="input-lbl">Option Name</label>'+
+                    '</div>'+
+                    '<div class="add-via-btn">'+
+                        '<a href="javascript:void(0)" title="Add Option" onclick="removeMoreOption('+queNum+','+option+')">'+
+                            "<img src='{{ asset('public/rider/images/icons-clickable-less.svg')}}'>"+
+                        '</a>'+
+                    '</div>'+
+                '</div>');
             } 
         }); 
-        // $('#more_options_list').on("click",".remove_field", function(e){ 
-        //     console.log('check11');
-        //     e.preventDefault(); $(this).parent('div').remove(); opt--; 
-        // })
+        
 
 
         //Add more option for more questions
         $('#more_questions_list').on("click",".add_more_options", function(e){ 
             e.preventDefault(); 
             var queNum = $(this).attr('content');
-            var option = $('#more_questions_list .form-group .quest_'+queNum+'_option').length;
+            var option = $('#more_questions_list .quest_'+queNum+'_option').length;
             if(option < 4){
-                //console.log('question: '+queNum);
-                //console.log('option: '+option);
-                $('#more_options_list_'+queNum).append('<div class="form-group quest_'+queNum+'_opt_'+option+'">'+
-                    '<input type="text" autocomplete="off" class="form-control quest_'+queNum+'_option" name="options_'+(queNum-1)+'[]" class="form-control" placeholder="Option Name">'+
-                    '<i class="fa fa-minus" onclick="removeMoreOption('+queNum+','+option+')"></i></div>');
+                
+
+                $('#more_options_list_'+queNum).append('<div class="col-11 pl-0 d-flex align-items-center w-100 mt-4 quest_'+queNum+'_opt_'+option+'">'+
+                    '<div class="input-field  mb-0 w-100  ">'+
+                        '<input type="text" autocomplete="off" name="options_'+(queNum-1)+'[]" id="search-bike" class="input-block quest_'+queNum+'_option" placeholder=" ">'+
+                        '<label for="search-bike" class="input-lbl">Option Name</label>'+
+                    '</div>'+
+                    '<div class="add-via-btn">'+
+                        '<a href="javascript:void(0)" title="Add Option" onclick="removeMoreOption('+queNum+','+option+')">'+
+                            "<img src='{{ asset('public/rider/images/icons-clickable-less.svg')}}'>"+
+                        '</a>'+
+                    '</div>'+
+                '</div>');
             } 
         });
 
@@ -570,17 +621,38 @@
             //console.log(quest);
             if(quest < 10){
                 quest++;
-                $('#more_questions_list').append('<div class="form-group"><label>'+
-                '</label> <input type="text" autocomplete="off" name="question[]" class="form-control" placeholder="Question Name">'+
-                '<div class="form-group">'+
-                    '<input type="text" autocomplete="off" name="options_'+(quest-1)+'[]" class="form-control quest_'+quest+'_option" placeholder="Option Name">'+
-                    '<i class="fa fa-plus add_more_options" content="'+quest+'"></i>'+
-                    '<div id="more_options_list_'+quest+'"></div>'+
-                    '</div><button class="btn btn-outline-danger btn-sm remove_field">- Remove Question</button>');
+                
+
+                $('#more_questions_list').append('<div class="p-3 rounded border mt-4">'+
+					'<div class="d-flex align-items-center w-100 ">'+
+						'<div class="input-field  mb-0 w-100  ">'+
+							'<input type="text" autocomplete="off" name="question[]" id="search-bike" class="input-block" placeholder=" ">'+
+							'<label for="search-bike" class="input-lbl">Question Name</label>'+
+						'</div>'+
+						'<div class="add-via-btn"> '+
+                            '<a href="#" class="remove_field" title="Add Question" id="btnAdd">'+
+                                "<img src='{{ asset('public/rider/images/icons-clickable-less.svg')}}'>"+
+                            '</a>'+
+                        '</div>'+
+					'</div>'+
+					'<div class="col-11 pl-0 d-flex align-items-center w-100 mt-4">'+
+						'<div class="input-field  mb-0 w-100  ">'+
+							'<input type="text" autocomplete="off" name="options_'+(quest-1)+'[]" id="search-bike" class="input-block quest_'+quest+'_option" placeholder=" ">'+
+							'<label for="search-bike" class="input-lbl">Option Name</label>'+
+						'</div>'+
+                        '<div class="add-via-btn">'+
+                            '<a href="#" title="Add Option" class="add_more_options" content="'+quest+'">'+
+                                "<img src='{{ asset('public/rider/images/icons-clickable-add.svg')}}'>"+
+                            '</a>'+
+                        '</div>'+
+				    '</div>'+
+					'<div id="more_options_list_'+quest+'""></div>'+
+				'</div>');
             } 
         }); 
         $('#more_questions_list').on("click",".remove_field", function(e){ 
-            e.preventDefault(); $(this).parent('div').remove(); quest--; 
+            //e.preventDefault(); $(this).parent('div').remove(); quest--; 
+            e.preventDefault(); $(this).parent('div').parent('div').parent('div').remove(); quest--; 
         })
 
         //Back Bike Step Event
@@ -776,6 +848,16 @@
             }); 
         })
 
+        $(".number-data").keydown(function(event) {
+            if ( event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 ) {
+            }
+            else {
+                if ((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
+                    event.preventDefault(); 
+                }   
+            }
+        });
+
 
         //Rider Group Join
         $('.rider-group-join').on('click', function(){
@@ -800,31 +882,6 @@
                 }
             });
             
-        })
-
-
-        //Rider Follow UP
-        $('.follow-rider').on('click', function(){
-            var referer = this;
-            var is_user = "{{Auth::user()}}";
-            if(!is_user) {
-                $('#loginmodal').modal('show');
-            }
-            
-            var rider_id = $(this).attr('content');
-            $.ajaxSetup({
-                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
-            });
-            $.ajax({
-                url: "{{route('follow-rider')}}",
-                type: "POST",
-                data: {rider_id:rider_id},
-                success: function( response ) {
-                    if(response.status==true) {                            
-                        $(referer).replaceWith('<button class="join-btn flex-grow-1 mt-2 mr-1">Followed</button>');
-                    }         
-                }
-            });
         })
 
         //add bike home
@@ -860,6 +917,13 @@
             deleteRecordSource(url,cls);            
         })
 
+
+        //scroll poll listing div
+        $('.scroll-div').slimScroll({
+            allowPageScroll: true,
+            //height: auto,
+        });
+
         
     });
 
@@ -887,11 +951,9 @@
                         location.replace(redirect_url);
                     }, 3000)
                 } else {
-                    //showErrorMessage(response.error);
                     errorMessage(response.error, btnId, btnText, fieldClass);
                 }
             }, error: function(response) {
-                //showErrorMessage(response.responseJSON.errors);
                 errorMessage(response.responseJSON.errors, btnId, btnText, fieldClass);
             }
         });
@@ -899,8 +961,7 @@
 
     function showErrorMessage(error,type='') {
         if(type=='') {
-            document.body.scrollTop = 0;
-            document.documentElement.scrollTop = 100;
+            scroll();
         }
         $(".print-error-msg").find("ul").html('');
         $(".print-error-msg").css('display','block');
@@ -942,6 +1003,7 @@
                             $(".alert").fadeOut("fast");
                         }
                         document.getElementById("inviteGroupMembersForm").reset();
+                        $('.all-mail span').remove();
                         $('#inviteMembersModal').modal('hide');
                     }, 3000);
                 } 
@@ -1092,7 +1154,7 @@
                 type: "POST",
                 data: {keyword:ui.item.label},
                 success: function( response ) {
-                    var img = "http://localhost/gull-html-laravel/public/images/bike_models/"+response.image;
+                    var img = "{{getImageUrl()}}/public/images/bike_models/"+response.image;
                     $('#bike-icon').hide();
                     $('.selected_bike').show();
                     $('#selected_bike').attr('src', img);
@@ -1404,10 +1466,10 @@
     
         $('#review_bike_list').val(model_name);
         $('#review_model_name').text(model_name);
-        var model_image = "http://localhost/gull-html-laravel/public/images/bike_models/"+img;
+        var model_image = "{{getImageUrl()}}/public/images/bike_models/"+img;
 
         if(img==undefined){
-            model_image = "http://localhost/throttle/public/images/rider/bikes/not_found.jpg";
+            model_image = "{{getImageUrl()}}/public/images/bike_models/not_found.jpg";
         }
         
         $('#reviewBikeListModal').modal('hide');
@@ -1542,9 +1604,9 @@
         var img = $('#bike_models option:selected').attr('data-content');
         $('#bike_list').val(model_name);
         $('#model_name').text(model_name);
-        var model_image = "http://localhost/gull-html-laravel/public/images/bike_models/"+img;
+        var model_image = "{{getImageUrl()}}/public/images/bike_models/"+img;
         if(img==undefined){
-            model_image = "http://localhost/throttle/public/images/rider/bikes/not_found.jpg";
+            model_image = "{{getImageUrl()}}/public/images/bike_models/not_found.jpg";
         }
         $('#bikeListModal').modal('hide');
         $('#bike-icon').hide();
@@ -1673,7 +1735,7 @@
                 $(".alert").fadeOut("fast");
             }
             location.replace(redirectUrl);
-        }, 3000);
+        }, 1000);
     }
 
     function updateRiderDescription(){
@@ -1732,6 +1794,38 @@
         });
     }
 
+    function updateRiderCoverImage(){
+        $('#update_rider_coverImage').text('Please wait...').attr('disabled', true);
+        $.ajaxSetup({
+                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+        });
+        $.ajax({
+            url: "{{route('my-profile.update-cover-image')}}",
+            type: "POST",
+            data: new FormData($('#updateRiderCoverImage')[0]),
+            processData: false,
+            contentType: false,
+            cache:false,
+            success: function( response ) {
+                if(response.status==true) {
+                    $(".print-error-msg").css('display','block');
+                    $(".print-error-msg").find("span").text(response.msg);                
+                    $('#update_rider_coverImage').text('Update').attr('disabled', false);
+                    setTimeout(function () {
+                        if ($(".alert").is(":visible")){
+                            $(".alert").fadeOut("fast");
+                        }
+                        $('#riderCoverImageModal').modal('hide');
+                        location.reload();
+                    }, 3000);
+                }
+                else{
+                    errorMessage(response.error, 'update_rider_coverImage', 'Update', 'form-group');
+                }
+            }
+        });
+    }
+
     function showHideActiveTab(){
         $('#day1-tab').removeClass('active');
         $('#day1').removeClass('show active');
@@ -1754,5 +1848,197 @@
 
     function removeCommentField(fieldName){
         $('#'+fieldName+' div.d-flex').remove();
+    }
+
+    function followRider(rider_id) {
+        var is_user = "{{Auth::user()}}";
+        if(!is_user) {
+            $('#loginmodal').modal('show');
+        }
+        $.ajaxSetup({
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+        });
+        $.ajax({
+            url: "{{route('follow-rider')}}",
+            type: "POST",
+            data: {rider_id:rider_id},
+            success: function( response ) {
+                if(response.status==true) {                            
+                    $('.follow-rider-'+rider_id).replaceWith('<button class="follow-btn w-100 mt-2 un-follow-rider-'+rider_id+'" onclick="unFollowRider('+rider_id+')" ><i class="fa fa-minus mr-2"></i>UNFOLLOW</button>');
+                }         
+            }
+        });
+    }
+
+    function unFollowRider(rider_id) {
+        var is_user = "{{Auth::user()}}";
+        if(!is_user) {
+            $('#loginmodal').modal('show');
+        }
+        $.ajaxSetup({
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+        });
+        $.ajax({
+            url: "{{route('un-follow-rider')}}",
+            type: "POST",
+            data: {rider_id:rider_id},
+            success: function( response ) {
+                if(response.status==true) {                            
+                    $('.un-follow-rider-'+rider_id).replaceWith('<button class="follow-btn w-100 mt-2 follow-rider-'+rider_id+'" onclick="followRider('+rider_id+')"><i class="fa fa-plus mr-2"></i>FOLLOW</button>');
+                }         
+            }
+        });        
+    }
+
+    function moveToNextDay(i){
+        var max = $('#first_day').attr('content');
+        var end_loc = $('input[name=end_location_'+i+']').val();
+        var start_location = $('input[name=start_location_'+i+']').val();
+            
+        var tab = 2+parseInt(i);
+        var error = false;
+
+        $('.input-field span.text-danger').remove();
+        if(end_loc == ''){                
+            var key = "end_location_"+i;
+            $(document).find('[name='+key+']').after('<span class="text-strong text-danger">End location field is required</span>');
+            error = true;
+        }
+
+        if(start_location == ''){              
+            var key = "start_location_"+i;
+            $(document).find('[name='+key+']').after('<span class="text-strong text-danger">Start location field is required</span>');
+            error = true;
+        }
+
+        var nextDay = tab+parseInt(1);
+
+        if(error == false) {
+
+            if(i < max) {
+                i++;                
+                if(i == parseInt(max)) {
+                    $(this).hide();
+                }
+                $.ajaxSetup({
+                    headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+                });
+                $.ajax({
+                    url: "{{route('my-rides.add-day')}}",
+                    type: "POST",
+                    data: {val: i, end_location: end_loc},
+                    success: function( response ) {
+                        $('#myTab li a').removeClass('active')
+                        $('#more_days').append('<li class="nav-item" role="presentation">'+
+                        '<a class="moreDays nav-link active" onclick="showHideActiveTab()" id="day2-tab" data-toggle="tab" href="#day'+tab+'" role="tab" aria-controls="Day2" aria-selected="true"><span>Day '+tab+'</span></a>'
+                    +'</li>');
+
+                        $('#daysContent .tab-pane').removeClass('active show');
+                        $('#dynamic_field').append(response);
+
+                        $('.next-day').attr('onclick', 'moveToNextDay('+i+')').text('PROCEED TO DAY '+nextDay);
+
+                        if(max == i){
+                            $('.next-day').hide();
+                            $('#rideStep2').show();
+                            $('#add').hide();
+                        }
+                        $('#add').html('<i class="fa fa-plus"></i>&nbsp; Add Day'+nextDay);
+                    }
+                });                
+            }
+        }
+        else{
+            scroll();
+        }
+    }
+
+    function followGroup(group_id){
+        var is_user = "{{Auth::user()}}";
+        if(!is_user) {
+            $('#loginmodal').modal('show');
+        }
+        $.ajaxSetup({
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+        });
+        $.ajax({
+            url: "{{route('follow-group')}}",
+            type: "POST",
+            data: {group_id:group_id},
+            success: function( response ) {
+                if(response.status==true) {                            
+                    $('.follow-group-'+group_id).replaceWith('<button class="follow-btn flex-grow-1 mt-2 ml-1 unfollow-group-'+group_id+'" onclick="unFollowGroup('+group_id+')"><i class="fa fa-minus mr-2"></i>Unfollow</button>');
+                }         
+            }
+        }); 
+    }
+
+    function unFollowGroup(group_id) {
+        var is_user = "{{Auth::user()}}";
+        if(!is_user) {
+            $('#loginmodal').modal('show');
+        }
+        $.ajaxSetup({
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+        });
+        $.ajax({
+            url: "{{route('unfollow-group')}}",
+            type: "POST",
+            data: {group_id:group_id},
+            success: function( response ) {
+                if(response.status==true) {                            
+                    $('.unfollow-group-'+group_id).replaceWith('<button class="follow-btn flex-grow-1 mt-2 ml-1 follow-group-'+group_id+'" onclick="followGroup('+group_id+')"><i class="fa fa-plus mr-2"></i>Follow</button>');
+                }         
+            }
+        });        
+    }
+
+    function joinGroup(group_id) {
+        var is_user = "{{Auth::user()}}";
+        if(!is_user) {
+            $('#loginmodal').modal('show');
+        }
+        $.ajaxSetup({
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+        });
+        $.ajax({
+            url: "{{route('join-group')}}",
+            type: "POST",
+            data: {group_id:group_id},
+            success: function( response ) {
+                if(response.status==true) {                            
+                    $('.join-group-'+group_id).replaceWith('<button class="join-btn flex-grow-1 mt-2 mr-1 leave-group-'+group_id+'" onclick="leaveGroup('+group_id+')">'+
+												'<i class="fa fa-minus mr-2"></i>Cancel</button>');     
+
+                }   
+            }
+        });        
+    }
+
+    function leaveGroup(group_id) {
+        var is_user = "{{Auth::user()}}";
+        if(!is_user) {
+            $('#loginmodal').modal('show');
+        }
+        $.ajaxSetup({
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+        });
+        $.ajax({
+            url: "{{route('leave-group')}}",
+            type: "POST",
+            data: {group_id:group_id},
+            success: function( response ) {
+                if(response.status==true) {                            
+                    $('.leave-group-'+group_id).replaceWith('<button class="join-btn flex-grow-1 mt-2 mr-1 join-group-'+group_id+'" onclick="joinGroup('+group_id+')">'+
+												'<i class="fa fa-send mr-2"></i>Join</button>');     
+
+                }   
+            }
+        });        
+    }
+
+    function scroll(){
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 100;
     }
 </script>

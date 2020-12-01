@@ -8,7 +8,7 @@
 </div>
 
 <div class="d-flex rounded-5x bg-blue review-bike-selected">
-	<span><img src="http://localhost/gull-html-laravel/public/images/bike_models/{{$result['bike_model_image']}}" id="review_bike_image" class="selected-bike" /></span>
+	<span><img src="{{getImageUrl()}}/public/images/bike_models/{{$result['bike_model_image']}}" id="review_bike_image" class="selected-bike" /></span>
 	<div class="selected-byke-name p-4">
 		<h5 class="add-bike-heading review-bike-name">{{$result['bike_details']['name']}} <small class="sml-txt-md d-block mt-2"></small></h5>
 	</div>
@@ -34,7 +34,7 @@
 				<div class="d-flex flex-wrap">
 					@foreach($result['brands'] as $brand)
 					<a class="logo-block" style="cursor:pointer;" onclick="showReviewBikeModelList('{{$brand->id}}')">
-						<span class="d-block"><img src="http://localhost/gull-html-laravel/public/images/bike_brands/{{$brand->logo}}" style="width: 60px;height: 54px;" /></span>
+						<span class="d-block"><img src="{{getImageUrl()}}/public/images/bike_brands/{{$brand->logo}}" style="width: 60px;height: 54px;" /></span>
 						<span class="d-block mt-2">{{$brand->brand_name}}</span>
 					</a>
 					@endforeach
@@ -44,7 +44,7 @@
 		</div>
 		<div class="col-4">
 			<div class="review_selected_bike">
-				<img src="http://localhost/gull-html-laravel/public/images/bike_models/{{$result['bike_model_image']}}" alt="" width="200" height="200" id="review_selected_bike"/>
+				<img src="{{getImageUrl()}}/public/images/bike_models/{{$result['bike_model_image']}}" alt="" width="200" height="200" id="review_selected_bike"/>
 				<div class="selected-list d-flex">
 					<span class="bike-select-number">
 						<i class="fa fa-check" aria-hidden="true"></i>
@@ -89,7 +89,7 @@
 		</div>
 		<h4 class="page-sub-heading mt-4 mb-2">Upload bike images</h4>
 		<div class="drag-drop">
-			<input type="file" name="image[]" id="review_drag-drop" multiple />
+			<input type="file" name="image[]" id="review_drag-drop" accept="image/*" multiple style="display:none"/>
 			<div id="review_uploads"></div>
 			<div class="dropzone" id="review_dropzone">
 				<div class="drop-icon"><i class="fa fa-file-image-o"></i></div>
@@ -99,7 +99,7 @@
 				<small class="sml-txt-md mt-2">Tip: For better buildup, Please upload Bike front and Odometer Photos.</small>
 			</div>
 		</div>
-		<div class="text-right pb-3">
+		<div class="text-right pb-3 mt-2">
 			<button type="button" onclick="submitReviewBikeImageStep()" class="btn btn-outline-success btn-sm px-5"> SAVE</button>
 		</div>
 	</form>
@@ -169,7 +169,7 @@
 					<div class="mr-2 pr-1"><img src="{{ asset('public/rider/images/icons-km-riden.svg')}}" class="img-fluid"></div>
 
 					<div class="input-field mt-4 w-100">
-						<input type="text" autocomplete="off" name="total_km" id="total_km" value="{{$result['bike_details']['total_km']}}" class="input-block rview_total_km" placeholder=" ">
+						<input type="text" autocomplete="off" name="total_km" id="total_km" value="{{$result['bike_details']['total_km']}}" class="input-block rview_total_km number-data" placeholder=" ">
 						<label for="search-bike" class="input-lbl">KMs driven</label>
 					</div>
 
@@ -178,7 +178,7 @@
 					<div class="mr-2 pr-1"><img src="{{ asset('public/rider/images/icons-destination.svg')}}" class="img-fluid"></div>
 
 					<div class="input-field  mb-0 w-100">
-						<input type="text" autocomplete="off" name="total_rides" id="total_rides" value="{{$result['bike_details']['total_rides']}}" class="input-block rview_total_rides" placeholder=" ">
+						<input type="text" autocomplete="off" name="total_rides" id="total_rides" value="{{$result['bike_details']['total_rides']}}" class="input-block rview_total_rides number-data" placeholder=" ">
 						<label for="search-bike" class="input-lbl">Rides you’ve completed with this bike?</label>
 					</div>
 
@@ -421,7 +421,7 @@
                 type: "POST",
                 data: {keyword:ui.item.label},
                 success: function( response ) {
-                    var img = "http://localhost/gull-html-laravel/public/images/bike_models/"+response.image;
+                    var img = "{{getImageUrl()}}/public/images/bike_models/"+response.image;
                     $('.review_selected_bike').show();
                     $('#review_selected_bike').attr('src', img);
 					$('#review_model_name').text(ui.item.label);
@@ -481,5 +481,16 @@
             generateNames(this.files);
         dropped = false;
 	};
+
+
+	$(".number-data").keydown(function(event) {
+		if ( event.keyCode == 46 || event.keyCode == 8 || event.keyCode == 9 ) {
+		}
+		else {
+			if ((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105 )) {
+				event.preventDefault(); 
+			}   
+		}
+	});
 });
 </script>

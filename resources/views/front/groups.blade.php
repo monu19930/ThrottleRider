@@ -27,10 +27,10 @@
 					 <div class="username mb-2  d-md-none">
 					   <span class="badge badge-warning"><i class="fa fa-star"></i> 4.5</span> 
 					 </div>
-					 <h3 class="user-name">{{$group['group_name']}}<small>{{$group['group_desc']}}</small></h3>
+					 <h3 class="user-name">{{$group['group_name']}}<small class="sml-txt">{{$group['city']}}</small></h3>
 					 <div class="location-details py-4 d-flex align-items-center">
 					   <span class="rating d-none d-md-block"><i class="fa fa-star"></i> {{$group['group_rating']}} <small>Rating</small></span>
-					   <span class="other-details"><i class="fa fa-star"></i>{{$group['total_rides']}} <small>Rides</small></span>
+					   <span class="other-details"><i class="fa fa-calendar-o"></i>{{$group['total_rides']}} <small>Rides</small></span>
 					   <span class="other-details"><i class="fa fa-map-o"></i> {{$group['total_km']}} km <small>Driven</small></span>
 					   <div class="d-flex followers-block align-items-center">
 						@foreach($group['group_member_list'] as $group_member_list)
@@ -43,19 +43,29 @@
 						 @endif
 					   </div>
 					 </div>
-					 @if($group['is_group_owner'] == false)
+					 
 					 <div class="d-flex group_{{$group['group_owner_id']}}">
 						@if($group['current_rider_join_status'] == false)
-							<button class="join-btn flex-grow-1 mt-2 mr-1 rider-group-join" id="group-join-{{$group['group_owner_id']}}" content="{{$group['group_owner_id']}}">
-								<i class="fa fa-send mr-2"></i>Join
+							<button class="join-btn flex-grow-1 mt-2 mr-1 join-group-{{$group['group_owner_id']}}" onclick="joinGroup('<?=$group['group_owner_id']?>')" @if($group['is_group_owner'] == true) disabled @endif>
+							<i class="fa fa-send mr-2"></i>Join
 							</button>
 						@else
-							<button class="join-btn flex-grow-1 mt-2 mr-1" ><i class="fa fa-send mr-2"></i>Joined</button>
-							<button class="join-btn flex-grow-1 mt-2 mr-1 view-feedback-poll" data-content="{{$group['group_owner_id']}}" ><i class="fa fa-send mr-2"></i>Polls</button>
+							<button class="join-btn flex-grow-1 mt-2 mr-1 leave-group-{{$group['group_owner_id']}}" onclick="leaveGroup('<?=$group['group_owner_id']?>')">
+							<i class="fa fa-minus mr-2"></i>Cancel</button>
+							<!-- <button class="join-btn flex-grow-1 mt-2 mr-1 view-feedback-poll" data-content="{{$group['group_owner_id']}}" >
+							<i class="fa fa-send mr-2"></i>Polls</button> -->
 						@endif
-						<button class="follow-btn flex-grow-1  mt-2 ml-1"><i class="fa fa-plus mr-2"></i>FOLLOW</button>
+
+						@if($group['current_rider_follow_status'] == false)
+							<button class="follow-btn flex-grow-1 mt-2 ml-1 follow-group-{{$group['group_owner_id']}}" onclick="followGroup('<?=$group['group_owner_id']?>')" @if($group['is_group_owner']==true) disabled @endif>
+							<i class="fa fa-plus mr-2"></i>Follow</button>
+						@else
+							<button class="follow-btn flex-grow-1 mt-2 ml-1 unfollow-group-{{$group['group_owner_id']}}" onclick="unFollowGroup('<?=$group['group_owner_id']?>')">
+							<i class="fa fa-minus mr-2"></i>Unfollow</button>
+						@endif
+				   
 				   </div>
-				   @endif
+				   
 				   </div>
 				 </div>
 				</div>

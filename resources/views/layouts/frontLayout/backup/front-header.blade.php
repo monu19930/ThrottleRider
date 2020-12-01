@@ -84,8 +84,8 @@
           </a>
 		  <div class="dropdown d-inline-block bnr-select">
                       <label class="location-lbl">Your Location</label>
-                        <button class="bnr-dropdown" type="button" id="dropdownMenuButton" content="{{getCurrentLocation()}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{getCurrentLocation()}} <i class="fa fa-angle-down drop-arrow">  </i>
+                        <button class="bnr-dropdown" type="button" id="dropdownMenuButton" content="{{currentLocation()}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{currentLocation()}} <i class="fa fa-angle-down drop-arrow">  </i>
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="#">Action</a>
@@ -138,8 +138,8 @@
                     Show me the Rider, Bikers and Groups from 
                     <div class="dropdown d-inline-block bnr-select">
                       <label class="location-lbl">Your Location</label>
-                        <button class="bnr-dropdown" type="button" id="dropdownMenuButton" content="{{getCurrentLocation()}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{getCurrentLocation()}} <i class="fa fa-angle-down drop-arrow">  </i>
+                        <button class="bnr-dropdown" type="button" id="dropdownMenuButton" content="{{currentLocation()}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{currentLocation()}} <i class="fa fa-angle-down drop-arrow">  </i>
                       </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="#">Action</a>

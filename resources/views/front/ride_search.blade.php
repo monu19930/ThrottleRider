@@ -13,13 +13,13 @@
                     </div>
                     
                     <div class="input-field">
-                      <input type="text" name="end_location" id="end_location" class="input-block" value="{{$result['search_location']}}" onkeypress="getFilterData()">
-                      <label for="fullname" class="input-lbl">Where to?</label>
+                      <input type="text" name="end_location" autocomplete="off" id="end_location" class="input-block bg-white" placeholder="" value="{{$result['search_location']}}" onkeypress="getFilterData()">
+                      <label for="end_location" class="input-lbl">Where to?</label>
                       <i class="fa fa-search cust-search"></i>
                     </div>
                     <div class="input-field">
-                      <input type="text" name="month" id="month" class="input-block" value="Any month">
-                      <label for="fullname" class="input-lbl">In month of</label>
+                      <input type="text" name="month" id="month" class="input-block bg-white" value="" placeholder="">
+                      <label for="month" class="input-lbl">In month of</label>
                       <i class="fa fa-calendar-o cust-search"></i>
                     </div>
                     <hr class="full-h-line ml-0">
@@ -66,7 +66,7 @@
                               <span class="star-icon"><i class="fa fa-star"></i></span>
                               <span class="rate-num">1+</span>
                             </a>
-                            <a class="star-rating" href="javascript:void(0)" onclick="filterRide('ride_rating', 2)">
+                            <a class="star-rating active-rating" href="javascript:void(0)" onclick="filterRide('ride_rating', 2)">
                               <span class="star-icon"><i class="fa fa-star"></i></span>
                               <span class="rate-num">2+</span>
                             </a>
@@ -74,7 +74,7 @@
                               <span class="star-icon"><i class="fa fa-star"></i></span>
                               <span class="rate-num">3+</span>
                             </a>
-                            <a class="star-rating active-rating" href="javascript:void(0)" onclick="filterRide('ride_rating', 4)"  >
+                            <a class="star-rating" href="javascript:void(0)" onclick="filterRide('ride_rating', 4)"  >
                               <span class="star-icon"><i class="fa fa-star"></i></span>
                               <span class="rate-num">4+</span>
                             </a>
@@ -104,13 +104,13 @@
                                <span id="slider-range-value2"></span>Km
                             </div>
                           </div>
-                                <input type="hidden" name="min-value" value="">
-                                <input type="hidden" name="max-value" value="">
+                                <input type="hidden" name="min_value" id="min-value" value="">
+                                <input type="hidden" name="max_value" id="max-value" value="">
                                 <input type="hidden" name="start_location" value="{{$result['location']}}">
-                                <input type="hidden" name="road_quality" id="road_quality">
-                                <input type="hidden" name="road_scenic" id="road_scenic">
-                                <input type="hidden" name="ride_rating" id="ride_rating">
-                                <input type="hidden" name="rider_rating" id="rider_rating">                              
+                                <input type="hidden" name="road_quality" id="road_quality" value="2">
+                                <input type="hidden" name="road_scenic" id="road_scenic" value="2">
+                                <input type="hidden" name="ride_rating" id="ride_rating" value="2">
+                                <input type="hidden" name="rider_rating" id="rider_rating" value="2">                              
                                 <div id="slider-range"></div>
                           </div>
                         </div>   
@@ -128,7 +128,7 @@
                              
                             @foreach($road_types as $key2 => $road_type)                            
                             <div class="custom-control custom-checkbox mb-2 mt-3">
-                              <input class="custom-control-input" type="checkbox" value="{{$road_type['id']}}" name="road_type[]" id="{{$road_type['road_type']}}" onclick="getFilterData()">
+                              <input class="custom-control-input" {{ $key2==1? 'checked' : '' }} type="checkbox" value="{{$road_type['id']}}" name="road_type[]" id="{{$road_type['road_type']}}" onclick="getFilterData()">
                               <label class="custom-control-label" for="{{$road_type['road_type']}}">
                               {{$road_type['road_type']}}
                               </label>
@@ -152,7 +152,7 @@
                               <span class="star-icon"><i class="fa fa-star"></i></span>
                               <span class="rate-num">1+</span>
                             </a>
-                            <a class="star-rating" href="javascript:void(0)" onclick="filterRide('road_quality', 2)">
+                            <a class="star-rating active-rating" href="javascript:void(0)" onclick="filterRide('road_quality', 2)">
                               <span class="star-icon"><i class="fa fa-star"></i></span>
                               <span class="rate-num">2+</span>
                             </a>
@@ -160,7 +160,7 @@
                               <span class="star-icon"><i class="fa fa-star"></i></span>
                               <span class="rate-num">3+</span>
                             </a>
-                            <a class="star-rating active-rating" href="javascript:void(0)" onclick="filterRide('road_quality', 4)"  >
+                            <a class="star-rating" href="javascript:void(0)" onclick="filterRide('road_quality', 4)"  >
                               <span class="star-icon"><i class="fa fa-star"></i></span>
                               <span class="rate-num">4+</span>
                             </a>
@@ -186,7 +186,7 @@
                               <span class="star-icon"><i class="fa fa-star"></i></span>
                               <span class="rate-num">1+</span>
                             </a>
-                            <a class="star-rating" href="javascript:void(0)" onclick="filterRide('road_scenic', 2)">
+                            <a class="star-rating active-rating" href="javascript:void(0)" onclick="filterRide('road_scenic', 2)">
                               <span class="star-icon"><i class="fa fa-star"></i></span>
                               <span class="rate-num">2+</span>
                             </a>
@@ -194,7 +194,7 @@
                               <span class="star-icon"><i class="fa fa-star"></i></span>
                               <span class="rate-num">3+</span>
                             </a>
-                            <a class="star-rating active-rating" href="javascript:void(0)" onclick="filterRide('road_scenic', 4)"  >
+                            <a class="star-rating" href="javascript:void(0)" onclick="filterRide('road_scenic', 4)"  >
                               <span class="star-icon"><i class="fa fa-star"></i></span>
                               <span class="rate-num">4+</span>
                             </a>
@@ -219,7 +219,7 @@
                               <span class="star-icon"><i class="fa fa-star"></i></span>
                               <span class="rate-num">1+</span>
                             </a>
-                            <a class="star-rating" href="javascript:void(0)" onclick="filterRide('rider_rating', 2)">
+                            <a class="star-rating active-rating" href="javascript:void(0)" onclick="filterRide('rider_rating', 2)">
                               <span class="star-icon"><i class="fa fa-star"></i></span>
                               <span class="rate-num">2+</span>
                             </a>
@@ -227,7 +227,7 @@
                               <span class="star-icon"><i class="fa fa-star"></i></span>
                               <span class="rate-num">3+</span>
                             </a>
-                            <a class="star-rating active-rating" href="javascript:void(0)" onclick="filterRide('rider_rating', 4)"  >
+                            <a class="star-rating" href="javascript:void(0)" onclick="filterRide('rider_rating', 4)"  >
                               <span class="star-icon"><i class="fa fa-star"></i></span>
                               <span class="rate-num">4+</span>
                             </a>
@@ -248,13 +248,13 @@
                         </div>
                         <div id="collapseEight" class="collapse" aria-labelledby="headingEight" data-parent="#accordionExample">
                           <div class="custom-control custom-checkbox mb-2 mt-3">
-                            <input class="custom-control-input" type="checkbox" id="Biker" checked>
+                            <input class="custom-control-input" type="checkbox" name="posted_by[]" value="rider" id="Biker" onclick="getFilterData()" checked>
                             <label class="custom-control-label" for="Biker">
                               Biker
                             </label>
                           </div>
                           <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="Group" >
+                            <input class="custom-control-input" type="checkbox" name="posted_by[]" value="group" onclick="getFilterData()" id="Group" >
                             <label class="custom-control-label" for="Group">
                               Group
                             </label>
@@ -339,9 +339,9 @@
                                       </div>
                                       <div class="location-details d-flex align-items-center ">
                                       
-                                        <span class="other-details"><i class="fa fa-map-o"></i>2176 km <small>from {{$ride['start_location']}}</small></span>
+                                        <span class="other-details"><i class="fa fa-map-o"></i>{{$ride['total_km']}} km <small>from {{$ride['start_location']}}</small></span>
                                         <!-- <span class="other-details"><i class="fa fa-calendar-o"></i>12 <small>Days trip</small></span> -->
-                                        <span class="other-details"><i class="fa fa-road"></i>Highway <small>Road Type</small></span>
+                                        <span class="other-details"><i class="fa fa-road"></i>{{$ride['road_type']}} <small>Road Type</small></span>
                                       </div>
                                     </div>
                                     
@@ -350,7 +350,7 @@
                                   
                                 </div>
                                 <div class="rider-img-block ml-3 ">
-                                  <img src="{{ asset('public/rider/images/rider.jpg')}}" class="img-fluid">
+                                  <img src="{{ asset('public/images/rides/')}}/{{$ride['ride_image']['image']}}" class="img-fluid">
                                 </div>
                               </div>
                                 <div class="d-flex align-items-center mt-1">
@@ -392,14 +392,14 @@
                       <div class="col-12 mb-3">
                               <div class="rides-block d-none d-md-flex">
                                 <div class="rider-img-block mr-md-3 ml-3 ml-md-0 order-2 order-md-1">
-                                  <img src="{{ asset('public/rider/images/rider.jpg')}}" class="img-fluid">
+                                  <img src="{{ asset('public/images/rides/')}}/{{$ride['ride_image']['image']}}" class="img-fluid">
                                 </div>
                                 <div class="rider-details-block w-100 order-1 order-md-2">
                                     <div class="location-heading-block ">
                                       <div>
-                                        <h4 class="location-title">{{$ride['via_location']}} To {{$ride['end_location']}}</h4>
+                                        <h4 class="location-title">Ride To {{$ride['end_location']}} Via {{$ride['via_location']}}</h4>
                                         <div class="d-flex align-items-center location-block">
-                                          <span class="location">{{$ride['start_location']}}, {{$ride['end_location']}}</span>
+                                          <span class="location">from {{$ride['start_location']}}</span>
                                           <span class="time left-seperater">in month of <span>{{$ride['start_date']}}</span></span></span>
                                         </div>
                                       </div>
@@ -407,9 +407,9 @@
                                     </div>
                                     <div class="location-details d-flex align-items-center">
                                       <span class="rating"><i class="fa fa-star"></i>{{$ride['ride_rating']}} <small>Rating</small></span>
-                                      <span class="other-details"><i class="fa fa-map-o"></i>150 km <small>from {{$ride['start_location']}}</small></span>
+                                      <span class="other-details"><i class="fa fa-map-o"></i>{{$ride['total_km']}} km <small>from {{$ride['start_location']}}</small></span>
                                       <span class="other-details"><i class="fa fa-calendar-o"></i>{{$ride['number_of_day']+1}} <small>Days trip</small></span>
-                                      <span class="other-details"><i class="fa fa-road"></i>Highway <small>Road Type</small></span>
+                                      <span class="other-details"><i class="fa fa-road"></i>{{$ride['road_type']}} <small>Road Type</small></span>
                                     </div>
                                     <div class="userdetails d-flex align-items-center">
                                       <span class="userimg mr-2"><img src="{{ asset('public/images/rider_images/')}}/{{$ride['rider_image']}}" class="img-fluid" /></span>
@@ -436,9 +436,9 @@
                                       </div>
                                       <div class="location-details d-flex align-items-center ">
                                       
-                                        <span class="other-details"><i class="fa fa-map-o"></i>2176 km <small>from {{$ride['start_location']}}</small></span>
+                                        <span class="other-details"><i class="fa fa-map-o"></i>{{$ride['total_km']}} km <small>from {{$ride['start_location']}}</small></span>
                                         <!-- <span class="other-details"><i class="fa fa-calendar-o"></i>12 <small>Days trip</small></span> -->
-                                        <span class="other-details"><i class="fa fa-road"></i>Highway <small>Road Type</small></span>
+                                        <span class="other-details"><i class="fa fa-road"></i>{{$ride['road_type']}} <small>Road Type</small></span>
                                       </div>
                                     </div>
                                     
@@ -447,7 +447,7 @@
                                   
                                 </div>
                                 <div class="rider-img-block ml-3 ">
-                                  <img src="{{ asset('public/rider/images/rider.jpg')}}" class="img-fluid">
+                                  <img src="{{ asset('public/images/rides/')}}/{{$ride['ride_image']['image']}}" class="img-fluid">
                                 </div>
                               </div>
                                 <div class="d-flex align-items-center mt-1">
@@ -722,10 +722,10 @@ $(document).ready(function() {
     prefix: ''
   });
   noUiSlider.create(rangeSlider, {
-    start: [1000, 2200],
+    start: [50, 5000],
     step: 1,
     range: {
-      'min': [100],
+      'min': [50],
       'max': [10000]
     },
     format: moneyFormat,
@@ -736,10 +736,13 @@ $(document).ready(function() {
   rangeSlider.noUiSlider.on('update', function(values, handle) {
     document.getElementById('slider-range-value1').innerHTML = values[0];
     document.getElementById('slider-range-value2').innerHTML = values[1];
-    document.getElementsByName('min-value').value = moneyFormat.from(
-      values[0]);
-    document.getElementsByName('max-value').value = moneyFormat.from(
-      values[1]);
+    document.getElementById('min-value').value = values[0];
+    document.getElementById('max-value').value = values[1];
+    // document.getElementsByName('min-value').value = moneyFormat.from(
+    //   values[0]);
+    // document.getElementsByName('max-value').value = moneyFormat.from(
+    //   values[1]);
+    getFilterData();
   });
 });
 

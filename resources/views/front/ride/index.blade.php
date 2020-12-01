@@ -27,17 +27,23 @@
 					<div class="rider-details-block w-100 order-1 order-md-2">
 					<div class="location-heading-block ">
 						<div>
-						<h4 class="location-title">Ride to {{ $ride['end_location']}} via {{$ride['via_location']}}</h4>
-						<div class="d-flex align-items-center location-block">
-							<span class="location">from {{ $ride['start_location']}}</span>
-							<span class="time left-seperater">in month of <span> {{$ride['start_date']}}</span></span></span>
+							<h4 class="location-title">Ride to {{ $ride['end_location']}} via {{$ride['via_location']}}</h4>
+							<div class="d-flex align-items-center location-block">
+								<span class="location">from {{ $ride['start_location']}}</span>
+								<span class="time left-seperater">in month of <span> {{$ride['start_date']}}</span></span></span>
+							</div>
 						</div>
-						</div>
-						<div class="bookmark ml-auto">
-							<a href="javascript:void(0)"><i class="fa fa-edit"></i></a>
-							<a href="javascript:void(0)" class="ride-remove" content="{{$ride['id']}}"><i class="fa fa-remove"></i></a>
-						</div>
+						<div class="prof-ride-menu ml-auto dropdown">												
+							<a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<img src="{{ asset('public/rider/images/circles-menu.png')}}">
+							</a>												
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">													
+								<a class="dropdown-item" href="javascript:void(0)">Edit</a>													
+								<a class="dropdown-item ride-remove" content="{{$ride['id']}}" href="javascript:void(0)">Remove</a>
+							</div>											
+						</div>						
 					</div>
+
 					<div class="location-details d-flex align-items-center">
 						<span class="rating"><i class="fa fa-star"></i>{{$ride['ride_rating']}} <small>Rating</small></span>
 						<span class="other-details"><i class="fa fa-map-o"></i>{{$ride['total_km']}} km <small>from {{ $ride['start_location']}}</small></span>

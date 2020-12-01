@@ -36,6 +36,7 @@ Route::group(['middleware'=>['auth']],function(){
 
     Route::post('/my-profile/update-description', 'RiderController@updateDescription')->name('my-profile.update-description');
     Route::post('/my-profile/update-detail', 'RiderController@updateDetail')->name('my-profile.update-detail');
+    Route::post('/my-profile/update-cover-image', 'RiderController@updateCoverImage')->name('my-profile.update-cover-image');
 
     Route::get('bikes', 'BikeController@index')->name('bikes');
     Route::get('bikes/add', 'BikeController@create')->name('add-bike');
@@ -69,7 +70,6 @@ Route::group(['middleware'=>['auth']],function(){
     Route::post('review-bike-moredetails', 'BikeController@reviewBikeMoreDetailsSave')->name('review-bike-moredetails-save');
     Route::post('review-bike-description', 'BikeController@reviewBikeDescSave')->name('review-bike-desc-save');
 
-    Route::post('group-join', 'RiderController@joinGroup')->name('join-group');
     Route::post('invite-members', 'RiderController@inviteGroupMembers')->name('invite-group-members');
 
     Route::get('my-groups/{id}/join', 'RiderController@invitationJoinGroup');
@@ -96,6 +96,13 @@ Route::group(['middleware'=>['auth']],function(){
 
 
     Route::post('follow-rider', 'RiderController@followRider')->name('follow-rider');
+    Route::post('unfollow-rider', 'RiderController@unFollowRider')->name('un-follow-rider');
+
+    Route::post('follow-group', 'GroupController@followGroup')->name('follow-group');
+    Route::post('unfollow-group', 'GroupController@unFollowGroup')->name('unfollow-group');
+
+    Route::post('group-join', 'GroupController@joinGroup')->name('join-group');
+    Route::post('leave-group', 'GroupController@leaveGroup')->name('leave-group');
 });
 
 Route::get('login/{social}', 'Auth\LoginController@redirectToSocial')->where('social', 'facebook|google');

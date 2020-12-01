@@ -27,16 +27,22 @@
 					<div class="rider-details-block w-100 order-1 order-md-2">
 					<div class="location-heading-block ">
 						<div>
-						<h4 class="location-title">{{ $bike['bike_name']}}</h4>
-						<div class="d-flex align-items-center location-block">
-							<span class="time">Added on <span>{{$bike['added_on']}}</span></span></span>
+							<h4 class="location-title">{{ $bike['bike_name']}}</h4>
+							<div class="d-flex align-items-center location-block">
+								<span class="time">Added on <span>{{$bike['added_on']}}</span></span></span>
+							</div>
 						</div>
-						</div>
-						<div class="bookmark ml-auto">
-							<a href="{{url('bikes/edit/')}}/{{$bike['id']}}"><i class="fa fa-edit"></i></a>
-							<a class="bike-remove" content="{{$bike['id']}}" style="cursor:pointer;"><i class="fa fa-remove"></i></a>
-						</div>
+						<div class="prof-ride-menu ml-auto dropdown">												
+							<a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<img src="{{ asset('public/rider/images/circles-menu.png')}}">
+							</a>												
+							<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">													
+								<a class="dropdown-item" href="{{url('bikes/edit/')}}/{{$bike['id']}}">Edit</a>													
+								<a class="dropdown-item bike-remove" content="{{$bike['id']}}" href="javascript:void(0)">Remove</a>
+							</div>											
+						</div>						
 					</div>
+					
 					<div class="location-details d-flex align-items-center">
 						<span class="rating"><i class="fa fa-star"></i>{{ $bike['rating']}} <small>Rating</small></span>
 						<span class="other-details"><i class="fa fa-map-o"></i>{{ $bike['total_km']}} km <small>Bikes Driven</small></span>

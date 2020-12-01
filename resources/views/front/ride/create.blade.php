@@ -360,11 +360,12 @@
                     <hr class="full-h-line my-4">
                     <div class="text-right pb-3 d-flex align-items-center">
                         <button type="button" class="red-outline-btn px-5 mr-3">SAVE FOR LATER</button>
-                        <!-- <button type="button" class="red-outline-btn ml-auto px-5 mr-3">BACK</button>
-                        <button type="button" class="post-btn lg px-5 ">PROCEED TO DAY 2</button> -->
-                        <button type="button" id="backRideStep1" class="red-outline-btn ml-auto px-5 mr-3">BACK</button> 
-                        <button type="button" id="rideStep2" class="post-btn lg px-5">CONTINUE</button>
+                        <!-- <button type="button" class="red-outline-btn ml-auto px-5 mr-3 back-day">BACK</button> -->
+                        <button type="button" id="backRideStep1" class="red-outline-btn ml-auto px-5 mr-3">BACK</button>
+                        <button type="button" class="post-btn lg px-5 next-day" onclick="moveToNextDay(0)">PROCEED TO DAY 2</button>
+                        <button type="button" id="rideStep2" class="post-btn lg px-5" style="display:none;">CONTINUE</button>
                     </div>
+
                 </div>
                 <div class="cust-left-block pt-5" id="review_ride"></div>
             </div>
