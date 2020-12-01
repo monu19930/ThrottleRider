@@ -82,7 +82,7 @@
          <li class="list-group-item"><a href="{{ route('my-groups.index')}}" class="{{ Route::currentRouteName()=='my-groups.index' ? 'active' : '' }}">Groups</a></li>
          <li class="list-group-item"><a href="{{ route('suppliers.index')}}" class="{{ Route::currentRouteName()=='suppliers.index' ? 'active' : '' }}">Suppliers</a></li>
          <li class="list-group-item"><a href="{{ route('tips.index')}}" class="{{ Route::currentRouteName()=='tips.index' ? 'active' : '' }}">Tips</a></li>
-         <li class="list-group-item"><a href="{{ route('polls.index')}}" class="{{ Route::currentRouteName()=='polls.index' ? 'active' : '' }}">Polls</a></li>
+         <li class="list-group-item"><a href="{{ route('polls.index')}}" class="{{ Route::currentRouteName()=='polls.index' || Route::currentRouteName()=='polls.create' ? 'active' : '' }}">Polls</a></li>
       </ul>
    </div>
    <!--<div class="card mt-4 mb-3 border-0"  >
