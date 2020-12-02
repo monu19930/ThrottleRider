@@ -112,4 +112,5 @@ Route::post('search-filter', 'HomeController@searchToLocation')->name('search-lo
 Route::post('search-data', 'HomeController@searchToLocationData')->name('search-location-result');
 
 Route::post('ride-filter-search', 'HomeController@RideSearchFilter')->name('ride-filter-search');
+Route::post('filter-city', 'HomeController@searchCityFilter')->name('filter-by-city');
 

@@ -2873,3 +2873,4 @@ height:60px;
     .option-list{margin:0 0px 0px 0px;padding:0;list-style:none;}
     .option-list li{margin-right:20px;margin-bottom:20px;    width: 47%;}
     .poll-item{width:100%;}
+    .upload-group-detail{height:90px;position:absolute;top:0;bottom:0;left:0;right:0;    opacity: 0;  z-index: 9999;}

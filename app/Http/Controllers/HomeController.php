@@ -719,6 +719,26 @@ class HomeController extends Controller
     public function signinForm(){
         return view('front.mobile-login');
     }
+
+
+    public function searchCityFilter(Request $request){
+        $search = $request->city;
+        $rides = $this->getRidesList($search);        
+        config(['app.default_location' => $search]);
+        
+        $nearestLocation = $this->getNearestEventLocation($search);
+        $result = [
+            'rides' =>  $rides,
+            'explore_rides' => $this->getExploredRides($search),
+            'riders' => $this->getBikersList($search),
+            'groups' => $this->getGroupList($search),
+            'events' => $this->getEventList([$search],2),
+            'upcoming_events' => $this->getEventList($nearestLocation),
+            'location' => $search
+        ];
+        $html = view('front.index_filter',$result)->render();
+        return $html;
+    }
     
     
 }

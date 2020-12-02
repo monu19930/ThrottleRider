@@ -22,7 +22,7 @@
 
 					<div class="d-flex align-items-center mt-4 mb-2">
 
-						<h2 class="page-heading">POLLS <small>{{ count($polls) }} Polls added</small></h2>
+						<h2 class="page-heading">POLLS <small>{{ count($result) }} Polls added</small></h2>
 
 						<span class="ml-auto filter-block3 mob-filter"><a href="{{route('polls.create')}}" class="post-btn lg px-5">ADD NEW POLL</a></span>
 
@@ -33,8 +33,8 @@
 
 
 					<div class="row">
-						@if(count($polls) > 0)
-						@foreach($polls as $key => $poll)
+						@if(count($result) > 0)
+						@foreach($result as $key => $poll)
 						<div class="col-12 mb-3 poll_refferer_{{$poll['id']}}">
 							<h5 class="blue-heading mt-4 mb-3">{{$poll['poll_name']}}
 								<small class="sml-txt d-block">Added on <strong>{{$poll['added_on']}}</strong></small>

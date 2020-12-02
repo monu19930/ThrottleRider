@@ -24,18 +24,20 @@ class PollController extends Controller
         $user = User::find($id);
         $polls = $user->polls->sortByDesc('created_at');
         $result = [];
-        foreach($polls as $key => $poll) {
-            $status_comment = $poll->approvalComments->sortBydesc('created_at');
-            $result['polls'][$key] = [
-                'id' => $poll->id,
-                'poll_name' => $poll->poll_name,
-                'added_on' => formatDate($poll->created_at, 'd M Y'),
-                'status' => $poll->is_approved,
-                'status_comment' => $status_comment,
-                'questions' => $this->filterQuestions($poll->questions)
-            ];
+        if($polls->count() > 0) {
+            foreach($polls as $key => $poll) {
+                $status_comment = $poll->approvalComments->where('type', 8)->sortBydesc('created_at');
+                $result[$key] = [
+                    'id' => $poll->id,
+                    'poll_name' => $poll->poll_name,
+                    'added_on' => formatDate($poll->created_at, 'd M Y'),
+                    'status' => $poll->is_approved,
+                    'status_comment' => $status_comment,
+                    'questions' => $this->filterQuestions($poll->questions)
+                ];
+            }
         }
-        return view('front.poll.index',$result);
+        return view('front.poll.index',compact('result'));
     }
 
     protected function filterQuestions($questions) {

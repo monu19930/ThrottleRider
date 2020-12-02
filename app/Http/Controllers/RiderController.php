@@ -30,7 +30,6 @@ class RiderController extends Controller
         $userData = [
             'name' => $request->name,
             'email' => $request->email,
-            'phone' => $request->phone,
             'password' => bcrypt($request->password),
             'email_verification_token' => Str::random(32)
         ];
@@ -77,7 +76,6 @@ class RiderController extends Controller
         $loggedInUser = user();
         $user = User::find($loggedInUser->id);
         $profile = $user->profile;
-        $followers = $user->followedRiders->pluck('followed_by')->toArray();
         $data = [
             'name' => $loggedInUser->name,
             'email' => $loggedInUser->email,
@@ -93,7 +91,7 @@ class RiderController extends Controller
             'is_social' => !empty($user->provider) ? true : false,
             'rides' => $this->latestRides(),
             'bikes' => $user->bikes->take(2)->sortBydesc('created_at'),
-            'total_followers' => count($followers)
+            'total_followers' => $user->followedRiders->count()
         ];
         return view('front/profile/index',$data);
     }

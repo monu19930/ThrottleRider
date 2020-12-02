@@ -97,13 +97,17 @@
             </a>
         <div class="dropdown d-inline-block bnr-select">
                         <label class="location-lbl">Your Location</label>
-                          <button class="bnr-dropdown" type="button" id="dropdownMenuButton" content="{{currentLocation()}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <button class="bnr-dropdown filter-city-menu" type="button" id="dropdownMenuButton" content="{{currentLocation()}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           {{currentLocation()}} <i class="fa fa-angle-down drop-arrow">  </i>
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <a class="dropdown-item" href="#">Action</a>
-                          <a class="dropdown-item" href="#">Another action</a>
-                          <a class="dropdown-item" href="#">Something else here</a>
+                        @php
+                        $cities = getCityList();
+                        @endphp
+
+                        @foreach($cities as $city)
+                          <a class="dropdown-item" href="javascript:void(0)" onclick="filterRecordsByCity('{{$city}}')">{{$city}}</a>
+                        @endforeach                         
                         </div>
                       </div>
             <div class="cust-search-bar">
@@ -126,8 +130,8 @@
                        <span class="txt-elps"> {{ Auth::user()->name}} </span><img src="{{ asset('public/images/rider_images/')}}/{{isset(user()->profile->image) ? user()->profile->image:'rider.jpg'}}" class="profile-pic" /><i class="fa fa-angle-down drop-arrow">  </i>
                         </button>
                         <div class="dropdown-menu profile-nav-list" aria-labelledby="dropdownMenuButton"  >
-                          <a class="dropdown-item" href="{{route('rider-logout')}}">Logout</a>
                           <a class="dropdown-item" href="{{route('my-profile')}}">My Profile</a>
+                          <a class="dropdown-item" href="{{route('rider-logout')}}">Logout</a>
                         </div>
                
                  </li>
@@ -150,13 +154,13 @@
                    Show me the Rides, Bikers and Groups from 
                     <div class="dropdown d-inline-block bnr-select">
                       <label class="location-lbl">Your Location</label>
-                        <button class="bnr-dropdown" type="button" id="dropdownMenuButton" content="{{currentLocation()}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button class="bnr-dropdown filter-city-menu" type="button" id="dropdownMenuButton" content="{{currentLocation()}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{currentLocation()}} <i class="fa fa-angle-down drop-arrow">  </i>
                        </button>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
+                      @foreach($cities as $city)
+                        <a class="dropdown-item filter-city" href="javascript:void(0)" data-content="{{$city}}">{{$city}}</a>
+                        @endforeach
                       </div>
                     </div>
                   </div>

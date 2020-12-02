@@ -79,8 +79,8 @@
          <li class="list-group-item"><a href="{{route('my-profile')}}" class="{{ Route::currentRouteName()=='my-profile' ? 'active' : '' }}">Profile</a></li>
          <li class="list-group-item"><a href="{{ route('my-rides')}}" class="{{ Route::currentRouteName()=='my-rides' ? 'active' : '' }}">Rides</a></li>
          <li class="list-group-item"><a href="{{ route('bikes')}}" class="{{ Route::currentRouteName()=='bikes' ? 'active' : '' }}">Bikes</a></li>
-         <li class="list-group-item"><a href="{{ route('my-groups.index')}}" class="{{ Route::currentRouteName()=='my-groups.index' ? 'active' : '' }}">Groups</a></li>
-         <li class="list-group-item"><a href="{{ route('suppliers.index')}}" class="{{ Route::currentRouteName()=='suppliers.index' ? 'active' : '' }}">Suppliers</a></li>
+         <li class="list-group-item"><a href="{{ route('my-groups.index')}}" class="{{ Route::currentRouteName()=='my-groups.index' || Route::currentRouteName()=='my-groups.create' ? 'active' : '' }}">Groups</a></li>
+         <li class="list-group-item"><a href="{{ route('suppliers.index')}}" class="{{ Route::currentRouteName()=='suppliers.index' || Route::currentRouteName()=='suppliers.create' ? 'active' : '' }}">Suppliers</a></li>
          <li class="list-group-item"><a href="{{ route('tips.index')}}" class="{{ Route::currentRouteName()=='tips.index' ? 'active' : '' }}">Tips</a></li>
          <li class="list-group-item"><a href="{{ route('polls.index')}}" class="{{ Route::currentRouteName()=='polls.index' || Route::currentRouteName()=='polls.create' ? 'active' : '' }}">Polls</a></li>
       </ul>

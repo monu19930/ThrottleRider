@@ -24,9 +24,7 @@
 
          
     </head>
-    <?php $page=$_SERVER['REQUEST_URI'];
- //  dd($page);
-      ?>
+    <?php $page=$_SERVER['REQUEST_URI'];?>
     @if($page=="/throttle/")
       <body class="">
      @else

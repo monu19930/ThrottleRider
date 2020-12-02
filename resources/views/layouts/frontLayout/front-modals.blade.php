@@ -10,7 +10,8 @@
     					<div class="col-lg-6">
     						<div class="login-block">
     							<form id="loginForm" method="post">
-    								<input type="hidden" name="csrf-token" content="{{ csrf_token() }}">
+									<input type="hidden" name="csrf-token" content="{{ csrf_token() }}">
+									<input type="hidden" id="rider">
     								<h2 class="login-heading">Welcome back! <small>Login using</small></h2>
     								<div class="social-btn mt-3">
     									<button type="button" class="outline-btn social_login" data-content="{{url('login/facebook')}}">

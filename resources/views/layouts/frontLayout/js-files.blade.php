@@ -56,7 +56,14 @@
             success: function( response ) {                
                 if(response.status==true) {
                     var redirect = "{{ route('my-profile') }}";
+                    if($('#rider').val()!=''){                        
+                        redirect = "";
+                    }                    
                     successMessage(response.msg, 'signinRiderBtn', 'LOGIN', 'loginForm', redirect , 'form-group');
+
+                    if($('#rider').val()!=''){                        
+                        performEventAfterLogin();                                           
+                    }
                 }
                 else {
                     errorMessage(response.error, 'signinRiderBtn', 'LOGIN', 'form-group');
@@ -240,7 +247,7 @@
         //post ride
         $('.post-ride').on('click', function(){
             var is_user = "{{Auth::user()}}";
-            if(!is_user) {
+            if(!is_user) {                
                 $('#loginmodal').modal('show');
             } else{
                 location.replace("{{route('my-rides.create')}}");
@@ -354,8 +361,6 @@
                 maxDate: dateToday,
                 onSelect: function (selected) {
                     var dt = new Date(selected);
-                    //var dt = new Date();
-                    console.log(dt);
                     dt.setDate(dt.getDate() + 1);
                     $("#end_date").datepicker("option", "minDate", dt);
                 }
@@ -377,8 +382,6 @@
                 minDate: dateToday,
                 onSelect: function (selected) {
                     var dt = new Date(selected);
-                    //var dt = new Date();
-                    console.log(dt);
                     dt.setDate(dt.getDate() + 1);
                     $("#eend_date").datepicker("option", "minDate", dt);
                 }
@@ -536,17 +539,25 @@
             e.preventDefault(); 
             if(k < max_spare_parts){
                 k++;
-                $('#spare_parts_div').append('<div class="col-12"><div class="d-flex align-items-center w-100 mt-4"><div class="input-field  mb-0 w-100 left-seprater-dotted">'+
-                    '<input type="text" name="spare_part_name[]" class="input-block" placeholder=" "><label for="search-bike" class="input-lbl">Name</label></div>'+
-                    '<div class="input-field  mb-0 w-100 left-seprater-dotted"><input type="text" name="spare_part_number[]" class="input-block" placeholder=" "><label for="search-bike" class="input-lbl">Serial Number</label></div>'+
-                    '<div class="input-field  mb-0 w-100 left-seprater-dotted"><input type="file" name="spare_part_image[]" class="input-block" placeholder=" "></div>'+
-                    "<div class='add-via-btn remove_field'><a href='javascript:void(0)'><img src='{{ asset('public/rider/images/icons-clickable-less.svg')}}'></a></div></div>"+
-                    '</div>'
+                $('#spare_parts_div').append('<div class="d-flex align-items-center w-100 mt-4 border rounded p-3">'+
+                    '<div class="row"><div class="col-6"><div class="input-field  mb-0 w-100">'+
+                        '<input type="text" name="spare_part_name[]" class="input-block" placeholder=" ">'+
+                        '<label for="search-bike" class="input-lbl">Name</label></div></div><div class="col-6">'+
+                        '<div class="input-field  mb-0 w-100 ">'+
+                        '<input type="text" name="spare_part_number[]" class="input-block" placeholder=" ">'+
+                        '<label for="search-bike" class="input-lbl">Serial Number</label></div></div><div class="col-12">'+
+                        '<div class="input-field  mb-0 w-100 "></div>'+
+                        '<div class="dropzone flex-row p-3 justify-content-start position-relative mt-3 h-75" id="dropzone">'+
+                        '<div class="drop-icon mr-3"><i class="fa fa-file-image-o"></i></div>'+
+                        '<div class="drop-box-format  ">Drag and drop <span class="text-gray">or</span> <span class="text-danger">Select from Gallery</span></div>'+
+                        '<input type="file" name="spare_part_image[]" class="input-block upload-group-detail h-100" placeholder=" ">'+
+                        '</div></div></div><div class="add-via-btn remove_field"> <a href="javascript:void(0)">'+
+                        "<img src='{{ asset('public/rider/images/icons-clickable-less.svg')}}'></a></div></div>"
                 );
             } 
         }); 
         $('#spare_parts_div').on("click",".remove_field", function(e){ 
-            e.preventDefault(); $(this).parent('div').parent('div').remove(); 
+            e.preventDefault(); $(this).parent('div').remove(); 
             k--; 
         })
 
@@ -617,12 +628,9 @@
         //add more polls questions
         var quest = 1;
         $('.add_more_questions').click(function(e){
-            e.preventDefault(); 
-            //console.log(quest);
+            e.preventDefault();            
             if(quest < 10){
                 quest++;
-                
-
                 $('#more_questions_list').append('<div class="p-3 rounded border mt-4">'+
 					'<div class="d-flex align-items-center w-100 ">'+
 						'<div class="input-field  mb-0 w-100  ">'+
@@ -717,8 +725,7 @@
         })
 
         //Add Supplier
-        $('#submitSupplier').on('click', function(){
-            //var form_id = 'supplierForm';
+        $('#submitSupplier').on('click', function(){          
             var url = "{{route('suppliers.store')}}"; 
             var redirectUrl = "{{route('suppliers.index')}}"; 
             submitForm('supplierForm', url, redirectUrl, 'submitSupplier', 'SUBMIT', 'input-field');
@@ -727,8 +734,7 @@
 
         //Show feedbackPoll Modal
         $('.view-feedback-poll').on('click', function(){
-            var group = $(this).attr('data-content');
-            //console.log(group);return false;
+            var group = $(this).attr('data-content');            
             $.ajaxSetup({
                     headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
                 });
@@ -791,7 +797,7 @@
         });
 
         $("#btnAdd").on("click", function () {
-            console.log('checkkk');
+           
        
         });
 
@@ -857,6 +863,26 @@
                 }   
             }
         });
+
+        //filter records by cityName
+
+        $('.filter-city').on('click', function(){
+            var type = $(this).data('content');
+            $('.filter-city-menu').html(type+' <i class="fa fa-angle-down drop-arrow">  </i>');
+            $('.filter-city-menu').attr('content', type);
+            $.ajaxSetup({
+                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+            });
+            $.ajax({
+                url: "{{route('filter-by-city')}}",
+                type: "POST",
+                data: {city:type},
+                success: function( response ) {
+                    $('#search_res').html(response);         
+                }
+            });
+
+        })
 
 
         //Rider Group Join
@@ -1285,27 +1311,14 @@
     }
 
     function valueChanged(refer)
-    {
-        // if($('input[name="'+fieldId+'"').is(":checked"))   
-        //     $("#checkbox-content").show();
-        // else
-        //     $("#checkbox-content").hide();
-
-
-        //$('input[name="'+fieldId+'"]').click(function() {
-            console.log(refer);
-            var cls = $(refer).attr('name');
-            console.log(cls);
-            if($(refer).prop("checked") == true) {
-                //alert("Checkbox is checked.");   
-                             
-                $("."+cls).attr('style', '');
-            }
-            else if($(refer).prop("checked") == false) {
-                //alert("Checkbox is unchecked.");
-                $("."+cls).attr('style', 'display:none !important');;
-            }
-        //});
+    { 
+        var cls = $(refer).attr('name');
+        if($(refer).prop("checked") == true) {                             
+            $("."+cls).attr('style', '');
+        }
+        else if($(refer).prop("checked") == false) {
+            $("."+cls).attr('style', 'display:none !important');;
+        }
     }
 
     function showHideField(val,field_key,content) {
@@ -1734,7 +1747,9 @@
             if ($(".alert").is(":visible")){
                 $(".alert").fadeOut("fast");
             }
-            location.replace(redirectUrl);
+            if(redirectUrl!=''){
+                location.replace(redirectUrl);
+            }          
         }, 1000);
     }
 
@@ -1853,41 +1868,46 @@
     function followRider(rider_id) {
         var is_user = "{{Auth::user()}}";
         if(!is_user) {
+            $('#rider').attr('content', 'follow-rider-'+rider_id).val(rider_id);
             $('#loginmodal').modal('show');
+        } else{
+            $.ajaxSetup({
+                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+            });
+            $.ajax({
+                url: "{{route('follow-rider')}}",
+                type: "POST",
+                data: {rider_id:rider_id},
+                success: function( response ) {
+                    if(response.status==true) {                            
+                        $('.follow-rider-'+rider_id).replaceWith('<button class="follow-btn w-100 mt-2 un-follow-rider-'+rider_id+'" onclick="unFollowRider('+rider_id+')" ><i class="fa fa-minus mr-2"></i>UNFOLLOW</button>');
+                    }         
+                }
+            });
         }
-        $.ajaxSetup({
-            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
-        });
-        $.ajax({
-            url: "{{route('follow-rider')}}",
-            type: "POST",
-            data: {rider_id:rider_id},
-            success: function( response ) {
-                if(response.status==true) {                            
-                    $('.follow-rider-'+rider_id).replaceWith('<button class="follow-btn w-100 mt-2 un-follow-rider-'+rider_id+'" onclick="unFollowRider('+rider_id+')" ><i class="fa fa-minus mr-2"></i>UNFOLLOW</button>');
-                }         
-            }
-        });
     }
 
     function unFollowRider(rider_id) {
         var is_user = "{{Auth::user()}}";
         if(!is_user) {
+            $('#rider').attr('content', 'un-follow-rider-'+rider_id).val(rider_id);
             $('#loginmodal').modal('show');
         }
-        $.ajaxSetup({
-            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
-        });
-        $.ajax({
-            url: "{{route('un-follow-rider')}}",
-            type: "POST",
-            data: {rider_id:rider_id},
-            success: function( response ) {
-                if(response.status==true) {                            
-                    $('.un-follow-rider-'+rider_id).replaceWith('<button class="follow-btn w-100 mt-2 follow-rider-'+rider_id+'" onclick="followRider('+rider_id+')"><i class="fa fa-plus mr-2"></i>FOLLOW</button>');
-                }         
-            }
-        });        
+        else{
+            $.ajaxSetup({
+                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+            });
+            $.ajax({
+                url: "{{route('un-follow-rider')}}",
+                type: "POST",
+                data: {rider_id:rider_id},
+                success: function( response ) {
+                    if(response.status==true) {                            
+                        $('.un-follow-rider-'+rider_id).replaceWith('<button class="follow-btn w-100 mt-2 follow-rider-'+rider_id+'" onclick="followRider('+rider_id+')"><i class="fa fa-plus mr-2"></i>FOLLOW</button>');
+                    }         
+                }
+            });
+        }      
     }
 
     function moveToNextDay(i){
@@ -1956,89 +1976,110 @@
     function followGroup(group_id){
         var is_user = "{{Auth::user()}}";
         if(!is_user) {
+            $('#rider').attr('content', 'follow-group-'+group_id).val(group_id);
             $('#loginmodal').modal('show');
         }
-        $.ajaxSetup({
-            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
-        });
-        $.ajax({
-            url: "{{route('follow-group')}}",
-            type: "POST",
-            data: {group_id:group_id},
-            success: function( response ) {
-                if(response.status==true) {                            
-                    $('.follow-group-'+group_id).replaceWith('<button class="follow-btn flex-grow-1 mt-2 ml-1 unfollow-group-'+group_id+'" onclick="unFollowGroup('+group_id+')"><i class="fa fa-minus mr-2"></i>Unfollow</button>');
-                }         
-            }
-        }); 
+        else{
+            $.ajaxSetup({
+                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+            });
+            $.ajax({
+                url: "{{route('follow-group')}}",
+                type: "POST",
+                data: {group_id:group_id},
+                success: function( response ) {
+                    if(response.status==true) {                            
+                        $('.follow-group-'+group_id).replaceWith('<button class="follow-btn flex-grow-1 mt-2 ml-1 unfollow-group-'+group_id+'" onclick="unFollowGroup('+group_id+')"><i class="fa fa-minus mr-2"></i>Unfollow</button>');
+                    }         
+                }
+            });
+        }
     }
 
     function unFollowGroup(group_id) {
         var is_user = "{{Auth::user()}}";
         if(!is_user) {
+            $('#rider').attr('content', 'unfollow-group-'+group_id).val(group_id);
             $('#loginmodal').modal('show');
-        }
-        $.ajaxSetup({
-            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
-        });
-        $.ajax({
-            url: "{{route('unfollow-group')}}",
-            type: "POST",
-            data: {group_id:group_id},
-            success: function( response ) {
-                if(response.status==true) {                            
-                    $('.unfollow-group-'+group_id).replaceWith('<button class="follow-btn flex-grow-1 mt-2 ml-1 follow-group-'+group_id+'" onclick="followGroup('+group_id+')"><i class="fa fa-plus mr-2"></i>Follow</button>');
-                }         
-            }
-        });        
+        } 
+        else{
+            $.ajaxSetup({
+                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+            });
+            $.ajax({
+                url: "{{route('unfollow-group')}}",
+                type: "POST",
+                data: {group_id:group_id},
+                success: function( response ) {
+                    if(response.status==true) {                            
+                        $('.unfollow-group-'+group_id).replaceWith('<button class="follow-btn flex-grow-1 mt-2 ml-1 follow-group-'+group_id+'" onclick="followGroup('+group_id+')"><i class="fa fa-plus mr-2"></i>Follow</button>');
+                    }         
+                }
+            });
+        }        
     }
 
     function joinGroup(group_id) {
         var is_user = "{{Auth::user()}}";
         if(!is_user) {
+            $('#rider').attr('content', 'join-group-'+group_id).val(group_id);
             $('#loginmodal').modal('show');
         }
-        $.ajaxSetup({
-            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
-        });
-        $.ajax({
-            url: "{{route('join-group')}}",
-            type: "POST",
-            data: {group_id:group_id},
-            success: function( response ) {
-                if(response.status==true) {                            
-                    $('.join-group-'+group_id).replaceWith('<button class="join-btn flex-grow-1 mt-2 mr-1 leave-group-'+group_id+'" onclick="leaveGroup('+group_id+')">'+
-												'<i class="fa fa-minus mr-2"></i>Cancel</button>');     
+        else{
+            $.ajaxSetup({
+                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+            });
+            $.ajax({
+                url: "{{route('join-group')}}",
+                type: "POST",
+                data: {group_id:group_id},
+                success: function( response ) {
+                    if(response.status==true) {                            
+                        $('.join-group-'+group_id).replaceWith('<button class="join-btn flex-grow-1 mt-2 mr-1 leave-group-'+group_id+'" onclick="leaveGroup('+group_id+')">'+
+                                                    '<i class="fa fa-minus mr-2"></i>Cancel</button>');     
 
-                }   
-            }
-        });        
+                    }   
+                }
+            });
+        }       
     }
 
     function leaveGroup(group_id) {
         var is_user = "{{Auth::user()}}";
         if(!is_user) {
+            $('#rider').attr('content', 'leave-group-'+group_id).val(group_id);
             $('#loginmodal').modal('show');
         }
-        $.ajaxSetup({
-            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
-        });
-        $.ajax({
-            url: "{{route('leave-group')}}",
-            type: "POST",
-            data: {group_id:group_id},
-            success: function( response ) {
-                if(response.status==true) {                            
-                    $('.leave-group-'+group_id).replaceWith('<button class="join-btn flex-grow-1 mt-2 mr-1 join-group-'+group_id+'" onclick="joinGroup('+group_id+')">'+
-												'<i class="fa fa-send mr-2"></i>Join</button>');     
+        else{
+            $.ajaxSetup({
+                headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+            });
+            $.ajax({
+                url: "{{route('leave-group')}}",
+                type: "POST",
+                data: {group_id:group_id},
+                success: function( response ) {
+                    if(response.status==true) {                            
+                        $('.leave-group-'+group_id).replaceWith('<button class="join-btn flex-grow-1 mt-2 mr-1 join-group-'+group_id+'" onclick="joinGroup('+group_id+')">'+
+                                                    '<i class="fa fa-send mr-2"></i>Join</button>');     
 
-                }   
-            }
-        });        
+                    }   
+                }
+            });
+        }      
     }
+
 
     function scroll(){
         document.body.scrollTop = 0;
         document.documentElement.scrollTop = 100;
+    }
+
+    function performEventAfterLogin(){
+        $('#loginForm div.alert-success').hide();
+        $('#loginmodal').modal('hide');
+        var cls = $('#rider').attr('content');
+        var fn = $('.'+cls).attr('onclick');
+        location.reload();
     }
 </script>

@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Group;
+use App\Models\Ride;
+use App\Models\RiderProfile;
 use Stevebauman\Location\Facades\Location;
 
 if (!function_exists('user')) {
@@ -152,6 +155,28 @@ if (!function_exists('getImageUrl')) {
     }
     
 }
+
+
+if (!function_exists('getCityList')) {
+   
+    function getCityList()
+    {   
+        $currentCity = currentLocation();
+        $RideCity = Ride::pluck('start_location')->toArray();
+        $groupCity = Group::pluck('city')->toArray();
+        $RiderCity = RiderProfile::pluck('city')->toArray();
+        $newCityArray = array_merge($RideCity,$groupCity,$RiderCity);
+        $cities = array_unique($newCityArray);
+
+        if(!in_array($currentCity, $cities)){
+            array_push($cities, $currentCity);
+        }
+        return $cities;
+    }
+    
+}
+
+
 
 
 
