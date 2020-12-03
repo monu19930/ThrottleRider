@@ -1,8 +1,10 @@
 <?php
 
+use App\Models\City;
 use App\Models\Group;
 use App\Models\Ride;
 use App\Models\RiderProfile;
+use App\Models\State;
 use Stevebauman\Location\Facades\Location;
 
 if (!function_exists('user')) {
@@ -149,7 +151,7 @@ if (!function_exists('getImageUrl')) {
             $url = 'http://localhost/gull-html-laravel';
         }
         else{
-            $url = 'https://smartevents.in/throttle-rides';
+            $url = 'https://smartevents.in/throttle-rides/admin/';
         }
         return $url;
     }
@@ -161,16 +163,7 @@ if (!function_exists('getCityList')) {
    
     function getCityList()
     {   
-        $currentCity = currentLocation();
-        $RideCity = Ride::pluck('start_location')->toArray();
-        $groupCity = Group::pluck('city')->toArray();
-        $RiderCity = RiderProfile::pluck('city')->toArray();
-        $newCityArray = array_merge($RideCity,$groupCity,$RiderCity);
-        $cities = array_unique($newCityArray);
-
-        if(!in_array($currentCity, $cities)){
-            array_push($cities, $currentCity);
-        }
+        $cities = City::orderBy('name', 'ASC')->pluck('name')->all();
         return $cities;
     }
     

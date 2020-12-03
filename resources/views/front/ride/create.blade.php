@@ -59,7 +59,7 @@
                                 <div class="d-flex align-items-center w-100 mt-4">
                                     <div class="mr-2 pr-1"><img src="{{ asset('public/rider/images/icons-startlocation.svg')}}" class="img-fluid"></div>
                                     <div class="input-field mb-0 w-100 left-seprater-dotted">
-                                        <input type="text" class="input-block" autocomplete="off" name="start_location" id="start_location" placeholder=" ">
+                                        <input type="text" class="input-block select-location" autocomplete="off" name="start_location" id="start_location" placeholder=" ">
                                         <label for="search-bike" class="input-lbl">Start location</label>
                                     </div>
                                 </div>
@@ -67,7 +67,7 @@
                                 <div class="d-flex align-items-center w-100  mt-4">
                                     <div class="mr-2 pr-1"><img src="{{ asset('public/rider/images/icons-via.svg')}}" class="img-fluid img-icon"></div>
                                     <div class="input-field  mb-0 w-100 left-seprater-dotted">
-                                        <input type="text" class="input-block via_location" autocomplete="off" name="via_location[]" placeholder=" ">
+                                        <input type="text" class="input-block via_location select-location" autocomplete="off" name="via_location[]" placeholder=" ">
                                         <label for="search-bike" class="input-lbl">Via</label>
                                     </div>
                                     <div class="add-via-btn">
@@ -81,7 +81,7 @@
                                 <div class="d-flex align-items-center mt-4 w-100">
                                     <div class="mr-2 pr-1"><img src="{{ asset('public/rider/images/icons-destination.svg')}}" class="img-fluid img-icon"></div>
                                     <div class="input-field  mb-0 w-100">
-                                        <input type="text" class="input-block" autocomplete="off" name="end_location" id="end_location" placeholder=" ">
+                                        <input type="text" class="input-block select-location" autocomplete="off" name="end_location" id="end_location" placeholder=" ">
                                         <label for="search-bike" class="input-lbl">Destination</label>
                                     </div>
                                 </div>
@@ -162,8 +162,16 @@
                             <div id="more_days" class="nav nav-tabs mb-4 cust-tab"></div>
                             <li>
                                 <a href="javascript:void(0)" class="text-red font-weight-normal nav-link" name="add" id="add"><i class="fa fa-plus"></i>&nbsp; Add Day 2</a>
-                            </li>
-                            <li class="ml-auto mr-2"><a href="#"><img src="{{asset('public/rider/images/icons-circles-menu.svg')}}"></a></li>
+                            </li>                            
+                            <li class="ml-auto mr-2 dropdown"  ><a href="#" class="  menu-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{asset('public/rider/images/icons-circles-menu.svg')}}" class="menu-icon"><img src="{{asset('public/rider/images/icons-circles-close.svg')}}" class="close-icon"></a>
+								<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+									<!-- <a class="dropdown-item days-cust-list" href="#"><span class="dropdown-day">Day 1</span><span class="ml-auto">Remove</span></a> -->
+									<!-- <a class="dropdown-item days-cust-list" href="#"><span class="dropdown-day">Day 2</span><span class="ml-auto">Remove</span></a> -->
+                                    <div id="more-days-pop"></div>
+                                    <div class="dropdown-divider"></div>
+									<a class="dropdown-item days-cust-list add-more-day-pop" href="javascript:void(0)" onclick="addMoreDaysPop(0)"><span><i class="fa fa-plus"></i>Add Day 2</span></a>
+							  </div>
+							</li>
                         </ul>
                     </div>
 
@@ -192,7 +200,7 @@
                                             <div class="mr-2 pr-1"><img src="{{asset('public/rider/images/icons-destination.svg')}}" class="img-fluid img-icon"></div>
 
                                             <div class="input-field  mb-0 w-100">
-                                                <input type="text" name="end_location_0" class="input-block" placeholder=" ">
+                                                <input type="text" name="end_location_0" class="input-block select-location" placeholder=" ">
                                                 <label for="search-bike" class="input-lbl">Destination for this day</label>
                                             </div>
 

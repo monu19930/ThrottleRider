@@ -160,7 +160,7 @@
                     $('#progressStep2').addClass('active-list');
 
                     $('#bikeProgress1').html('<i class="fa fa-check" aria-hidden="true"></i>');
-                    $('#bikeProgress2').text('2');
+                    $('#bikeProgress2').text('2');                    
                              
                 },
                 error: function(response) {                   
@@ -202,6 +202,7 @@
                         $('#bikeProgress1').html('<i class="fa fa-check" aria-hidden="true"></i>');
                         $('#bikeProgress2').html('<i class="fa fa-check" aria-hidden="true"></i>');
                         $('#bikeProgress3').text('3');
+                        scroll();
                     }
                 }
             });
@@ -236,6 +237,7 @@
                         $('#first_day').attr('content', response.days);
 
                         $('.next_day').text('PROCEED TO DAY '+response.days);
+                        scroll();
                     } else {
                         errorMessage(response.error,'rideStep1', 'CONTINUE');
 
@@ -285,6 +287,7 @@
                         $('#bikeProgress1').html('<i class="fa fa-check" aria-hidden="true"></i>');
                         $('#bikeProgress2').html('<i class="fa fa-check" aria-hidden="true"></i>');
                         $('#bikeProgress3').text('3');
+                        scroll();
                     }
                 });
             }
@@ -353,9 +356,15 @@
         
         });
 
+        //upcoming event click redirect
+        $('.upcoming-event').on('click', function(){
+            var url = $(this).data('content');
+            location.replace(url);
+        })
+
 
         $(function() {
-            var dateToday = new Date(); 
+            var dateToday = new Date();
             $("#start_date").datepicker({
                 dateFormat: 'yy-mm-dd',
                 maxDate: dateToday,
@@ -474,7 +483,8 @@
                     if(i == parseInt(max)) {
                         $(this).hide();                        
                         $('.next-day').hide();
-                        $('#rideStep2').show();                      
+                        $('#rideStep2').show();
+                        $('.add-more-day-pop').hide();                      
                     }
                     $.ajaxSetup({
                         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
@@ -486,7 +496,7 @@
                         success: function( response ) {
                             $('#myTab li a').removeClass('active')
                             $('#more_days').append('<li class="nav-item" role="presentation">'+
-                            '<a class="moreDays nav-link active" onclick="showHideActiveTab()" id="day2-tab" data-toggle="tab" href="#day'+tab+'" role="tab" aria-controls="Day2" aria-selected="true"><span>Day '+tab+'</span></a>'
+                            '<a class="moreDays nav-link active" onclick="showHideActiveTab()" id="tab-day-'+tab+'" data-toggle="tab" href="#day'+tab+'" role="tab" aria-controls="Day2" aria-selected="true"><span>Day '+tab+'</span></a>'
                         +'</li>');
 
                             $('#daysContent .tab-pane').removeClass('active show');
@@ -495,6 +505,9 @@
                             $('#add').html('<i class="fa fa-plus"></i>&nbsp; Add Day'+nextDay);
 
                             $('.next-day').attr('onclick', 'moveToNextDay('+i+')').text('PROCEED TO DAY '+nextDay);
+
+                            $('#more-days-pop').append('<a class="dropdown-item days-cust-list btn_remove" href="#" data-content="'+tab+'"><span class="dropdown-day">Day '+tab+'</span><span class="ml-auto">Remove</span></a>');
+                            $('.add-more-day-pop').html('<span><i class="fa fa-plus"></i>Add Day '+nextDay+'</span>');
                         }
                     });                
                 }
@@ -502,8 +515,12 @@
         });
 
         $(document).on('click', '.btn_remove', function(){  
-            var button_id = $(this).attr("id");   
-            $('#row'+button_id+'').remove();
+            console.log('checkkk1');
+            var button_id = $(this).data("content");
+            $('#day'+button_id+'').remove();
+
+            $('#tab-day-'+button_id).parent('li').remove();
+
             $('#add').show();
             i--;
         }); 
@@ -520,7 +537,7 @@
                 $('#via_location_more').append('<div class="d-flex align-items-center w-100  mt-4">'+
                 "<div class='mr-2 pr-1'><img src='{{ asset('public/rider/images/icons-via.svg')}}' class='img-fluid img-icon'></div>"+
                 '<div class="input-field  mb-0 w-100 left-seprater-dotted">'+
-                    '<input type="text" class="input-block via_location" autocomplete="off" name="via_location[]" placeholder=" ">'+
+                    '<input type="text" class="input-block via_location select-location" autocomplete="off" name="via_location[]" placeholder=" ">'+
                     '<label for="search-bike" class="input-lbl">Via</label>'+
                 '</div><div class="add-via-btn remove_field">'+
                 "<a href='javascript:void(0)'><img src='{{ asset('public/rider/images/icons-clickable-less.svg')}}'></a></div>"+            
@@ -771,6 +788,7 @@
                     }, 
                 }); 
             },
+            select : inputSearch
         });
 
         //search filter
@@ -794,64 +812,40 @@
                     }, 
                 }); 
             },
+            select : inputSearch
         });
 
-        $("#btnAdd").on("click", function () {
-           
-       
+
+        $('#via_location_more').on('keydown.autocomplete', 'input.select-location', function() {
+            $(this).autocomplete({ 
+                source: function (request, response) {
+                    getLocationList(request, response);                   
+                },
+            });
         });
 
-    $("body").on("click", ".remove", function () {
-        $(this).closest("div").parent("div").remove();
-    });
+        
+        $(".select-location").autocomplete({ 
+            source: function (request, response) {
+                getLocationList(request, response);
+            },
+        });
+
+
+        $("body").on("click", ".remove", function () {
+            $(this).closest("div").parent("div").remove();
+        });
 
         $('#submit-search2').on('click', function(){
             var search_keyword = $('#search-input2').val();
             var key = $('#submit-search2').attr('content');
-            if(search_keyword!=''){
-                $.ajaxSetup({
-                        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
-                    });
-                $.ajax({ 
-                    url:"{{route('search-location-result')}}", 
-                    type: "POST",
-                    format: "json",
-                    data: {
-                        search: key,
-                        search_type: search_keyword
-                    },
-                    
-                    success: function (response) {
-                        //response(data);
-                        $('#search_res').html(response);  
-                    }, 
-                });
-            }
-            else{
-                $('#search-input2').focus();
-            }
+            searchLocations(search_keyword,key);
         })
 
         $('#submit-search').on('click', function(){
             var search_keyword = $('#search-input').val();
             var key = $('#submit-search').attr('content');
-            $.ajaxSetup({
-                    headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
-                });
-            $.ajax({ 
-                url:"{{route('search-location-result')}}", 
-                type: "POST",
-                format: "json",
-                data: {
-                    search: key,
-                    search_type: search_keyword
-                },
-                
-                success: function (response) {
-                    //response(data);
-                    $('#search_res').html(response);  
-                }, 
-            }); 
+            searchLocations(search_keyword,key); 
         })
 
         $(".number-data").keydown(function(event) {
@@ -865,7 +859,6 @@
         });
 
         //filter records by cityName
-
         $('.filter-city').on('click', function(){
             var type = $(this).data('content');
             $('.filter-city-menu').html(type+' <i class="fa fa-angle-down drop-arrow">  </i>');
@@ -1964,6 +1957,7 @@
                             $('#add').hide();
                         }
                         $('#add').html('<i class="fa fa-plus"></i>&nbsp; Add Day'+nextDay);
+                        scroll();
                     }
                 });                
             }
@@ -2081,5 +2075,51 @@
         var cls = $('#rider').attr('content');
         var fn = $('.'+cls).attr('onclick');
         location.reload();
+    }
+
+    function getLocationList(request, response){
+        $.ajaxSetup({
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+        });
+        $.ajax({ 
+            url:"{{route('find-location')}}", 
+            type: "POST",
+            format: "json",
+            data: {
+                limit: 8,
+                search: request.term,
+            },            
+            success: function (data) {
+                response(data);
+            }, 
+        }); 
+    }
+
+    function inputSearch(event, ui){
+        var key = $('#submit-search2').attr('content');
+        searchLocations(ui.item.value,key);
+    }
+
+    function searchLocations(search_keyword,key) {
+        if(search_keyword!=''){
+            $.ajaxSetup({
+                    headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+                });
+            $.ajax({ 
+                url:"{{route('search-location-result')}}", 
+                type: "POST",
+                format: "json",
+                data: {
+                    search: key,
+                    search_type: search_keyword
+                },                
+                success: function (response) {
+                    $('#search_res').html(response);  
+                }, 
+            });
+        }
+        else{
+            $('#search-input2').focus();
+        }
     }
 </script>

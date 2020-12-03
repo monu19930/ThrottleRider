@@ -183,7 +183,7 @@
                                             <div class="mr-2 pr-1"><img src="{{asset('public/rider/images/icons-startlocation.svg')}}" class="img-fluid img-icon"></div>
 
                                             <div class="input-field mb-0 w-100 left-seprater-dotted">
-                                                <input type="text" name="start_location_0" id="start_location_0" class="input-block" readonly placeholder=" ">
+                                                <input type="text" name="start_location_0" id="start_location_0" class="input-block select-location" readonly placeholder=" ">
                                                 <label for="search-bike" class="input-lbl">Start location</label>
                                             </div>
 

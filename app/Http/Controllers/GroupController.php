@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\GroupRequest;
+use App\Models\City;
 use Illuminate\Http\Request;
 use App\User;
 use App\Models\Group;
@@ -54,21 +55,8 @@ class GroupController extends Controller
     }
 
     public function create() {
-        $cities = $this->getCity();
+        $cities = getCityList();
         return view('front/group/create',compact('cities'));
-    }
-
-    protected function getCity() {
-
-        return $data = [
-            'Delhi' => 'Delhi',
-            'Noida' => 'Noida',
-            'New Delhi' => 'New Delhi',
-            'Punjab' => 'Punjab',
-            'Ghaziabad' => 'Ghaziabad',
-            'Haryana' => 'Haryana',
-            'Varanasi' => 'Varanasi',
-        ];
     }
     
     public function store(GroupRequest $request)
@@ -88,8 +76,7 @@ class GroupController extends Controller
             'group_name' => $request->group_name,
             'group_desc' => $request->group_description,
             'city' => $request->city,
-            'group_image' =>$new_name,
-            'city' => isset($user->profile->city) ? $user->profile->city : ''
+            'group_image' =>$new_name
         ];
         Group::Create($data);
         $response = array('status'=>true, 'msg' => 'Group has been added successfully');

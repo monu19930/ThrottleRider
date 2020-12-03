@@ -1,10 +1,10 @@
 @extends('layouts.frontLayout.front-layout')
 @section('title', 'Groups');
 @section('content')
-<section class="main-bg">
+<section class="main-bg" id="search_res">
 	<div class="container ">
 	  <div class="row">
-		<div class="col-md-8" id="search_res">
+		<div class="col-md-8">
 		  <div class="cust-left-block">
 			<h2 class="page-heading">
 			  Groups
@@ -82,36 +82,7 @@
 		  </div>
 		
 		<div class="col-md-4 d-none d-md-block">
-		  <div class="right-block">
-			<button class="post-btn w-100 mb-3">POST A RIDE
-			@guest
-				<small>LOGIN REQUIRED</small>
-			@endguest
-			</button>
-			<div class="card mt-2 mb-3 border-0"  >
-			 <ul class="list-group list-group-flush cust-notify">
-			   <li class="list-group-item"><h4 class="notify-heading">Notifications</h4></li>
-			   <li class="list-group-item">
-				 <div class="notify-title">Title of notification</div>
-				 <p class="notify-txt">The kit consists of more than a hundred ready-to-use elements that you… <a href="">more</a></p>
-				 <span class="right-arrow"><i class="fa fa-angle-right"></i></span>
-			   </li>
-			   <li class="list-group-item">
-				 <div class="notify-title">Title of notification</div>
-				 <p class="notify-txt">The kit consists of more than a hundred ready-to-use elements that you… <a href="">more</a></p>
-				 <span class="right-arrow"><i class="fa fa-angle-right"></i></span>
-			   </li>
-			 </ul>
-		   </div>
-		   <div class="card mt-4 mb-3 border-0"  >
-			 <div class="card-body text-center">
-			   <div class="badge-icon"><img src="{{ asset('public/rider/images/badge.png')}}"></div>
-			   <div class="badge-status">Current status of Badge</div>
-			   <p class="badge-txt">Also we’ll show the available points in your account here.</p>
-			 </div>
-		   </div>
-		   <div class="sponser-ads"><span>SPONSERED ADS</span></div>
-		  </div>
+			@include('front.post-ride-sidebar')
 		</div>
 	  </div>
 	</div>

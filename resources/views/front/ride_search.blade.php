@@ -13,7 +13,7 @@
                     </div>
                     
                     <div class="input-field">
-                      <input type="text" name="end_location" autocomplete="off" id="end_location" class="input-block bg-white" placeholder="" value="{{$result['search_location']}}" onkeypress="getFilterData()">
+                      <input type="text" name="end_location" autocomplete="off" id="end_location" class="input-block bg-white" placeholder="" value="{{$result['search_location']}}" onkeyup="getFilterData()">
                       <label for="end_location" class="input-lbl">Where to?</label>
                       <i class="fa fa-search cust-search"></i>
                     </div>

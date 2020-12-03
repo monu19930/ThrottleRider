@@ -103,6 +103,9 @@ Route::group(['middleware'=>['auth']],function(){
 
     Route::post('group-join', 'GroupController@joinGroup')->name('join-group');
     Route::post('leave-group', 'GroupController@leaveGroup')->name('leave-group');
+
+
+    Route::post('my-rides/find-location', 'RideController@findLocation')->name('find-location');
 });
 
 Route::get('login/{social}', 'Auth\LoginController@redirectToSocial')->where('social', 'facebook|google');

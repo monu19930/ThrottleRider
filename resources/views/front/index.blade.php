@@ -13,7 +13,9 @@
 					<div class="d-flex align-items-center filter-details mb-4">
 						<span class="filter-block1">{{count($rides)}} new rides from <strong>{{$location}}</strong></span>
 						<span class="filter-block2 left-seperater">Not your city? <a href="">Change here</a></span>
+						@if(count($rides) > 0)
 						<span class="ml-auto filter-block3 mob-filter"><a href="{{route('rides.index')}}">View all Rides</a></span>
+						@endif
 					</div>
 					<div class="row">
 						<!-- repeat div from here START -->
@@ -129,7 +131,10 @@
 							Top Bikers
 
 						</h4>
+						@if(count($riders) > 0)
 						<span class="ml-auto filter-block3"><a href="{{route('bikers.index')}}">View all Bikers</a></span>
+						@endif
+
 					</div>
 					<div class="top-riders-slider slider  mb-2">
 						@if(count($riders) > 0)
@@ -176,7 +181,9 @@
 						<h4 class="page-sub-heading mt-4 mb-3">
 							Top Groups
 						</h4>
+						@if(count($groups) > 0)
 						<span class="ml-auto filter-block3"><a href="{{route('groups.index')}}">View all Groups</a></span>
+						@endif
 					</div>
 					<div class="top-group-slider slider mb-3">
 						@if(count($groups) > 0)
@@ -200,9 +207,9 @@
 												<span class="follow-users"><img src="{{ asset('public/images/rider_images/')}}/{{!empty($group_member_list) ? $group_member_list:'rider.jpg'}}" /></span>
 												@endforeach
 
-												@if($group['total_group_members'] > 0)
+												
 												<span class="joined-grp">{{$group['total_group_members']}} People<small>Joined the group</small></span>
-												@endif
+												
 											</div>
 										</div>
 
@@ -263,7 +270,7 @@
 						@foreach($upcoming_events as $upcoming_event)
 						<div class="slide">
 							<img src="{{ asset('public/images/rides/')}}/{{isset($upcoming_event['ride_image']['image']) ? $upcoming_event['ride_image']['image'] : 'not_found.png'}}">
-							<div class="img-content">
+							<div class="img-content upcoming-event" data-content="{{route('rides.show',$upcoming_event['slug'])}}">
 								<div class="calender-block">
 									<span class="calender-head">{{formatDate($upcoming_event['start_date'],'l')}}</span>
 									<span class="calender-body">
@@ -477,37 +484,7 @@
 				</div>
 			</div>
 			<div class="col-md-4 d-none d-md-block">
-				<div class="right-block pt-4">
-					<button class="post-btn w-100 mb-3 post-ride">POST A RIDE
-						@guest
-						<small>LOGIN REQUIRED</small>
-						@endguest
-					</button>
-					<div class="card mt-2 mb-3 border-0">
-						<ul class="list-group list-group-flush cust-notify">
-							<li class="list-group-item">
-								<h4 class="notify-heading">Notifications</h4>
-							</li>
-							@foreach($events as $key => $event)
-								@if($key < 3) 
-								<li class="list-group-item">
-									<div class="notify-title">Ride To {{$event['end_location']}} Via {{$event['via_location']}}</div>
-									<p class="notify-txt">{{substr($event['description'], 0, 50)}}... <a href="{{route('rides.show',$event['slug'])}}">more</a></p>
-									<span class="right-arrow"><i class="fa fa-angle-right"></i></span>
-								</li>
-								@endif
-							@endforeach
-						</ul>
-					</div>
-					<div class="card mt-4 mb-3 border-0">
-						<div class="card-body text-center">
-							<div class="badge-icon"><img src="{{ asset('public/rider/images/badge.png')}}"></div>
-							<div class="badge-status">Current status of Badge</div>
-							<p class="badge-txt">Also we’ll show the available points in your account here.</p>
-						</div>
-					</div>
-					<div class="sponser-ads"><span>SPONSERED ADS</span></div>
-				</div>
+				@include('front.post-ride-sidebar')
 			</div>
 		</div>
 	</div>

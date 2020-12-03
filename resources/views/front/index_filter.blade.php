@@ -14,7 +14,9 @@
 					<div class="d-flex align-items-center filter-details mb-4">
 						<span class="filter-block1">{{count($rides)}} new rides from <strong>{{$location}}</strong></span>
 						<span class="filter-block2 left-seperater">Not your city? <a href="">Change here</a></span>
+						@if(count($rides) > 0)
 						<span class="ml-auto filter-block3 mob-filter"><a href="{{route('rides.index')}}">View all Rides</a></span>
+						@endif
 					</div>
 					<div class="row">
 						<!-- repeat div from here START -->
@@ -130,7 +132,10 @@
 							Top Bikers
 
 						</h4>
+						@if(count($riders) > 0)
 						<span class="ml-auto filter-block3"><a href="{{route('bikers.index')}}">View all Bikers</a></span>
+						@endif
+
 					</div>
 					<div class="top-riders-slider slider  mb-2">
 						@if(count($riders) > 0)
@@ -177,7 +182,9 @@
 						<h4 class="page-sub-heading mt-4 mb-3">
 							Top Groups
 						</h4>
+						@if(count($groups) > 0)
 						<span class="ml-auto filter-block3"><a href="{{route('groups.index')}}">View all Groups</a></span>
+						@endif
 					</div>
 					<div class="top-group-slider slider mb-3">
 						@if(count($groups) > 0)

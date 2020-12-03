@@ -117,26 +117,34 @@
 
     <!--Signup Modal -->
     <div class="modal fade" id="bikeListModal" data-backdrop="static" data-keyboard="false" tabindex="-2" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    	<div class="modal-dialog modal-dialog-centered modal-lg">
-    		<div class="modal-content rounded-0" style="width:60%">
-    			<div class="modal-body p-0">
-    				<button type="button" class="close login-close" data-dismiss="modal" aria-label="Close">
-    					<span aria-hidden="true">&times;</span>
+    	<div class="modal-dialog modal-dialog-centered  ">
+    		<div class="modal-content rounded-0">
+				<div class="modal-header">
+				<h5 class="modal-title font-weight-bold" id="exampleModalLabel">Bike Modal Name </h5>
+					 
+    				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    					<img src="{{ asset('public/rider/images/icons-circles-close.svg')}}">
     				</button>
+    			</div>
+    			<div class="modal-body p-0">
+    				 
     				<div class="row no-gutters">
     					<div class="col-md-12">
     						<div class="login-block">
     							<form id="bikeModalForm" method="post">
     								<input type="hidden" name="csrf-token" content="{{ csrf_token() }}">
-    								<h2 class="login-heading">SELECT BIKE MODEL NAME<small>Choose model name</small></h2>
+    								<h2 class="login-heading"><small>Choose model name</small></h2>
     								<div class="alert alert-danger print-error-msg" style="display:none">
     									<ul></ul>
     								</div>
     								<div class="login-input">
-    									<div class="form-group">
-    										<select class="custom-select" id="bike_models"></select>
-    									</div>
-    									<div class="form-group">
+										<div class="input-field mb-0 w-100">  
+										   
+											<select class="floating-select  px-3 py-2" id="bike_models" onclick="this.setAttribute('value', this.value);" value=""></select>
+										   
+										</div>
+    									 
+    									<div class="form-group mt-3">
     										<button type="button" class="btn btn-danger w-100" onclick="submitBikeModel();">SUBMIT</button>
     									</div>
     								</div>
@@ -245,7 +253,8 @@
     	<div class="modal-dialog modal-dialog-centered modal-md">
     		<div class="modal-content rounded-0">
     			<div class="modal-header">
-					<h2 class="login-heading">Invite New Members<small>Enter multiple email address by comma(,) separated</small></h2>
+				<h5 class="modal-title font-weight-bold" id="exampleModalLabel">Invite New Members</h5>
+					 
     				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
     					<img src="{{ asset('public/rider/images/icons-circles-close.svg')}}">
     				</button>
@@ -256,13 +265,13 @@
 					</div>
     				<form id="inviteGroupMembersForm" method="post">
 						<input type="hidden" name="member" id="group_member">
-    					<div class="login-input">
+    					<div class="login-input modal-input">
     						<div class="d-flex mt-3 align-items-center">
     							<div class="w-100 input-field mb-0">
 									<input type="text" autocomplete="off" name="email[]" id="invite_group_member_email" class="input-block">
     							</div>
     						</div>
-
+							<small class="sml-txt lg text-danger">Enter multiple email address by comma(,) separated</small>
     					</div>
     				</form>
     			</div>
@@ -311,10 +320,13 @@
 
 
     						<div class="d-flex mt-3 align-items-center">
-    							<div class="w-100 input-field mb-0">
-    								<input type="file" class="input-block" name="images[]" accept="image/*" multiple>
-    								<label for="search-bike" class="input-lbl">Images</label>
-    							</div>
+							<div class="dropzone flex-row p-3 justify-content-start position-relative mt-3 h-75" id="dropzone">                       
+							<div class="drop-icon mr-3"><i class="fa fa-file-image-o"></i></div>                       
+							<div class="drop-box-format  ">Drag and drop <span class="text-gray">or</span> <span class="text-danger">Select from Gallery</span></div>  
+							<input type="file" class="input-block upload-group-detail h-100" name="images[]" accept="image/*" multiple>							
+							                      
+							</div>
+    							 
     						</div>
 
     						<div class="d-flex mt-3 align-items-center">
@@ -346,7 +358,7 @@
     	<div class="modal-dialog modal-dialog-centered modal-md">
     		<div class="modal-content rounded-0">
     			<div class="modal-header">
-    				<h5 class="modal-title font-weight-bold" id="exampleModalLabel">SHARE CONTACT</h5>
+    				<h5 class="modal-title font-weight-bold" id="exampleModalLabel">Share Contact</h5>
     				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
     					<img src="{{ asset('public/rider/images/icons-circles-close.svg')}}">
     				</button>

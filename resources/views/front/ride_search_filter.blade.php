@@ -1,6 +1,6 @@
 <div class="cust-left-block pt-5">
                             <h2 class="page-heading">
-                              Rides from {{$result['location']}} 
+                            Rides from {{$result['location']}} 
                               @if(isset($result['search_location']) && !empty($result['search_location']))
                                 to {{$result['search_location']}}
                               @endif
@@ -12,11 +12,11 @@
                                 <a href="#" class="sortby-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   <label>Sort by</label>
                                   Ratings <i class="fa fa-angle-down drop-arrow"></i></a>
-                                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                  <!-- <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item" href="#">Action</a>
                                     <a class="dropdown-item" href="#">Another action</a>
                                     <a class="dropdown-item" href="#">Something else here</a>
-                                  </div>
+                                  </div> -->
                                 </span>
                             </div>
                             <div class="row">
@@ -102,6 +102,11 @@
                               <!-- repeat div from here START -->
                               @endif
                             @endforeach
+
+                          @else
+                          <div class="col-12 mb-3">
+                            <h2 class="page-heading">Record not found</h2>
+                          </div>
                           @endif				
                           </div>
             

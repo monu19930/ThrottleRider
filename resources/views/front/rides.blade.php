@@ -1,7 +1,7 @@
 @extends('layouts.frontLayout.front-layout')
 @section('title', 'Rides')
 @section('content')
-<section class="left-main-bg ">
+<section class="left-main-bg" id="search_res">
     <div class="container ">
         <div class="row">
             <div class="col-md-4 d-none d-md-block">
@@ -14,13 +14,13 @@
                             </div>
 
                             <div class="input-field">
-                                <input type="text" autocomplete="off" name="start_location" id="start_location" class="input-block  bg-white" onkeypress="getFilterData()"  placeholder="  " value="">
+                                <input type="text" autocomplete="off" name="start_location" id="start_location" class="input-block  bg-white" onkeyup="getFilterData()"  placeholder="  " value="">
                                 <label for="start_location" class="input-lbl">Where from?</label>
                                 <i class="fa fa-search cust-search"></i>
                             </div>                           
 
                             <div class="input-field">
-                                <input type="text" autocomplete="off" name="end_location" id="end_location" class="input-block  bg-white" onkeypress="getFilterData()" placeholder="  " value="">
+                                <input type="text" autocomplete="off" name="end_location" id="end_location" class="input-block  bg-white" onkeyup="getFilterData()" placeholder="  " value="">
                                 <label for="end_location" class="input-lbl">Where to?</label>
                                 <i class="fa fa-search cust-search"></i>
                             </div>

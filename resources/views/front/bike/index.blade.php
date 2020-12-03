@@ -11,7 +11,7 @@
 		  <div class="cust-left-block">			
 		  		<div class="d-flex align-items-center mt-4 mb-2">
 				  	<h2 class="page-heading">MY BIKES <small>{{ count((array)$bikes) }} Bikes added</small></h2>
-					<span class="ml-auto filter-block3 mob-filter"><a href="{{route('add-bike')}}" class="btn btn-danger mb-2">ADD NEW BIKE</a></span>
+					<span class="ml-auto filter-block3 mob-filter"><a href="{{route('add-bike')}}" class="post-btn  px-5">ADD NEW BIKE</a></span>
 				</div>
 				<div class="d-flex align-items-center filter-details mb-4"></div>
 			
@@ -52,7 +52,7 @@
 						
 						<span class="username">
 						<span class="d-block">
-						{{ $bike['description']}}
+						{{ substr($bike['description'], 0, 200)}}..
 						</span>
 						<span class="badge badge-warning">
 						</span>

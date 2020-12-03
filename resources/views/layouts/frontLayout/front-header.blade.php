@@ -24,9 +24,9 @@
                               <button class="profile-dropdown" type="button" title="{{ Auth::user()->name}}" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                              <span class="txt-elps"> {{ Auth::user()->name}} </span><img src="{{ asset('public/images/rider_images/')}}/{{isset(user()->profile->image) ? user()->profile->image:'rider.jpg'}}" class="profile-pic" /><i class="fa fa-angle-down drop-arrow">  </i>
                               </button>
-                              <div class="dropdown-menu profile-nav-list" aria-labelledby="dropdownMenuButton"  >
-                                <a class="dropdown-item" href="{{route('rider-logout')}}">Logout</a>
+                              <div class="dropdown-menu profile-nav-list" aria-labelledby="dropdownMenuButton"  >                                
                                 <a class="dropdown-item" href="{{route('my-profile')}}">My Profile</a>
+                                <a class="dropdown-item" href="{{route('rider-logout')}}">Logout</a>
                               </div>
                      
               </li>
@@ -157,10 +157,12 @@
                         <button class="bnr-dropdown filter-city-menu" type="button" id="dropdownMenuButton" content="{{currentLocation()}}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{currentLocation()}} <i class="fa fa-angle-down drop-arrow">  </i>
                        </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      @foreach($cities as $city)
-                        <a class="dropdown-item filter-city" href="javascript:void(0)" data-content="{{$city}}">{{$city}}</a>
-                        @endforeach
+                      <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
+                        <div class="scroll-div">
+                          @foreach($cities as $city)
+                          <a class="dropdown-item filter-city" href="javascript:void(0)" data-content="{{$city}}">{{$city}}</a>
+                          @endforeach
+                        </div>
                       </div>
                     </div>
                   </div>

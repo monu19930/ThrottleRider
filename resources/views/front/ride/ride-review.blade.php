@@ -8,7 +8,11 @@
     </h5>
     <span class="ml-auto"><a href="#">Change</a></span>
 </div>
-<div class="rider-overview mt-3 mt-lg-0">{{$ride['short_description']}} <a href="#">read more</a></div>
+<div class="rider-overview mt-3 mt-lg-0">
+    @if(!empty($ride['short_description']))
+    {{$ride['short_description']}} <a href="#">read more</a>
+    @endif
+</div>
 <div class="d-flex align-items-center my-3">
     <div class="d-flex mt-3 mr-5">
         <div><img src="{{ asset('public/rider/images/icons-calendar.svg')}}"></div>
@@ -56,7 +60,11 @@
                 </div>
                 <div class="col-9 col-md-7">
                     <h4 class="page-sub-heading">{{$rideDay['start_location']}} to {{$rideDay['end_location']}}</h4>
-                    <div class="timeline-txt">Day {{$key+1}} {{$rideDay['day_description']}}<a href="#">read more</a> </div>
+                    <div class="timeline-txt">
+                        @if(!empty($rideDay['day_description']))
+                        Day {{$key+1}} {{$rideDay['day_description']}}<a href="#">read more</a>
+                        @endif 
+                    </div>
                     <div class="d-none d-md-block">
                         <div class="byker-profile-rate d-inline-flex align-items-center mt-3 ">
 

@@ -11,7 +11,7 @@
 				<div class="cust-left-block">
 					<div class="d-flex align-items-center mt-4 mb-2">
 						<h2 class="page-heading">SUPPLIERS <small>{{ count($suppliers) }} Suppliers added</small></h2>
-						<span class="ml-auto filter-block3 mob-filter"><a href="{{route('suppliers.create')}}" class="btn btn-danger mb-2">ADD NEW SUPPLIER</a></span>
+						<span class="ml-auto filter-block3 mob-filter"><a href="{{route('suppliers.create')}}" class="post-btn  px-5">ADD NEW SUPPLIER</a></span>
 					</div>
 					<div class="d-flex align-items-center filter-details mb-4"></div>
 
@@ -90,7 +90,9 @@
 										</div>
 										<div class="userdetails d-flex align-items-center">
 											<span class="username">
-												<span class="d-block">{{ $supplier['supplier_description']}}</span>
+												
+												<span class="d-block">{{substr($supplier['supplier_description'], 0, 200)}}..</span>
+
 												<span class="badge badge-warning">
 													@if(!empty($supplier['spare_parts']))
 													<div class="action" data-target="#spare_parts_content{{$key}}" data-toggle="collapse">

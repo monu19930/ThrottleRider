@@ -34,6 +34,10 @@ class RiderController extends Controller
             'email_verification_token' => Str::random(32)
         ];
         $user = User::create($userData);
+
+        RiderProfile::create([
+            'rider_id' => $user->id
+        ]);
         
         $response = array('status'=>true, 'msg' => 'Registration has been successful, Verification Email has been sent on your email-id');
 

@@ -20,7 +20,7 @@
                 <div class="mr-2 pr-1"><img src="{{asset('public/rider/images/icons-destination.svg')}}" class="img-fluid img-icon"></div>
 
                 <div class="input-field  mb-0 w-100">
-                    <input type="text" name="end_location_{{$i}}" class="input-block" placeholder=" ">
+                    <input type="text" autocomplete="off" name="end_location_{{$i}}" class="input-block select-location" placeholder=" ">
                     <label for="search-bike" class="input-lbl">Destination for this day</label>
                 </div>
 
@@ -227,6 +227,27 @@
             generateNames(this.files);
         dropped = false;
 	};
+
+    $(".select-location").autocomplete({ 
+            source: function (request, response) {
+                $.ajaxSetup({
+                    headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"}
+                });
+                $.ajax({ 
+                    url:"{{route('find-location')}}", 
+                    type: "POST",
+                    format: "json",
+                    data: {
+                        limit: 8,
+                        search: request.term,
+                    },
+                    
+                    success: function (data) {
+                        response(data);
+                    }, 
+                }); 
+            },
+        });
 });
 
 </script>

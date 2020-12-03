@@ -74,8 +74,11 @@ class HomeController extends Controller
     protected function getEventList($search,$limit='') {
         $result = [];
         $current_date = formatDate(Carbon::now(), 'Y-m-d');
-        $rides = Ride::whereIn('start_location',$search)->where('is_approved', 1)->where('start_date', '>', $current_date)->OrderBy('created_at', 'desc');
+        $rides = Ride::where('is_approved', 1)->where('start_date', '>', $current_date)->OrderBy('created_at', 'desc');
 
+        if(!empty($search)) {
+            $rides = $rides->whereIn('start_location',$search);
+        }
         if(!empty($limit)){
             $rides = $rides->limit($limit);
         }
@@ -286,7 +289,7 @@ class HomeController extends Controller
 
             $array = [
                 'Rides Within _key',
-                'Events Within _key',
+                //'Events Within _key',
                 'Groups Within _key',
                 'Bikers Within _key',
                 'Suppliers Within _key',            
@@ -294,7 +297,7 @@ class HomeController extends Controller
         } else {
             $array = [
                 'Rides To _key',
-                'Events in _key',
+                //'Events in _key',
                 'Groups in _key',
                 'Bikers in _key',
                 'Suppliers in _key',
@@ -602,6 +605,8 @@ class HomeController extends Controller
                 'is_rider_owner' => isOwner($user->id)
             ];
         }
+        $search = '';
+        $result['events'] = $this->getEventList($search, 2);
         return view('front.riders',$result);
     }
 
@@ -631,6 +636,8 @@ class HomeController extends Controller
                'is_group_owner' => (isset(user()->id) && user()->id == $group->create_rider_id) ? true : false,
            ];
         }
+        $search = '';
+        $result['events'] = $this->getEventList($search, 2);
         return view('front.groups',$result);
     }
 
@@ -732,7 +739,7 @@ class HomeController extends Controller
             'explore_rides' => $this->getExploredRides($search),
             'riders' => $this->getBikersList($search),
             'groups' => $this->getGroupList($search),
-            'events' => $this->getEventList([$search],2),
+            'events' => $this->getEventList('',2),
             'upcoming_events' => $this->getEventList($nearestLocation),
             'location' => $search
         ];

@@ -181,7 +181,7 @@
                   <div class="d-flex align-items-center">
                     <!-- <button class="red-outline-btn px-5 mr-3">ADD MORE BIKES</button>
                     <button class="red-outline-btn px-5 mr-3">ADD A TRIP</button> -->
-                    <a href="{{route('my-rides.create')}}" class="red-outline-btn px-5 mr-3">ADD MORE TRIPS</a>
+                    <a href="{{($rides->group_id==0) ? route('my-rides.create') : route('my-groups.events.create',$rides->group_id)}}" class="red-outline-btn px-5 mr-3">ADD MORE TRIPS</a>
                     <a href="{{route('add-bike')}}" class="red-outline-btn px-5 mr-3">ADD A BIKE</a>
                     <button class="red-outline-btn px-5 mr-3">EXPLORE TRIPS</button>
                   </div>

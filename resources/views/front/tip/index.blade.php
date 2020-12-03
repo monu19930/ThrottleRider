@@ -11,7 +11,7 @@
 		  <div class="cust-left-block">
 		  		<div class="d-flex align-items-center mt-4 mb-2">
 					<h2 class="page-heading">TIPS <small>{{ count($tips) }} Tips added</small></h2>
-					<span class="ml-auto filter-block3 mob-filter"><a class="btn btn-danger mb-2" href="#" data-toggle="modal" data-target="#createTipModal" >ADD NEW TIP</a></span>
+					<span class="ml-auto filter-block3 mob-filter"><a class="post-btn  px-5" href="#" data-toggle="modal" data-target="#createTipModal" >ADD NEW TIP</a></span>
 				</div>
 				<div class="d-flex align-items-center filter-details mb-4"></div>
 				
@@ -52,9 +52,7 @@
 					<div class="location-details d-flex align-items-center"></div>
 					<div class="userdetails d-flex align-items-center">
 						<span class="username">
-						<span class="d-block">
-						{{ $tip['description']}}
-						</span>
+						<span class="d-block">{{substr($tip['description'], 0, 200)}}..</span>
 						<span class="badge badge-warning">
 						</span>
 						</span>

@@ -4,7 +4,7 @@
 		<div class="cust-left-block pt-4">
 			<h2 class="page-heading">{{$result['type']}}</h2>
 			<div class="d-flex align-items-center filter-details mb-4">
-			  <span class="filter-block1">{{$total}} {{$result['key']}} found</strong></span>
+			  <span class="filter-block1">{{$total}} Results</strong></span>
 			</div>
 			<div class="row">
 				@if(isset($rides) && ($rides->count() > 0))
@@ -176,6 +176,12 @@
 					@endforeach			 
 				@endif
 				</div>
+
+				@if($total == 0)
+				<div class="col-12 mb-4 mt-4">
+					<h5>Record not available</h5>
+				</div>
+				@endif
 		</div>		   
 	</div>
 		</div>

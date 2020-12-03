@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use App\Models\Ride;
 use App\Models\RideDay;
 use App\Models\RoadType;
@@ -304,9 +305,23 @@ class RideController extends Controller
             'ride_rating' => $rideDays['ride_rating'],
             'road_type' => $rideDays['ride_days'][0]['road_type'],
             'ride_image' => !empty($rideDays['ride_days'][0]['image']) ? $rideDays['ride_days'][0]['image'] : 'not_found.png',
+            'group_id' => $ride->group_id
         ];
         $rides = (object)$rides;
         return view('front.ride.confirm', compact('rides'));
+    }
+
+    public function findLocation(Request $request) {
+
+        $search = $request->search;
+        $models = City::select('name')->where('name','LIKE','%'.$search.'%')->get();
+        $result = [];
+        if($models->count() > 0) {
+            foreach($models as $key=> $model) {
+                $result[$key] = $model->name;
+            }
+        }
+        return $result;
     }
     
 }

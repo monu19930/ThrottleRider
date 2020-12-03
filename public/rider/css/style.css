@@ -1397,9 +1397,11 @@ height:60px;
 }
 .profile-pic {
   width: 28px;
-  border-radius: 20px;
+  height: 28px;
+  border-radius: 50%;
   margin: -20px 5px 0 5px;
 }
+.big{width: 120px;height:120px;}
 .inner-pages {
   padding-top: 60px !important;
 }
@@ -2244,7 +2246,7 @@ height:60px;
 }
 
 .logo-block {
-  padding: 15px 31px;
+  padding: 15px 5px;
   border-radius: 5px;
   border: solid 1px #e5e5e5;
   background-color: #ffffff;
@@ -2258,6 +2260,7 @@ height:60px;
 .logo-block:nth-of-type(4n + 4) {
   margin-right: 0;
 }
+.logo-block img{height:42px;}
 .bike-prev {
   border-radius: 3px;
   height: 413px;
@@ -2874,3 +2877,46 @@ height:60px;
     .option-list li{margin-right:20px;margin-bottom:20px;    width: 47%;}
     .poll-item{width:100%;}
     .upload-group-detail{height:90px;position:absolute;top:0;bottom:0;left:0;right:0;    opacity: 0;  z-index: 9999;}
+    .menu-dropdown .close-icon{display:none;}
+    .menu-dropdown[aria-expanded="true"] .close-icon{display:block}
+    .menu-dropdown[aria-expanded="true"] .menu-icon{display:none}
+    .days-cust-list{
+      display:flex;align-items:center;width:230px;color:#c23e3e !important;font-weight:bold;
+    }
+    .dropdown-day{font-size: 14px; color: #666666;line-height: normal;font-weight:normal}
+    .bike-prev-block{border-radius: 5px;
+      background-color: #f9fbff;}
+      .bike-prev-img img{width:100%;border-radius:5px 5px 0 0}
+    .bike-prev-txt{padding:20px;font-size: 20px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.4;
+      letter-spacing: normal;
+      color: #000000;}
+
+      .selected-list{padding: 0 15px 0 0;
+        border-radius: 12.5px;
+        background-color: #e8edf5;font-size: 12px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        color: #565f70;}
+        .bike-prev-icon{width:25px;height:25px;border-radius:50%;color:#fff;background: #4aa301;
+          text-align: center;
+          line-height: 24px;margin-right:10px;
+      }
+      .change-link{position:absolute;right:20px; top: 12px;font-size: 14px; font-weight: 700;}
+      .modal-input .to-input{display:none}
+      .modal-input .enter-mail-id{ width: 100%;  padding: 10px 20px;}
+      .ms-options-wrap > button{border-radius: 5px;  border: solid 1px #e5e5e5 !important; background-color: #f8fbff !important;  font-size: 14px !important;  font-weight: normal;  font-stretch: normal;  font-style: normal; line-height: normal;  letter-spacing: normal;  color: #999999 !important;  height: 52px;}
+      .ms-search input{border-radius: 5px;  border: solid 1px #e5e5e5 !important; background-color: #f8fbff !important;  font-size: 14px !important;  font-weight: normal;  font-stretch: normal;  font-style: normal; line-height: normal;  letter-spacing: normal;  color: #999999 !important;  height: 52px;}
+      .ms-options{padding:15px; }
+      .ms-options-wrap > .ms-options > ul input[type="checkbox"]{height:auto !important;top:10px  !important;}
+      .ms-options-wrap > .ms-options > ul label{padding-left:30px !important;}
+      
+      .upcoming-event{
+        cursor:pointer;
+      }
